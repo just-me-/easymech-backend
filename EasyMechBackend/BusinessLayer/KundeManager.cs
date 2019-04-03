@@ -16,7 +16,7 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        public static Kunde GetKundeById(int id)
+        public static Kunde GetKundeById(long id)
         {
             using (EMContext c = new EMContext())
             {
@@ -24,21 +24,23 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        public static void AddKunde(Kunde k)
+        public static Kunde AddKunde(Kunde k)
         {
             using (EMContext c = new EMContext())
             {
                 c.Add(k);
                 c.SaveChanges();
+                return k;
             }
         }
 
-        public static void UpdateKunde(Kunde k)
+        public static Kunde UpdateKunde(Kunde k)
         {
             using (EMContext c = new EMContext())
             {
                 c.Entry(k).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 c.SaveChanges();
+                return k;
             }
         }
 
