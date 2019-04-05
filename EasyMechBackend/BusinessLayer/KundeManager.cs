@@ -8,6 +8,48 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
     {
+
+        //Fill Dummy Data for Dev
+        #region dummydata
+        //Enter a random Data
+        static KundeManager()
+        {
+            if (GetKunden().Count() == 0)
+            {
+                Kunde k1 = new Kunde
+                {
+                    Firma = "Toms Vergnügungspark",
+                    Vorname = "Tom",
+                    Nachname = "K",
+                    PLZ = 7000,
+                    Ort = "Chur",
+                    Email = "t-kistler@bluewin.ch",
+                    Telefon = "081 123 45 68",
+                    Notiz =
+                    @"Zahlt immer pünktlich, ist ganz nett.
+                    Darf weider mal eine Maschine mieten"
+                };
+
+
+                Kunde k2 = new Kunde
+                {
+                    Firma = "DJ Fire",
+                    Vorname = "Dario",
+                    Nachname = "Fuoco",
+                    PLZ = 7500,
+                    Ort = "Sargans",
+                    Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
+                    IsActive = false
+                };
+
+                AddKunde(k1);
+                AddKunde(k2);
+            }
+        }
+
+        #endregion
+        
+
         public static List<Kunde> GetKunden()
         {
             using (EMContext c = new EMContext())
