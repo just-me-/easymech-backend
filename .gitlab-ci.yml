@@ -1,0 +1,37 @@
+image: microsoft/dotnet:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  project: "EasyMechBackend"
+  repo: "easymech-backend"
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq sshpass
+  - "dotnet restore"
+
+build:
+  stage: build
+  variables:
+    build_path: "$project/"
+  script:
+    - "cd $build_path"
+    - "dotnet build"
+
+deploy_stage:
+  stage: deploy
+  environment: Staging
+  only:
+    - master
+  script:
+    - cd ..
+    - ls
+    - sshpass -V
+    - export SSHPASS=$USER_PASS 
+    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch date
+    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sudo /app/scripts/easymech-backend-cleanup.sh"    
+    - sshpass -e scp -o stricthostkeychecking=no -r $repo/ gitlab@sinv-56057.edu.hsr.ch:/app/deploy_easymech_be_dev
+    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sh -c 'sudo /app/scripts/easymech-backend.sh> /dev/null 2>&1 &'"
