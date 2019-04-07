@@ -32,6 +32,6 @@ deploy_stage:
     - sshpass -V
     - export SSHPASS=$USER_PASS 
     - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch date
-    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sudo /app/scripts/easymech-backend-cleanup.sh"    
-    - sshpass -e scp -o stricthostkeychecking=no -r $repo/ gitlab@sinv-56057.edu.hsr.ch:/app/deploy_easymech_be_dev
-    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sh -c 'sudo /app/scripts/easymech-backend.sh> /dev/null 2>&1 &'"
+    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sudo /app/scripts/docker-cleanup.sh 40006 easymech-backend"
+    - sshpass -e scp -o stricthostkeychecking=no -r $repo/ gitlab@sinv-56057.edu.hsr.ch:/app/docker
+    - sshpass -e ssh -o stricthostkeychecking=no gitlab@sinv-56057.edu.hsr.ch "sh -c 'sudo /app/scripts/docker-backend.sh 40006 easymech-backend"
