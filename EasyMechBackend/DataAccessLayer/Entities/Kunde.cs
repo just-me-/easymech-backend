@@ -38,6 +38,11 @@ namespace EasyMechBackend.DataAccessLayer
 
         public bool IsActive { get; set; }
 
+        //Relationships
+        // -------------------------------------------
+        public List<Maschine> Maschinen { get; set; }
+        // -------------------------------------------
+
         [Timestamp]
         public byte[] Timestamp { get; set; }
 

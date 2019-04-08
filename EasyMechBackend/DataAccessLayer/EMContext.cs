@@ -14,6 +14,14 @@ namespace EasyMechBackend.DataAccessLayer
         public EMContext() : base() { } //DAs son Ding jetzt hier...
 
         public DbSet<Kunde> Kunden { get; set; }
+        public DbSet<Maschine> Maschinen { get; set; }
+        public DbSet<Fahrzeugtyp> Fahrzeugtypen { get; set; }
+        public DbSet<Aktion> Aktionen { get; set; }
+        public DbSet<FahrzeugUebergabe> FahrzeugUebergaben { get; set; }
+        public DbSet<FahrzeugRuecknahme> FahrzeugRuecknahmen { get; set; }
+        public DbSet<ServiceDurchfuehrung> ServiceDurchfuehrungen { get; set; }
+        public DbSet<Materialposten> Materialposten { get; set; }
+        public DbSet<Arbeitsschritt> Arbeitsschritte { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -12,3 +12,17 @@ D:\Eigene Dokumente\VisualStudio\EPJ - Backend\easymech-backend\EasyMechBackend\
 D:\Eigene Dokumente\VisualStudio\EPJ - Backend\easymech-backend\EasyMechBackend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.RazorTargetAssemblyInfo.cache
 D:\Eigene Dokumente\VisualStudio\EPJ - Backend\easymech-backend\EasyMechBackend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.dll
 D:\Eigene Dokumente\VisualStudio\EPJ - Backend\easymech-backend\EasyMechBackend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.pdb
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\bin\Debug\netcoreapp2.1\EasyMechBackend.deps.json
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\bin\Debug\netcoreapp2.1\EasyMechBackend.runtimeconfig.json
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\bin\Debug\netcoreapp2.1\EasyMechBackend.runtimeconfig.dev.json
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\bin\Debug\netcoreapp2.1\EasyMechBackend.dll
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\bin\Debug\netcoreapp2.1\EasyMechBackend.pdb
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.csprojAssemblyReference.cache
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.csproj.CoreCompileInputs.cache
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.RazorAssemblyInfo.cache
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.RazorAssemblyInfo.cs
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.AssemblyInfoInputs.cache
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.AssemblyInfo.cs
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.RazorTargetAssemblyInfo.cache
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.dll
+C:\Users\marco\Documents\HSR\Semester4\EPJ\Backend\easymech-backend\EasyMechBackend\obj\Debug\netcoreapp2.1\EasyMechBackend.pdb
