@@ -28,16 +28,15 @@ namespace EasyMechBackend
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<EMContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-            
-
             services.AddCors(o => o.AddPolicy("AllowPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            services.AddDbContext<EMContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
