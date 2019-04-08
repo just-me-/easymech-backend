@@ -11,7 +11,7 @@ namespace EasyMechBackend.DataAccessLayer
     public class EMContext : DbContext
     {
         public EMContext(DbContextOptions<EMContext> options) : base(options) { }
-        public EMContext() : base() { } //DAs son Ding jetzt hier...
+        public EMContext() : base() { } //Das son Ding jetzt hier...
 
         public DbSet<Kunde> Kunden { get; set; }
         public DbSet<Maschine> Maschinen { get; set; }
