@@ -19,24 +19,10 @@ namespace EasyMechBackend.ServiceLayer
         //private readonly TodoContext _context;
 
         // GET: /Kunden/
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<KundeDto>>> GetKunden()
-        //{
-        //    return await Task.Run(() => KundeManager.GetKunden().ConvertToDtos());
-        //    return await _context.Kunden.ToAsyncList();
-        //}
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<KundeDto>>> GetKunden()
         {
-
-            return new List<KundeDto>
-            {
-                new KundeDto
-                {
-                    Nachname = "Bla"
-                }
-            };
+            return await Task.Run(() => KundeManager.GetKunden().ConvertToDtos());
         }
 
         // GET: /Kunden/2
