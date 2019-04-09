@@ -9,6 +9,10 @@ namespace EasyMechBackend.DataAccessLayer
 {
     public class Reservation
     {
+        [Key]
+        public long Id { get; set; }
+
+
         public string Standort { get; set; }
 
         public DateTime Startdatum { get; set; }
@@ -17,10 +21,28 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
+        public long MaschinenId { get; set; }
+
+        [ForeignKey("MaschinenId")]
+        public Maschine Maschine { get; set; }
+
+        public long KundenId { get; set; }
+
+        [ForeignKey("KundenId")]
+        public Kunde Kunde { get; set; }
+
+        public long UebergabeId { get; set; }
+
+        [ForeignKey("UebergabeId")]
         public FahrzeugUebergabe FahrzeugUebergabe { get; set; }
 
+        public long RuecknahmeId { get; set; }
+
+        [ForeignKey("RuecknahmeId")]
         public FahrzeugRuecknahme Fahrzeugruecknahme { get; set; }
         // -------------------------------------------
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
 
     }
 

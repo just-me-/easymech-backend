@@ -21,6 +21,4 @@ namespace EasyMechBackend.DataAccessLayer
         public byte[] Timestamp { get; set; }
 
     }
-
-
 }
