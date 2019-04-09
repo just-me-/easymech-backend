@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyMechBackend", "EasyMechBackend\EasyMechBackend.csproj", "{51EEE745-6F60-469D-9814-E5AE47367C8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyMechBackend", "EasyMechBackend\EasyMechBackend.csproj", "{51EEE745-6F60-469D-9814-E5AE47367C8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9FE29EF4-05D4-4F63-B563-F9F530546BE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayerTest", "BusinessLayerTest\BusinessLayerTest.csproj", "{18288658-DBB1-4D65-AC36-4FD1FC35864A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{51EEE745-6F60-469D-9814-E5AE47367C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51EEE745-6F60-469D-9814-E5AE47367C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51EEE745-6F60-469D-9814-E5AE47367C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18288658-DBB1-4D65-AC36-4FD1FC35864A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18288658-DBB1-4D65-AC36-4FD1FC35864A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18288658-DBB1-4D65-AC36-4FD1FC35864A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18288658-DBB1-4D65-AC36-4FD1FC35864A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{18288658-DBB1-4D65-AC36-4FD1FC35864A} = {9FE29EF4-05D4-4F63-B563-F9F530546BE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25CF630A-CE38-42CC-95E3-C33C1F1882BD}

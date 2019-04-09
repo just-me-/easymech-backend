@@ -1,0 +1,75 @@
+[33mcommit 6272f7b2fa46b9b165e8d56264639c232e808c53[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Tue Apr 9 11:01:28 2019 +0200
+
+    Syntax Hotfix
+
+[33mcommit c3b41f1c270d2f803022455a7750517d3c354eef[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Tue Apr 9 10:54:34 2019 +0200
+
+    test
+
+[33mcommit d11b17daa0c6b51e3d23cfeb3a8ea66e2b6d5301[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Mon Apr 8 18:52:24 2019 +0200
+
+    CORS Hotfix 2
+
+[33mcommit d4e3a24c6fac98c10f93a921a85b797bafc46d83[m
+Merge: ec8f9e7 b0dc4c7
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Mon Apr 8 17:54:52 2019 +0200
+
+    Merge branch 'master' of https://gitlab.dev.ifs.hsr.ch/epj-2019-fs/easymech/easymech-backend
+
+[33mcommit ec8f9e7ba7cff9af6d786c06ff9b648b818ec4cb[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Mon Apr 8 17:54:38 2019 +0200
+
+    Hotfix CORS
+
+[33mcommit b0dc4c78c3327251bcf5b50952a156f6fdb906f1[m
+Author: udfu <dario_delpiero10@hotmail.com>
+Date:   Sun Apr 7 21:20:29 2019 +0200
+
+    typo in yml file -.-
+
+[33mcommit 53b635b31de8ecbfb93e1652c1269ab6145c2281[m
+Author: udfu <dario_delpiero10@hotmail.com>
+Date:   Sun Apr 7 21:17:30 2019 +0200
+
+    dockerized backend
+
+[33mcommit bbffd4906430841aee64ac6c92dad048c0855bb1[m
+Merge: 90e3fb3 81d5934
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Fri Apr 5 13:14:29 2019 +0200
+
+    Merge branch 'master' of https://gitlab.dev.ifs.hsr.ch/epj-2019-fs/easymech/easymech-backend
+    
+    Merge with YAML / CI Commit
+
+[33mcommit 90e3fb3daa477e1c0d5ceaa39931d27a4c9476b4[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Fri Apr 5 13:13:33 2019 +0200
+
+    Backend V0.01 - should run +/-
+
+[33mcommit 81d5934879364657247ea36c411bd23810757057[m
+Author: udfu <dario_delpiero10@hotmail.com>
+Date:   Thu Apr 4 11:01:08 2019 +0200
+
+    ci
+
+[33mcommit 84115142f677e2b7b092d91a5fee07b8659aec76[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Wed Apr 3 13:20:24 2019 +0200
+
+    erster versuch
+
+[33mcommit 15992c41dd55ff621bec201224157df79c044036[m
+Author: Tom852 <thomaskistler@bluewin.ch>
+Date:   Tue Apr 2 21:26:14 2019 +0200
+
+    Initial Commit

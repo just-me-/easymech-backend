@@ -28,10 +28,6 @@ namespace EasyMechBackend
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<EMContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-            
-
             services.AddCors(o => o.AddPolicy("AllowPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -39,12 +35,17 @@ namespace EasyMechBackend
                        .AllowAnyHeader();
             }));
 
+            services.AddDbContext<EMContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("AllowPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

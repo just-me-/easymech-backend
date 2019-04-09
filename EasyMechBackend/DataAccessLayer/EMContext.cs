@@ -49,7 +49,7 @@ namespace EasyMechBackend.DataAccessLayer
                 optionsBuilder
                     .EnableSensitiveDataLogging()
                     .UseLoggerFactory(LoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
-                    .UseSqlServer("Host=sinv-56057.edu.hsr.ch;Port=40005;Username=em;Password=em19;Database=easymech;");
+                    .UseNpgsql("Host=sinv-56057.edu.hsr.ch;Port=40005;Username=em;Password=em19;Database=easymech;");
                 //Todo: string aus config abgreifen:
                 //string connection = Startup.Configuration.GetConnectionString("DefaultConnection")
             }
