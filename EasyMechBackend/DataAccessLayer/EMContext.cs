@@ -16,7 +16,14 @@ namespace EasyMechBackend.DataAccessLayer
         public DbSet<Kunde> Kunden { get; set; }
         public DbSet<Maschine> Maschinen { get; set; }
         public DbSet<Fahrzeugtyp> Fahrzeugtypen { get; set; }
+
         public DbSet<Aktion> Aktionen { get; set; }
+        public DbSet<Reservation> Reservationen { get; set; }
+        public DbSet<Transaktion> Transaktion { get; set; }
+        public DbSet<Verkauf> Verkaeufe { get; set; }
+        public DbSet<Einkauf> Einkaeufe { get; set; }
+        public DbSet<GeplanterService> GeplanteServices { get; set; }
+
         public DbSet<FahrzeugUebergabe> FahrzeugUebergaben { get; set; }
         public DbSet<FahrzeugRuecknahme> FahrzeugRuecknahmen { get; set; }
         public DbSet<ServiceDurchfuehrung> ServiceDurchfuehrungen { get; set; }
