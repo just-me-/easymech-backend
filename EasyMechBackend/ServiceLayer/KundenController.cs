@@ -29,14 +29,14 @@ namespace EasyMechBackend.ServiceLayer
         [HttpGet]
         public async Task<ActionResult<IEnumerable<KundeDto>>> GetKunden()
         {
-            var temp = new KundeDto
+
+            return new List<KundeDto>
             {
-                Nachname = "Bla"
+                new KundeDto
+                {
+                    Nachname = "Bla"
+                }
             };
-            
-            var a = new List<KundeDto>();
-            a.Add(temp);
-            return a;
         }
 
         // GET: /Kunden/2
