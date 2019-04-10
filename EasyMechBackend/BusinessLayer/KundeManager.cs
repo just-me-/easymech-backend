@@ -11,7 +11,6 @@ namespace EasyMechBackend.BusinessLayer
 
         //Fill Dummy Data for Dev
         #region dummydata
-        //Enter a random Data
         static KundeManager()
         {
             if (GetKunden().Count() == 0)
