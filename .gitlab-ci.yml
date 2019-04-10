@@ -20,6 +20,11 @@ build:
   script:
     - "cd $build_path"
     - "dotnet build"
+	
+test:
+  stage: test
+  script:
+    - dotnet test
 
 deploy_stage:
   stage: deploy
