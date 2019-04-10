@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {
@@ -37,14 +38,14 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             KundeDto dto = new KundeDto();
             dto.Id = entity.Id;
-            dto.Firma = entity.Firma;
-            dto.Vorname = entity.Vorname;
-            dto.Nachname = entity.Nachname;
+            dto.Firma = HttpUtility.HtmlEncode(entity.Firma);
+            dto.Vorname = HttpUtility.HtmlEncode(entity.Vorname);
+            dto.Nachname = HttpUtility.HtmlEncode(entity.Nachname);
             dto.PLZ = entity.PLZ;
-            dto.Ort = entity.Ort;
-            dto.Email = entity.Email;
-            dto.Telefon = entity.Telefon;
-            dto.Notiz = entity.Notiz;
+            dto.Ort = HttpUtility.HtmlEncode(entity.Ort);
+            dto.Email = HttpUtility.HtmlEncode(entity.Email);
+            dto.Telefon = HttpUtility.HtmlEncode(entity.Telefon);
+            dto.Notiz = HttpUtility.HtmlEncode(entity.Notiz);
             dto.IsActive = entity.IsActive;
             dto.Timestamp = entity.Timestamp;
 

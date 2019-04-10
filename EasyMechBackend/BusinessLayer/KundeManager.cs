@@ -42,8 +42,20 @@ namespace EasyMechBackend.BusinessLayer
                     IsActive = false
                 };
 
+                Kunde k3 = new Kunde
+                {
+                    Firma = "Hack0r",
+                    Vorname = "<script>alert(\"Fail\")</script>",
+                    Nachname = "O'Brian",
+                    PLZ = 0,
+                    Ort = "",
+                    Email = "",
+                    IsActive = false
+                };
+
                 AddKunde(k1);
                 AddKunde(k2);
+                AddKunde(k3);
             }
         }
 
