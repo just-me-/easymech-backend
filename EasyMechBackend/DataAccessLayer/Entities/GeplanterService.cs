@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    public class GeplanterService : Aktion
+    public class GeplanterService
     {
+        [Key]
+        public long Id { get; set; }
+
+        [MaxLength(1028)]
         public string Bezeichnung { get; set; }
 
         public DateTime Beginn { get; set; }
@@ -17,8 +21,24 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
+        public long MaschinenId { get; set; }
+
+        [ForeignKey("MaschinenId")]
+        public Maschine Maschine { get; set; }
+
+        public long KundenId { get; set; }
+
+        [ForeignKey("KundenId")]
+        public Kunde Kunde { get; set; }
+
+        public long ServiceDurchfuehrungsId { get; set; }
+
+        [ForeignKey("ServiceDurchfuehrungsId")]
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
+
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
     }
 
 

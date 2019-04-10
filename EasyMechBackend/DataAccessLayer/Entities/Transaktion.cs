@@ -7,16 +7,33 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    public class Transaktion : Aktion
+    public class Transaktion
     {
+        [Key]
+        public long Id { get; set; }
+
+        public enum TransaktionsTyp { Verkauf, Einkauf};
+
         public double Preis { get; set; }
 
+        public TransaktionsTyp Typ { get; set; }
+
         public DateTime Datum { get; set; }
+
+        //Relationships
+        // -------------------------------------------
+        public long MaschinenId { get; set; }
+
+        [ForeignKey("MaschinenId")]
+        public Maschine Maschine { get; set; }
+
+        public long KundenId { get; set; }
+
+        [ForeignKey("KundenId")]
+        public Kunde Kunde { get; set; }
+        // -------------------------------------------
+
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
     }
-
-    public class Verkauf : Transaktion
-    { }
-
-    public class Einkauf : Transaktion
-    { }
 }
