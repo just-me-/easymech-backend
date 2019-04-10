@@ -8,7 +8,6 @@ using EasyMechBackend.BusinessLayer;
 
 namespace EasyMechBackend.ServiceLayer
 
-//TODO Asynchronität.... Lohnen sich die Awaits überhaupt? Die kann ich doch genausogut weglassen....... :/
 {
     [Route("[controller]")]
     [ApiController]
@@ -55,21 +54,6 @@ namespace EasyMechBackend.ServiceLayer
 
             return NoContent();
         }
-        #region vorlage für referenz
-        //        [HttpPut("{id}")]
-        //        public async Task<IActionResult> PutTodoItem(long id, TodoItem item)
-        //        {
-        //            if (id != item.Id)
-        //            {
-        //                return BadRequest();
-        //            }
-
-        //            _context.Entry(item).State = EntityState.Modified;
-        //            await _context.SaveChangesAsync();
-
-        //            return NoContent();
-        //        }
-        #endregion
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
