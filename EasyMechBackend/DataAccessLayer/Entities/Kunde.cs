@@ -22,6 +22,9 @@ namespace EasyMechBackend.DataAccessLayer
         [Required, MaxLength(128)]
         public string Nachname { get; set; }
 
+        [Required, MaxLength(128)]
+        public string Adresse { get; set; }
+
         [Required]
         public int PLZ { get; set; }
 

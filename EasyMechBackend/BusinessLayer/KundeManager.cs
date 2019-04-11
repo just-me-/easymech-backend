@@ -13,7 +13,7 @@ namespace EasyMechBackend.BusinessLayer
         #region dummydata
         static KundeManager()
         {
-            if (GetKunden().Count() == 0)
+            if (GetKunden().Count == 0)
             {
                 Kunde k1 = new Kunde
                 {
@@ -22,6 +22,7 @@ namespace EasyMechBackend.BusinessLayer
                     Nachname = "K",
                     PLZ = 7000,
                     Ort = "Chur",
+                    Adresse = "Strasse 1",
                     Email = "t-kistler@bluewin.ch",
                     Telefon = "081 123 45 68",
                     Notiz =
@@ -35,6 +36,7 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "DJ Fire",
                     Vorname = "Dario",
                     Nachname = "Fuoco",
+                    Adresse = "Strasse 1",
                     PLZ = 7500,
                     Ort = "Sargans",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
@@ -46,6 +48,7 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "Hack0r",
                     Vorname = "<script>alert(\"Fail\")</script>",
                     Nachname = "O'Brian",
+                    Adresse = "Strasse 1",
                     PLZ = 0,
                     Ort = "",
                     Email = "",

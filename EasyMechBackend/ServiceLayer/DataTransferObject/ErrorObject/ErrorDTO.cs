@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.ServiceLayer.ErrorObject
 {
-    public class ErrorDto
+    public class DtoWrapper<T>
     {
+        public T Dto { get; set; }
+        public bool HasError { get; set; }
         public string ErrorType { get; set; }
         public string ErrorMsg { get; set; }
 
-        public ErrorDto(string t, string msg) { ErrorType = t; ErrorMsg = msg; }
-        public ErrorDto(string msg) { ErrorType = "not specified"; ErrorMsg = msg; }
-        public ErrorDto() { ErrorType = "not specified"; ErrorMsg = "unknown Error"; }
+        public DtoWrapper(string t, string msg) { ErrorType = t; ErrorMsg = msg; }
+        public DtoWrapper(string msg) { ErrorType = "not specified"; ErrorMsg = msg; }
+        public DtoWrapper() { ErrorType = "not specified"; ErrorMsg = "unknown Error"; }
     }
 }
