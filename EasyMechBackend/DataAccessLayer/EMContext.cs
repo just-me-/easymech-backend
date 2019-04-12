@@ -29,7 +29,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
+            //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
         }
 
         //Logging
