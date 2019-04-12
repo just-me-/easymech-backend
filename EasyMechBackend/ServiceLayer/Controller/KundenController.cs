@@ -21,7 +21,6 @@ namespace EasyMechBackend.ServiceLayer
         [HttpGet]
         public async Task<ActionResult<IEnumerable<KundeDto>>> GetKunden()
         {
-            return BadRequest("blablablabla");
             return await Task.Run(() => KundeManager.GetKunden().ConvertToDtos());
         }
 
@@ -42,11 +41,7 @@ namespace EasyMechBackend.ServiceLayer
             return CreatedAtAction(nameof(GetKunde), new { id = kunde.Id }, kunde);
         }
 
-<<<<<<< HEAD
         // PUT: kunden/5
-=======
-        // PUT: api/Todo/5
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         [HttpPut("{id}")]
         public async Task<IActionResult> PutKunde(long id, KundeDto kunde)
         {
@@ -62,13 +57,7 @@ namespace EasyMechBackend.ServiceLayer
 
         // DELETE: kunden/5
         [HttpDelete("{id}")]
-<<<<<<< HEAD
         public async Task<IActionResult> DeleteKunde(long id)
-            
-
-=======
-        public async Task<IActionResult> DeleteTodoItem(long id)
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         {
             var kunde = await Task.Run(() => KundeManager.GetKundeById(id));
 

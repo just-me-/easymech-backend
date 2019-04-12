@@ -13,7 +13,7 @@ namespace EasyMechBackend.BusinessLayer
         #region dummydata
         static KundeManager()
         {
-            if (GetKunden().Count() == 0)
+            if (!GetKunden().Any())
             {
                 Kunde k1 = new Kunde
                 {
@@ -35,12 +35,8 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "DJ Fire",
                     Vorname = "Dario",
                     Nachname = "Fuoco",
-<<<<<<< HEAD
                     Adresse = "Strasse 1",
                     PLZ = "7500",
-=======
-                    PLZ = 7500,
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
                     Ort = "Sargans",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
                     IsActive = false
@@ -51,12 +47,8 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "Hack0r",
                     Vorname = "<script>alert(\"Fail\")</script>",
                     Nachname = "O'Brian",
-<<<<<<< HEAD
                     Adresse = "Strasse 1",
                     PLZ = "0",
-=======
-                    PLZ = 0,
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
                     Ort = "",
                     Email = "",
                     IsActive = false

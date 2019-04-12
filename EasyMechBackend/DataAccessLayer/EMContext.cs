@@ -29,13 +29,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-<<<<<<< HEAD
             //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
-=======
-            modelBuilder.Entity<Kunde>()
-                .Property(b => b.IsActive)
-                .HasDefaultValue(true);
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         }
 
         //Logging

@@ -23,15 +23,10 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(128)]
         public string Nachname { get; set; }
 
-<<<<<<< HEAD
         [MaxLength(128)]
         public string Adresse { get; set; }
 
         public string PLZ { get; set; }
-=======
-        [Required]
-        public int PLZ { get; set; }
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
 
         [MaxLength(128)]
         public string Ort { get; set; }
