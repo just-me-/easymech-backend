@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
+using EasyMechBackend.DataAccessLayer;
 
 namespace EasyMechBackend.ServiceLayer
 
@@ -35,11 +36,23 @@ namespace EasyMechBackend.ServiceLayer
 
         // POST: Kunden/
         [HttpPost]
-        public async Task<ActionResult<KundeDto>> PostKunde(KundeDto kunde)
+        public async Task<ActionResult<KundeDto>> PostKunde(KundeDto kundeDto)
         {
-            await Task.Run(() => KundeManager.AddKunde(kunde.ConvertToEntity()));
-            return CreatedAtAction(nameof(GetKunde), new { id = kunde.Id }, kunde);
+           Kunde kundeToAdd = kundeDto.ConvertToEntity();
+
+           Task<Kunde> addingTask =  Task.Run(() => KundeManager.AddKunde(kundeToAdd));
+           Kunde kundeAdded = await addingTask;
+
+           return CreatedAtAction(nameof(GetKunde), new { id = kundeAdded.Id }, kundeAdded.ConvertToDto());
         }
+
+        //        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem item)
+        //        {
+        //            _context.TodoItems.Add(item);
+        //            await _context.SaveChangesAsync();
+
+        //            return CreatedAtAction(nameof(GetTodoItem), new { id = item.Id }, item);
+        //        }
 
         // PUT: api/Todo/5
         [HttpPut("{id}")]
@@ -57,8 +70,11 @@ namespace EasyMechBackend.ServiceLayer
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(long id)
+        public async Task<IActionResult> DeleteTodoItem(string idString)
+            
+
         {
+            long id = long.Parse(idString);
             var kunde = await Task.Run(() => KundeManager.GetKundeById(id));
 
             if (kunde == null)

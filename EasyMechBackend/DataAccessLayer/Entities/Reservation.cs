@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
+
+    [NotMapped] //Tabvle fehlt
     public class Reservation
     {
         [Key]

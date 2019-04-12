@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
+    [NotMapped] //TAble fehlt
     public class Transaktion
     {
         [Key]
