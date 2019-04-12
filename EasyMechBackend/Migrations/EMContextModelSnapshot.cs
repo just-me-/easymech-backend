@@ -23,12 +23,9 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-<<<<<<< HEAD
                     b.Property<string>("Adresse")
                         .HasMaxLength(128);
 
-=======
->>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
                     b.Property<string>("Email")
                         .HasMaxLength(128);
 
