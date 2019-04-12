@@ -29,9 +29,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Kunde>()
-                .Property(b => b.IsActive)
-                .HasDefaultValue(true);
+            //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
         }
 
         //Logging

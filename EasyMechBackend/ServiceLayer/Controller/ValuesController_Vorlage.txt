@@ -32,14 +32,14 @@
 //            }
 //        }
 
-//        // GET: api/Todo
+//        // GET: api/...
 //        [HttpGet]
 //        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
 //        {
 //            return await _context.TodoItems.ToListAsync();
 //        }
 
-//        // GET: api/Todo/5
+//        // GET: api/.../5
 //        [HttpGet("{id}")]
 //        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
 //        {
@@ -53,7 +53,7 @@
 //            return todoItem;
 //        }
 
-//        // POST: api/Todo
+//        // POST: api/...
 //        [HttpPost]
 //        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem item)
 //        {
@@ -63,7 +63,7 @@
 //            return CreatedAtAction(nameof(GetTodoItem), new { id = item.Id }, item);
 //        }
 
-//        // PUT: api/Todo/5
+//        // PUT: api/.../5
 //        [HttpPut("{id}")]
 //        public async Task<IActionResult> PutTodoItem(long id, TodoItem item)
 //        {
@@ -78,7 +78,7 @@
 //            return NoContent();
 //        }
 
-//        // DELETE: api/Todo/5
+//        // DELETE: api/.../5
 //        [HttpDelete("{id}")]
 //        public async Task<IActionResult> DeleteTodoItem(long id)
 //        {

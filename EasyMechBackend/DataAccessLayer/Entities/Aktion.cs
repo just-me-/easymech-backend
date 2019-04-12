@@ -5,9 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
+/*
+// Datenstruktur anders gewählt
+
 namespace EasyMechBackend.DataAccessLayer
 {
-    [Table("Aktion", Schema = "public")]
+    [NotMapped]
     public class Aktion
     {
         [Key]
@@ -22,3 +25,4 @@ namespace EasyMechBackend.DataAccessLayer
 
     }
 }
+*/

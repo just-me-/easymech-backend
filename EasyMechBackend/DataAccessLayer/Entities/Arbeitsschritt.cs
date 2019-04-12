@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Arbeitsschritt", Schema = "public")]
+    [NotMapped]
     public class Arbeitsschritt
     {
         [Key]
@@ -23,9 +24,6 @@ namespace EasyMechBackend.DataAccessLayer
         // -------------------------------------------
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
-
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
     }
 

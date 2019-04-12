@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
+using System;
+using EasyMechBackend.DataAccessLayer;
 
 namespace EasyMechBackend.ServiceLayer
 
@@ -13,64 +15,126 @@ namespace EasyMechBackend.ServiceLayer
     [ApiController]
     public class KundenController : ControllerBase
     {
-
-        // bRAUCHEN WIR NET ODER? - das wär da die dependency inejction
-        //private readonly TodoContext _context;
-
         // GET: /Kunden/
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KundeDto>>> GetKunden()
+        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetKunden()
         {
-            return await Task.Run(() => KundeManager.GetKunden().ConvertToDtos());
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var kundenDtos = KundeManager.GetKunden().ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<IEnumerable<KundeDto>>("error", e.Message);
+                }
+            });
+
+            return await task;
         }
 
         // GET: /Kunden/2
         [HttpGet("{id}")]
-        public async Task<ActionResult<KundeDto>> GetKunde(long id)
+        public async Task<ActionResult<ResponseObject<KundeDto>>> GetKunde(long id)
         {
-            var kunde = await Task.Run((() => KundeManager.GetKundeById(id).ConvertToDto()));
-        
-            return kunde;
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    KundeDto kundeDto = KundeManager.GetKundeById(id).ConvertToDto();
+                    return new ResponseObject<KundeDto>(kundeDto);
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message);
+                }
+            });
+
+
+
+            return await task;
         }
 
-        // POST: Kunden/
+        // POST: kunden/
         [HttpPost]
-        public async Task<ActionResult<KundeDto>> PostKunde(KundeDto kunde)
+        public async Task<ActionResult<ResponseObject<KundeDto>>> PostKunde(KundeDto kunde)
         {
-            await Task.Run(() => KundeManager.AddKunde(kunde.ConvertToEntity()));
-            return CreatedAtAction(nameof(GetKunde), new { id = kunde.Id }, kunde);
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    KundeDto dto = KundeManager.AddKunde(kunde.ConvertToEntity()).ConvertToDto();
+                    return new ResponseObject<KundeDto>(dto);
+                }
+                catch (DbUpdateException e)
+                {
+                    return new ResponseObject<KundeDto>("error", "DB Update Exception: " + e.InnerException.Message);
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message);
+                }
+            });
+
+            return await task;
         }
 
-        // PUT: api/Todo/5
+        // PUT: kunden/
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutKunde(long id, KundeDto kunde)
+        public async Task<ActionResult<ResponseObject<KundeDto>>> PutKunde(long id, KundeDto kunde)
         {
-            if (id != kunde.Id)
+
+            var task = Task.Run(() =>
             {
-                return BadRequest();
-            }
+                try
+                {
+                    if (id != kunde.Id)
+                    {
+                        return new ResponseObject<KundeDto>("error", "ID in URL does not match ID in the request's body data");
+                    }
+                    KundeDto changedKundeDto = KundeManager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
+                    return new ResponseObject<KundeDto>(changedKundeDto);
+                }
+                catch (DbUpdateException e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message + e.InnerException.Message);
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message);
+                }
 
-            await Task.Run(() => KundeManager.UpdateKunde(kunde.ConvertToEntity()));  //funzt das ?müssen wir hier die id mitgeben?
+            });
 
-            return NoContent();
+            return await task;
         }
 
-        // DELETE: api/Todo/5
+        // DELETE: kunden/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(long id)
+        public async Task<ActionResult<ResponseObject<KundeDto>>> DeleteTodoItem(long id)
         {
-            var kunde = await Task.Run(() => KundeManager.GetKundeById(id));
-
-            if (kunde == null)
+            var task = Task.Run(() =>
             {
-                return NotFound();
-            }
+                try
+                {
+                    var kunde = KundeManager.GetKundeById(id);
+                    KundeManager.SetKundeInactive(kunde);
+                    return new ResponseObject<KundeDto>("ok", $"Set Kunde {id} to inactive");
+                }
+                catch (DbUpdateException e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message + e.InnerException.Message);
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<KundeDto>("error", e.Message);
+                }
 
-            await Task.Run(() => KundeManager.DeleteKunde(kunde));
-
-            return NoContent();
+            });
+            return await task;
         }
-
     }
-
 }

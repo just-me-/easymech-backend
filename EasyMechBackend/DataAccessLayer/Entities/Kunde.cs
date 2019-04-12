@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMechBackend.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,21 +15,25 @@ namespace EasyMechBackend.DataAccessLayer
         public long Id { get; set; }
 
         [MaxLength(128)]
+        [Required]
         public string Firma { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Vorname { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Nachname { get; set; }
 
-        [Required]
-        public int PLZ { get; set; }
+        [MaxLength(128)]
+        public string Adresse { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
+        public string PLZ { get; set; }
+
+        [MaxLength(128)]
         public string Ort { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Email { get; set; }
 
         [MaxLength(128)]
@@ -36,15 +41,42 @@ namespace EasyMechBackend.DataAccessLayer
 
         public string Notiz { get; set; }
 
-        public bool IsActive { get; set; }
+        [Required]
+        public bool? IsActive { get; set; }
+
+
+        //Upcoming Milestone2:
 
         //Relationships
         // -------------------------------------------
-        public List<Maschine> Maschinen { get; set; }
+        //public List<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
+
+        public void Validate()
+        {
+            ClipTo128Chars();
+            FillRequiredFields();
+        }
+
+        private void FillRequiredFields()
+        {
+            if (Firma == null) Firma = "";
+            if (IsActive == null) IsActive = true;
+        }
+
+        private void ClipTo128Chars()
+        {
+            Firma = Firma.ClipTo128Chars();
+            Vorname = Vorname.ClipTo128Chars();
+            Nachname = Nachname.ClipTo128Chars();
+            Adresse = Adresse.ClipTo128Chars();
+            PLZ = PLZ.ClipTo128Chars();
+            Ort = Ort.ClipTo128Chars();
+            Email = Email.ClipTo128Chars();
+            Telefon = Telefon.ClipTo128Chars();
+
+        }
     }
 }

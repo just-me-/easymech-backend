@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
+    [NotMapped]
     public class Transaktion
     {
         [Key]
@@ -33,7 +34,5 @@ namespace EasyMechBackend.DataAccessLayer
         public Kunde Kunde { get; set; }
         // -------------------------------------------
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
     }
 }

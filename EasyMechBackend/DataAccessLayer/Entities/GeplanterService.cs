@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
+    [NotMapped]
     public class GeplanterService
     {
         [Key]
         public long Id { get; set; }
 
-        [MaxLength(1028)]
+        [MaxLength(128)]
         public string Bezeichnung { get; set; }
 
         public DateTime Beginn { get; set; }
@@ -37,8 +38,6 @@ namespace EasyMechBackend.DataAccessLayer
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
     }
 
 
