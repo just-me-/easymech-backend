@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Aktion", Schema = "public")]
-    [NotMapped]
     public class Aktion
     {
         [Key]

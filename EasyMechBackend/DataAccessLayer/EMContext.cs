@@ -29,7 +29,13 @@ namespace EasyMechBackend.DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+<<<<<<< HEAD
             //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
+=======
+            modelBuilder.Entity<Kunde>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+>>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         }
 
         //Logging
@@ -46,7 +52,7 @@ namespace EasyMechBackend.DataAccessLayer
                     .UseLoggerFactory(LoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
                     .UseNpgsql("Host=sinv-56057.edu.hsr.ch;Port=40005;Username=em;Password=em19;Database=easymech;");
                 //Todo: string aus config abgreifen:
-                //string connection = Startup.Configuration.GetConnectionString("DefaultConnection") <--Aufwärtsref
+                //string connection = Startup.Configuration.GetConnectionString("DefaultConnection")
             }
         }
 

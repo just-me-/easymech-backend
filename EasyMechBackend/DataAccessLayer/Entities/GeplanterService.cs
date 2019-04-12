@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    [NotMapped] //Table Dings fehlt hier schema etc
     public class GeplanterService
     {
         [Key]
         public long Id { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(1028)]
         public string Bezeichnung { get; set; }
 
         public DateTime Beginn { get; set; }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
-using EasyMechBackend.DataAccessLayer;
 
 namespace EasyMechBackend.ServiceLayer
 
@@ -37,17 +36,17 @@ namespace EasyMechBackend.ServiceLayer
 
         // POST: Kunden/
         [HttpPost]
-        public async Task<ActionResult<KundeDto>> PostKunde(KundeDto kundeDto)
+        public async Task<ActionResult<KundeDto>> PostKunde(KundeDto kunde)
         {
-           Kunde kundeToAdd = kundeDto.ConvertToEntity();
-
-           Task<Kunde> addingTask =  Task.Run(() => KundeManager.AddKunde(kundeToAdd));
-           Kunde kundeAdded = await addingTask;
-
-           return CreatedAtAction(nameof(GetKunde), new { id = kundeAdded.Id }, kundeAdded.ConvertToDto());
+            await Task.Run(() => KundeManager.AddKunde(kunde.ConvertToEntity()));
+            return CreatedAtAction(nameof(GetKunde), new { id = kunde.Id }, kunde);
         }
 
+<<<<<<< HEAD
         // PUT: kunden/5
+=======
+        // PUT: api/Todo/5
+>>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         [HttpPut("{id}")]
         public async Task<IActionResult> PutKunde(long id, KundeDto kunde)
         {
@@ -63,9 +62,13 @@ namespace EasyMechBackend.ServiceLayer
 
         // DELETE: kunden/5
         [HttpDelete("{id}")]
+<<<<<<< HEAD
         public async Task<IActionResult> DeleteKunde(long id)
             
 
+=======
+        public async Task<IActionResult> DeleteTodoItem(long id)
+>>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
         {
             var kunde = await Task.Run(() => KundeManager.GetKundeById(id));
 

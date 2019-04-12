@@ -23,9 +23,12 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+<<<<<<< HEAD
                     b.Property<string>("Adresse")
                         .HasMaxLength(128);
 
+=======
+>>>>>>> parent of cfb01e3... Merge branch 'master' of ssh://gitlab.dev.ifs.hsr.ch:45022/epj-2019-fs/easymech/easymech-backend
                     b.Property<string>("Email")
                         .HasMaxLength(128);
 
@@ -33,7 +36,9 @@ namespace EasyMechBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsActive");
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Nachname")
                         .HasMaxLength(128);
@@ -50,11 +55,6 @@ namespace EasyMechBackend.Migrations
 
                     b.Property<string>("Vorname")
                         .HasMaxLength(128);
-
-                    b.Property<uint>("xmin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid");
 
                     b.HasKey("Id");
 
