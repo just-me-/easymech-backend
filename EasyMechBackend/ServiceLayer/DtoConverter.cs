@@ -28,7 +28,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             k.Telefon = dto.Telefon;
             k.Notiz = dto.Notiz;
             k.IsActive = dto.IsActive;
-            k.Timestamp = dto.Timestamp;
 
             return k;
         }
@@ -49,7 +48,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             dto.Telefon = HttpUtility.HtmlEncode(entity.Telefon);
             dto.Notiz = HttpUtility.HtmlEncode(entity.Notiz);
             dto.IsActive = entity.IsActive;
-            dto.Timestamp = entity.Timestamp;
 
             return dto;
         }

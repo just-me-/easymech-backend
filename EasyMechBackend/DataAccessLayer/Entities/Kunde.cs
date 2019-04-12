@@ -14,24 +14,24 @@ namespace EasyMechBackend.DataAccessLayer
         public long Id { get; set; }
 
         [MaxLength(128)]
+        [Required]
         public string Firma { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Vorname { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Nachname { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Adresse { get; set; }
 
-        [Required]
-        public int PLZ { get; set; }
+        public string PLZ { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Ort { get; set; }
 
-        [Required, MaxLength(128)]
+        [MaxLength(128)]
         public string Email { get; set; }
 
         [MaxLength(128)]
@@ -41,13 +41,12 @@ namespace EasyMechBackend.DataAccessLayer
 
         public bool IsActive { get; set; }
 
+        
         //Relationships
         // -------------------------------------------
-        public List<Maschine> Maschinen { get; set; }
+        //public List<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
     }
 }

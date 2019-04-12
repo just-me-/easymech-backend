@@ -70,11 +70,10 @@ namespace EasyMechBackend.ServiceLayer
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(string idString)
+        public async Task<IActionResult> DeleteKunde(long id)
             
 
         {
-            long id = long.Parse(idString);
             var kunde = await Task.Run(() => KundeManager.GetKundeById(id));
 
             if (kunde == null)

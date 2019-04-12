@@ -20,7 +20,7 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "Toms Vergnügungspark",
                     Vorname = "Tom",
                     Nachname = "K",
-                    PLZ = 7000,
+                    PLZ = "7000",
                     Ort = "Chur",
                     Adresse = "Strasse 1",
                     Email = "t-kistler@bluewin.ch",
@@ -37,7 +37,7 @@ namespace EasyMechBackend.BusinessLayer
                     Vorname = "Dario",
                     Nachname = "Fuoco",
                     Adresse = "Strasse 1",
-                    PLZ = 7500,
+                    PLZ = "7500",
                     Ort = "Sargans",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
                     IsActive = false
@@ -49,7 +49,7 @@ namespace EasyMechBackend.BusinessLayer
                     Vorname = "<script>alert(\"Fail\")</script>",
                     Nachname = "O'Brian",
                     Adresse = "Strasse 1",
-                    PLZ = 0,
+                    PLZ = "0",
                     Ort = "",
                     Email = "",
                     IsActive = false
