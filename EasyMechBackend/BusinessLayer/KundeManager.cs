@@ -22,7 +22,7 @@ namespace EasyMechBackend.BusinessLayer
                     Nachname = "K",
                     PLZ = "7000",
                     Ort = "Chur",
-                    Email = "t-kistler@bluewin.ch",
+                    Email = "t@b.ch",
                     Telefon = "081 123 45 68",
                     Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
                 };
@@ -46,7 +46,7 @@ namespace EasyMechBackend.BusinessLayer
                     Nachname = "O'Brian",
                     PLZ = "0",
                     Ort = "",
-                    Email = "",
+                    Notiz = "Sekretärin rastet aus und hämmert auf Tastatur rum: +*ç%&/()=à£\\\"éàé!!è!è£èè£è{@#°{@°{#°¢°¬¢§¬¬§¬§}°@}",
                     IsActive = true
                 };
 
