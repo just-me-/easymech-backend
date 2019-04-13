@@ -21,6 +21,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             k.Firma = dto.Firma;
             k.Vorname = dto.Vorname;
             k.Nachname = dto.Nachname;
+            k.Adresse = dto.Adresse;
             k.PLZ = dto.PLZ;
             k.Ort = dto.Ort;
             k.Email = dto.Email;
@@ -39,6 +40,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             dto.Firma = entity.Firma;
             dto.Vorname = entity.Vorname;
             dto.Nachname = entity.Nachname;
+            dto.Adresse = entity.Adresse;
             dto.PLZ = entity.PLZ;
             dto.Ort = entity.Ort;
             dto.Email = entity.Email;

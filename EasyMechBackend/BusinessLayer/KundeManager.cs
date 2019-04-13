@@ -143,7 +143,6 @@ namespace EasyMechBackend.BusinessLayer
             IEnumerable<Kunde> searchResult = allKunden;
 
 
-
             PropertyInfo[] props = typeof(Kunde).GetProperties();
 
             foreach (var prop in props) {
