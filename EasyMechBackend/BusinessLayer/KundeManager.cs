@@ -1,4 +1,5 @@
 ﻿using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace EasyMechBackend.BusinessLayer
                     PLZ = "7000",
                     Ort = "Chur",
                     Email = "t@b.ch",
-                    Telefon = "081 123 45 68",
+                    Telefon = "+41 81 123 45 68",
                     Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
                 };
 
@@ -33,8 +34,8 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "DJ Fire",
                     Vorname = "Dario",
                     Nachname = "Fuoco",
-                    PLZ = "7500",
-                    Ort = "Sargans",
+                    PLZ = "9475",
+                    Ort = "Sevelen",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
                     IsActive = true
                 };
@@ -121,6 +122,60 @@ namespace EasyMechBackend.BusinessLayer
             {
                 c.Remove(k);
                 c.SaveChanges();
+            }
+        }
+
+        public static List<Kunde> GetSearchResult(Kunde searchEntity)
+        {
+            if( searchEntity.Id != 0)
+            {
+                return new List<Kunde>
+                {
+                    GetKundeById(searchEntity.Id)
+                };
+
+            }
+
+            List<Kunde> allKunden = GetKunden();
+            IEnumerable<Kunde> searchResult = allKunden;
+
+            if (searchEntity.Firma.HasSearchTerm())
+            {
+                searchResult = searchResult.Where(k => k.Firma != null && k.Firma.Contains(searchEntity.Firma));
+            }
+
+
+            if (searchEntity.Nachname.HasSearchTerm())
+            {
+                searchResult = searchResult.Where(k => k.Nachname != null && k.Nachname.Contains(searchEntity.Nachname)).ToList();
+            }
+
+            if (searchEntity.Vorname.HasSearchTerm())
+            {
+                searchResult = searchResult.Where(k => k.Vorname != null && k.Vorname.Contains(searchEntity.Vorname)).ToList();
+            }
+
+
+
+            if (searchEntity.Ort.HasSearchTerm())
+            {
+                searchResult = searchResult.Where(k => k.Ort != null && k.Ort.Contains(searchEntity.Ort)).ToList();
+            }
+
+            if (searchEntity.PLZ.HasSearchTerm())
+            {
+                searchResult = searchResult.Where(k => k.PLZ != null && k.PLZ.Contains(searchEntity.PLZ)).ToList();
+            }
+
+
+
+            if (searchResult.Any())
+            {
+                return searchResult.ToList();
+            }
+            else
+            {
+                return new List<Kunde>();
             }
         }
     }

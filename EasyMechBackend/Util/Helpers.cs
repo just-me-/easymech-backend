@@ -17,5 +17,10 @@ namespace EasyMechBackend.Util
             return s;
 
         }
+
+        public static bool HasSearchTerm(this string s)
+        {
+            return s?.Length >= 3;
+        }
     }
 }

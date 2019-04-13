@@ -85,7 +85,7 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
-        // PUT: kunden/
+        // PUT: kunden/5
         [HttpPut("{id}")]
         public async Task<ActionResult<ResponseObject<KundeDto>>> PutKunde(long id, KundeDto kunde)
         {
@@ -137,6 +137,27 @@ namespace EasyMechBackend.ServiceLayer
                 }
 
             });
+            return await task;
+        }
+
+        // POST: kunden/search
+        [HttpPost("search")]
+        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetSearchResult(KundeDto k)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var kundenDtos = KundeManager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                }
+            });
+
             return await task;
         }
     }
