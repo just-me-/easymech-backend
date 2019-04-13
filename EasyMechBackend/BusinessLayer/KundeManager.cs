@@ -22,11 +22,9 @@ namespace EasyMechBackend.BusinessLayer
                     Nachname = "K",
                     PLZ = "7000",
                     Ort = "Chur",
-                    Email = "t-kistler@bluewin.ch",
+                    Email = "t@b.ch",
                     Telefon = "081 123 45 68",
-                    Notiz =
-                    @"Zahlt immer pünktlich, ist ganz nett.
-                    Darf weider mal eine Maschine mieten"
+                    Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
                 };
 
 
@@ -39,7 +37,7 @@ namespace EasyMechBackend.BusinessLayer
                     PLZ = "7500",
                     Ort = "Sargans",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
-                    IsActive = false
+                    IsActive = true
                 };
 
                 Kunde k3 = new Kunde
@@ -50,8 +48,8 @@ namespace EasyMechBackend.BusinessLayer
                     Adresse = "Strasse 1",
                     PLZ = "0",
                     Ort = "",
-                    Email = "",
-                    IsActive = false
+                    Notiz = "Sekretärin rastet aus und hämmert auf Tastatur rum: +*ç%&/()=à£\\\"éàé!!è!è£èè£è{@#°{@°{#°¢°¬¢§¬¬§¬§}°@}",
+                    IsActive = true
                 };
 
                 AddKunde(k1);
@@ -61,13 +59,17 @@ namespace EasyMechBackend.BusinessLayer
         }
 
         #endregion
-        
 
         public static List<Kunde> GetKunden()
         {
             using (EMContext c = new EMContext())
             {
-                return c.Kunden.ToList();
+                var query =
+                from k in c.Kunden
+                where k.IsActive.Value
+                orderby k.Id descending
+                select k;
+                return query.ToList();
             }
         }
 
@@ -75,7 +77,12 @@ namespace EasyMechBackend.BusinessLayer
         {
             using (EMContext c = new EMContext())
             {
-                return c.Kunden.SingleOrDefault(kunde => kunde.Id == id);
+                Kunde k = c.Kunden.SingleOrDefault(kunde => kunde.Id == id);
+                if (k == null)
+                {
+                    throw new InvalidOperationException($"Kunde with id {id} is not in database");
+                }
+                return k;
             }
         }
 
@@ -83,6 +90,7 @@ namespace EasyMechBackend.BusinessLayer
         {
             using (EMContext c = new EMContext())
             {
+                k.Validate();
                 c.Add(k);
                 c.SaveChanges();
                 return k;
@@ -93,9 +101,19 @@ namespace EasyMechBackend.BusinessLayer
         {
             using (EMContext c = new EMContext())
             {
+                k.Validate();
                 c.Entry(k).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 c.SaveChanges();
                 return k;
+            }
+        }
+
+        public static void SetKundeInactive(Kunde k)
+        {
+            using (EMContext c = new EMContext())
+            {
+                k.IsActive = false;
+                UpdateKunde(k);
             }
         }
 

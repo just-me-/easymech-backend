@@ -33,9 +33,8 @@ namespace EasyMechBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool?>("IsActive")
+                        .IsRequired();
 
                     b.Property<string>("Nachname")
                         .HasMaxLength(128);
@@ -45,7 +44,8 @@ namespace EasyMechBackend.Migrations
                     b.Property<string>("Ort")
                         .HasMaxLength(128);
 
-                    b.Property<string>("PLZ");
+                    b.Property<string>("PLZ")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Telefon")
                         .HasMaxLength(128);

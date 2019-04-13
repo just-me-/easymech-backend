@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Maschine", Schema = "public")]
+    [NotMapped]
     public class Maschine
     {
         [Key]
@@ -25,7 +26,7 @@ namespace EasyMechBackend.DataAccessLayer
         public int Bertriebsdauer { get; set; }
 
         [Required]
-        public bool IstAktiv { get; set; }
+        public bool IsActive { get; set; }
 
         //Relationships
         // -------------------------------------------
@@ -35,7 +36,5 @@ namespace EasyMechBackend.DataAccessLayer
         public Kunde Besitzer { get; set; }
         // -------------------------------------------
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
     }
 }

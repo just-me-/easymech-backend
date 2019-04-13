@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
+    [NotMapped]
     public class Reservation
     {
         [Key]
@@ -41,8 +42,6 @@ namespace EasyMechBackend.DataAccessLayer
         [ForeignKey("RuecknahmeId")]
         public FahrzeugRuecknahme Fahrzeugruecknahme { get; set; }
         // -------------------------------------------
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
     }
 

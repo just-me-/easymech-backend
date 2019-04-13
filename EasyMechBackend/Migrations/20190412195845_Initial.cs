@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,16 +17,16 @@ namespace EasyMechBackend.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Firma = table.Column<string>(maxLength: 128, nullable: true),
-                    Vorname = table.Column<string>(maxLength: 128, nullable: false),
-                    Nachname = table.Column<string>(maxLength: 128, nullable: false),
-                    PLZ = table.Column<int>(nullable: false),
-                    Ort = table.Column<string>(maxLength: 128, nullable: false),
-                    Email = table.Column<string>(maxLength: 128, nullable: false),
+                    Firma = table.Column<string>(maxLength: 128, nullable: false),
+                    Vorname = table.Column<string>(maxLength: 128, nullable: true),
+                    Nachname = table.Column<string>(maxLength: 128, nullable: true),
+                    Adresse = table.Column<string>(maxLength: 128, nullable: true),
+                    PLZ = table.Column<string>(maxLength: 128, nullable: true),
+                    Ort = table.Column<string>(maxLength: 128, nullable: true),
+                    Email = table.Column<string>(maxLength: 128, nullable: true),
                     Telefon = table.Column<string>(maxLength: 128, nullable: true),
                     Notiz = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
-                    Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

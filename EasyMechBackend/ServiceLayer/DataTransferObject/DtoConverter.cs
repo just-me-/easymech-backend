@@ -27,7 +27,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             k.Telefon = dto.Telefon;
             k.Notiz = dto.Notiz;
             k.IsActive = dto.IsActive;
-
             return k;
         }
 
@@ -37,14 +36,14 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             KundeDto dto = new KundeDto();
             dto.Id = entity.Id;
-            dto.Firma = HttpUtility.HtmlEncode(entity.Firma);
-            dto.Vorname = HttpUtility.HtmlEncode(entity.Vorname);
-            dto.Nachname = HttpUtility.HtmlEncode(entity.Nachname);
+            dto.Firma = entity.Firma;
+            dto.Vorname = entity.Vorname;
+            dto.Nachname = entity.Nachname;
             dto.PLZ = entity.PLZ;
-            dto.Ort = HttpUtility.HtmlEncode(entity.Ort);
-            dto.Email = HttpUtility.HtmlEncode(entity.Email);
-            dto.Telefon = HttpUtility.HtmlEncode(entity.Telefon);
-            dto.Notiz = HttpUtility.HtmlEncode(entity.Notiz);
+            dto.Ort = entity.Ort;
+            dto.Email = entity.Email;
+            dto.Telefon = entity.Telefon;
+            dto.Notiz = entity.Notiz;
             dto.IsActive = entity.IsActive;
 
             return dto;
@@ -69,8 +68,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             return source.Select(converter).ToList();
         }
     }
-    
+
 
 
 }
-

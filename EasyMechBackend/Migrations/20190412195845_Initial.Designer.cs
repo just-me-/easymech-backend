@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    [Migration("20190402170717_initial")]
-    partial class initial
+    [Migration("20190412195845_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,38 +26,34 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Adresse")
+                        .HasMaxLength(128);
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(128);
 
                     b.Property<string>("Firma")
+                        .IsRequired()
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool?>("IsActive")
+                        .IsRequired();
 
                     b.Property<string>("Nachname")
-                        .IsRequired()
                         .HasMaxLength(128);
 
                     b.Property<string>("Notiz");
 
                     b.Property<string>("Ort")
-                        .IsRequired()
                         .HasMaxLength(128);
 
-                    b.Property<int>("PLZ");
+                    b.Property<string>("PLZ")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Telefon")
                         .HasMaxLength(128);
 
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Vorname")
-                        .IsRequired()
                         .HasMaxLength(128);
 
                     b.HasKey("Id");
