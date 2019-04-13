@@ -3,6 +3,7 @@ using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace EasyMechBackend.BusinessLayer
@@ -136,9 +137,32 @@ namespace EasyMechBackend.BusinessLayer
 
             }
 
+
             List<Kunde> allKunden = GetKunden();
             IEnumerable<Kunde> searchResult = allKunden;
 
+            PropertyInfo[] props = typeof(Kunde).GetProperties();
+
+            foreach (var prop in props) {
+
+                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
+                if (prop.PropertyType != typeof(string)) continue;
+
+
+                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                if (potentialSearchTerm.HasSearchTerm())
+                {
+                    searchResult = searchResult.Where(k => {
+                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
+                        return contentOfCustomerThatIsEvaluated != null &&
+                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
+
+                        });
+                }
+            }
+
+
+            /*
             if (searchEntity.Firma.HasSearchTerm())
             {
                 searchResult = searchResult.Where(k => k.Firma != null && k.Firma.Contains(searchEntity.Firma));
@@ -167,7 +191,7 @@ namespace EasyMechBackend.BusinessLayer
                 searchResult = searchResult.Where(k => k.PLZ != null && k.PLZ.Contains(searchEntity.PLZ)).ToList();
             }
 
-
+    */
 
             if (searchResult.Any())
             {
@@ -177,6 +201,7 @@ namespace EasyMechBackend.BusinessLayer
             {
                 return new List<Kunde>();
             }
+            
         }
     }
 }
