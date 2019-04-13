@@ -15,6 +15,9 @@ namespace EasyMechBackend.ServiceLayer
     [ApiController]
     public class KundenController : ControllerBase
     {
+        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
+        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+
         // GET: /Kunden/
         [HttpGet]
         public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetKunden()
@@ -29,7 +32,7 @@ namespace EasyMechBackend.ServiceLayer
                 }
                 catch (Exception e)
                 {
-                    return new ResponseObject<IEnumerable<KundeDto>>("error", e.Message);
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
                 }
             });
 
@@ -49,7 +52,7 @@ namespace EasyMechBackend.ServiceLayer
                 }
                 catch (Exception e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message);
+                    return new ResponseObject<KundeDto>(e.Message);
                 }
             });
 
@@ -71,11 +74,11 @@ namespace EasyMechBackend.ServiceLayer
                 }
                 catch (DbUpdateException e)
                 {
-                    return new ResponseObject<KundeDto>("error", "DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>("DB Update Exception: " + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message);
+                    return new ResponseObject<KundeDto>(e.Message);
                 }
             });
 
@@ -93,18 +96,18 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     if (id != kunde.Id)
                     {
-                        return new ResponseObject<KundeDto>("error", "ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data");
                     }
                     KundeDto changedKundeDto = KundeManager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
                     return new ResponseObject<KundeDto>(changedKundeDto);
                 }
                 catch (DbUpdateException e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message);
+                    return new ResponseObject<KundeDto>(e.Message);
                 }
 
             });
@@ -122,15 +125,15 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     var kunde = KundeManager.GetKundeById(id);
                     KundeManager.SetKundeInactive(kunde);
-                    return new ResponseObject<KundeDto>("ok", $"Set Kunde {id} to inactive");
+                    return new ResponseObject<KundeDto>(null, OKTAG, $"Set Kunde {id} to inactive");
                 }
                 catch (DbUpdateException e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
-                    return new ResponseObject<KundeDto>("error", e.Message);
+                    return new ResponseObject<KundeDto>(e.Message);
                 }
 
             });

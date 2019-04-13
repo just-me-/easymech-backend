@@ -5,15 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ServiceLayer\Controller\ValuesController_Vorlage.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="ServiceLayer\Controller\ValuesController_Vorlage.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

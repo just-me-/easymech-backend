@@ -9,23 +9,38 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         where T: class
     {
 
+        public static readonly string OKTAG = "ok";
+        public static readonly string ERRORTAG = "error";
+
         public T Data { get; set; }
         public string Status { get; set; }
         public string Message { get; set; }
 
 
+        //Regular case: Data provided, no message
         public ResponseObject(T data)
         {
             Data = data;
-            Status = "ok";
+            Status = OKTAG;
             Message = "";
         }
 
-        public ResponseObject(string state, string msg)
+        //Error case: no Data + Message
+        public ResponseObject(string msg)
         {
-            Status = state;
-            Message = msg;
             Data = null;
+            Status = ERRORTAG;
+            Message = msg;
         }
+
+        //Custom Case: All Props manually set
+        public ResponseObject(T data, string status, string msg)
+        {
+            Data = data;
+            Status = status;
+            Message = msg;
+        }
+
+
     }
 }
