@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
+
 
 namespace EasyMechBackend
 {
@@ -55,8 +57,6 @@ namespace EasyMechBackend
                 app.UseHsts();
             }
 
-            //app.UseDefaultFiles();
-            //app.UseStaticFiles(); //weg damit wenn es läuft... ;)
             app.UseHttpsRedirection();
             app.UseMvc();
         }
