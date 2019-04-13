@@ -141,6 +141,8 @@ namespace EasyMechBackend.BusinessLayer
             List<Kunde> allKunden = GetKunden();
             IEnumerable<Kunde> searchResult = allKunden;
 
+
+
             PropertyInfo[] props = typeof(Kunde).GetProperties();
 
             foreach (var prop in props) {
@@ -161,38 +163,7 @@ namespace EasyMechBackend.BusinessLayer
                 }
             }
 
-
-            /*
-            if (searchEntity.Firma.HasSearchTerm())
-            {
-                searchResult = searchResult.Where(k => k.Firma != null && k.Firma.Contains(searchEntity.Firma));
-            }
-
-
-            if (searchEntity.Nachname.HasSearchTerm())
-            {
-                searchResult = searchResult.Where(k => k.Nachname != null && k.Nachname.Contains(searchEntity.Nachname)).ToList();
-            }
-
-            if (searchEntity.Vorname.HasSearchTerm())
-            {
-                searchResult = searchResult.Where(k => k.Vorname != null && k.Vorname.Contains(searchEntity.Vorname)).ToList();
-            }
-
-
-
-            if (searchEntity.Ort.HasSearchTerm())
-            {
-                searchResult = searchResult.Where(k => k.Ort != null && k.Ort.Contains(searchEntity.Ort)).ToList();
-            }
-
-            if (searchEntity.PLZ.HasSearchTerm())
-            {
-                searchResult = searchResult.Where(k => k.PLZ != null && k.PLZ.Contains(searchEntity.PLZ)).ToList();
-            }
-
-    */
-
+            
             if (searchResult.Any())
             {
                 return searchResult.ToList();
