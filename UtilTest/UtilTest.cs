@@ -39,4 +39,42 @@ namespace UtilTest
             Assert.AreEqual(s, r);
         }
     }
+
+
+    [TestClass]
+    public class HasSearchTerm
+    {
+        [TestMethod]
+        public void TestNegativeSearchTerm()
+        {
+            string s = "a";
+            bool r = s.HasSearchTerm();
+            Assert.IsFalse(r);
+        }
+
+        [TestMethod]
+        public void TestPositiveSearchTerm()
+        {
+            string s = "blabla";
+            bool r = s.HasSearchTerm();
+            Assert.IsTrue(r);
+        }
+
+        [TestMethod]
+        public void TestEmpty()
+        {
+            string s = "";
+            bool r = s.HasSearchTerm();
+            Assert.IsFalse(r);
+        }
+
+        [TestMethod]
+        public void TestNull()
+        {
+            string s = null;
+            bool r = s.HasSearchTerm();
+            Assert.IsFalse(r);
+        }
+    }
+
 }

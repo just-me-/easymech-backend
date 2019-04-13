@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
@@ -69,6 +70,28 @@ namespace EasyMechBackend.DataAccessLayer
 
         private void ClipTo128Chars()
         {
+
+            //Option with reflection: Uses SetValue - ignores privacy - unsauber
+            #region unusedOption
+            //Code nur quickly testet
+            /*
+            PropertyInfo[] props = this.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+
+                if (prop.PropertyType != typeof(string)) continue;
+                if (prop.Name == "Notiz") continue;
+
+
+                string content = (string)prop.GetValue(this);
+                prop.SetValue(this, content.ClipTo128Chars());
+                
+            }
+            */
+            #endregion
+
+
+            //Option with DRY - weniger unsaube
             Firma = Firma.ClipTo128Chars();
             Vorname = Vorname.ClipTo128Chars();
             Nachname = Nachname.ClipTo128Chars();

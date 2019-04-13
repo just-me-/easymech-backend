@@ -1,7 +1,9 @@
 ﻿using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace EasyMechBackend.BusinessLayer
@@ -23,7 +25,7 @@ namespace EasyMechBackend.BusinessLayer
                     PLZ = "7000",
                     Ort = "Chur",
                     Email = "t@b.ch",
-                    Telefon = "081 123 45 68",
+                    Telefon = "+41 81 123 45 68",
                     Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
                 };
 
@@ -33,9 +35,8 @@ namespace EasyMechBackend.BusinessLayer
                     Firma = "DJ Fire",
                     Vorname = "Dario",
                     Nachname = "Fuoco",
-                    Adresse = "Strasse 1",
-                    PLZ = "7500",
-                    Ort = "Sargans",
+                    PLZ = "9475",
+                    Ort = "Sevelen",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
                     IsActive = true
                 };
@@ -124,6 +125,55 @@ namespace EasyMechBackend.BusinessLayer
                 c.Remove(k);
                 c.SaveChanges();
             }
+        }
+
+        public static List<Kunde> GetSearchResult(Kunde searchEntity)
+        {
+            if( searchEntity.Id != 0)
+            {
+                return new List<Kunde>
+                {
+                    GetKundeById(searchEntity.Id)
+                };
+
+            }
+
+
+            List<Kunde> allKunden = GetKunden();
+            IEnumerable<Kunde> searchResult = allKunden;
+
+
+
+            PropertyInfo[] props = typeof(Kunde).GetProperties();
+
+            foreach (var prop in props) {
+
+                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
+                if (prop.PropertyType != typeof(string)) continue;
+
+
+                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                if (potentialSearchTerm.HasSearchTerm())
+                {
+                    searchResult = searchResult.Where(k => {
+                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
+                        return contentOfCustomerThatIsEvaluated != null &&
+                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
+
+                        });
+                }
+            }
+
+
+            if (searchResult.Any())
+            {
+                return searchResult.ToList();
+            }
+            else
+            {
+                return new List<Kunde>();
+            }
+
         }
     }
 }

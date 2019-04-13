@@ -7,8 +7,10 @@ using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using EasyMechBackend.DataAccessLayer;
+using log4net;
 
 namespace EasyMechBackend.ServiceLayer
+
 
 {
     [Route("[controller]")]
@@ -17,6 +19,10 @@ namespace EasyMechBackend.ServiceLayer
     {
         private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
         private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+       
 
         // GET: /Kunden/
         [HttpGet]
@@ -28,10 +34,12 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     var kundenDtos = KundeManager.GetKunden().ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
                     return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
                 }
             });
@@ -48,10 +56,12 @@ namespace EasyMechBackend.ServiceLayer
                 try
                 {
                     KundeDto kundeDto = KundeManager.GetKundeById(id).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return new ResponseObject<KundeDto>(kundeDto);
                 }
                 catch (Exception e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
                     return new ResponseObject<KundeDto>(e.Message);
                 }
             });
@@ -70,14 +80,17 @@ namespace EasyMechBackend.ServiceLayer
                 try
                 {
                     KundeDto dto = KundeManager.AddKunde(kunde.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: kunde {dto.Id} added");
                     return new ResponseObject<KundeDto>(dto);
                 }
                 catch (DbUpdateException e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
                     return new ResponseObject<KundeDto>("DB Update Exception: " + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
                     return new ResponseObject<KundeDto>(e.Message);
                 }
             });
@@ -99,14 +112,17 @@ namespace EasyMechBackend.ServiceLayer
                         return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data");
                     }
                     KundeDto changedKundeDto = KundeManager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Kunde {id} updated");
                     return new ResponseObject<KundeDto>(changedKundeDto);
                 }
                 catch (DbUpdateException e)
-                {
+                { 
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
                     return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
                     return new ResponseObject<KundeDto>(e.Message);
                 }
 
@@ -125,18 +141,44 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     var kunde = KundeManager.GetKundeById(id);
                     KundeManager.SetKundeInactive(kunde);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
                     return new ResponseObject<KundeDto>(null, OKTAG, $"Set Kunde {id} to inactive");
                 }
                 catch (DbUpdateException e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
                     return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
                     return new ResponseObject<KundeDto>(e.Message);
                 }
 
             });
+            return await task;
+        }
+
+        // POST: kunden/search
+        [HttpPost("search")]
+        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetSearchResult(KundeDto k)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var kundenDtos = KundeManager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                }
+            });
+
             return await task;
         }
     }
