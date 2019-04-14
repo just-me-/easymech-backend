@@ -20,7 +20,7 @@ namespace EasyMechBackend.ServiceLayer
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-       
+
 
         // GET: /Kunden/
         [HttpGet]
@@ -114,7 +114,7 @@ namespace EasyMechBackend.ServiceLayer
                     return new ResponseObject<KundeDto>(changedKundeDto);
                 }
                 catch (DbUpdateException e)
-                { 
+                {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
                     return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
                 }
@@ -157,8 +157,8 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
-        // POST: kunden/search
-        [HttpPost("search")]
+        // POST: kunden/suchen
+        [HttpPost("suchen")]
         public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetSearchResult(KundeDto k)
         {
             var task = Task.Run(() =>
