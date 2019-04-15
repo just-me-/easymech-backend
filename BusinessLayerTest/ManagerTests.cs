@@ -21,14 +21,14 @@ namespace BusinessLayerTest
     {
 
 
-        //[TestMethod]
-        //public void GetKundenTest()
-        //{
-        //    var options = new DbContextOptionsBuilder<EMContext>()
-        //                    .UseInMemoryDatabase(databaseName: "GetKunden")
-        //                    .Options;
+        [TestMethod]
+        public void GetKundenTest()
+        {
+            var options = new DbContextOptionsBuilder<EMContext>()
+                            .UseInMemoryDatabase(databaseName: "getKundenTestDB")
+                            .Options;
 
 
-        //}
+        }
     }
 }
