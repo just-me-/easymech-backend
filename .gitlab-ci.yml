@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - deploy
+  - publish
 
 variables:
   project: "EasyMechBackend"
@@ -14,15 +15,15 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq sshpass
   - "dotnet restore"
   
- Sonar_Publish:
-    stage: publish
-    script:
-        - chcp 65001
-        - Scripts\\sonar_run.bat
-    only:
-        - develop
-    tags:
-        - windows
+Sonar_Publish:
+  stage: publish
+  script:
+    - chcp 65001
+    - Scripts\\sonar_run.bat
+  only:
+    - develop
+  tags:
+    - windows
 
 build:
   stage: build
