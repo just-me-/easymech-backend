@@ -19,7 +19,7 @@ sonar:
   stage: sonar
   script:
     - chcp 65001
-    - Scripts\\sonar_run.bat
+    - Scripts\\sonar_run.bat 
   tags:
     - epj
 
