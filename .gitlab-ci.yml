@@ -15,7 +15,7 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq sshpass
   - "dotnet restore"
   
-Sonar_Publish:
+publish:
   stage: publish
   script:
     - chcp 65001
