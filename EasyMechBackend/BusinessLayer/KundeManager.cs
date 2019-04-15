@@ -1,5 +1,6 @@
 ﻿using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
-    {
+    { 
 
         //Fill Dummy Data for Dev
         #region dummydata
@@ -74,9 +75,16 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        public static Kunde GetKundeById(long id)
+        public static Kunde GetKundeById(long id, bool isTest = false)
         {
-            using (EMContext c = new EMContext())
+            var options = new DbContextOptionsBuilder<EMContext>().Options;
+            if (isTest)
+            {
+                options = new DbContextOptionsBuilder<EMContext>()
+                            .UseInMemoryDatabase(databaseName: "getKundenTestDB")
+                            .Options;
+            }
+            using (EMContext c = new EMContext(options))
             {
                 Kunde k = c.Kunden.SingleOrDefault(kunde => kunde.Id == id);
                 if (k == null)

@@ -22,6 +22,8 @@ namespace EasyMechBackend.DataAccessLayer
         public GeplanterService GeplanterService { get; set; }
 
         public List<Materialposten> Materialposten { get; set; }
+
+        public List<Arbeitsschritt> Arbeitsschritte { get; set; }
         // -------------------------------------------
 
 
