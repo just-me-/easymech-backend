@@ -16,11 +16,12 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
+        public long GeplanterServiceId { get; set; }
+
+        [ForeignKey("GeplanterServiceId")]
         public GeplanterService GeplanterService { get; set; }
 
         public List<Materialposten> Materialposten { get; set; }
-
-
         // -------------------------------------------
 
 

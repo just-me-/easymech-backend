@@ -18,6 +18,9 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Anzahl { get; set; }
 
+        [MaxLength(256)]
+        public string Bezeichnung { get; set; }
+
         //Relationships
         // -------------------------------------------
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }

@@ -13,7 +13,6 @@ namespace EasyMechBackend.DataAccessLayer
         [Key]
         public long Id { get; set; }
 
-
         public string Standort { get; set; }
 
         public DateTime Startdatum { get; set; }

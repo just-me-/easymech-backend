@@ -26,7 +26,7 @@ namespace EasyMechBackend.DataAccessLayer
         public int Bertriebsdauer { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
         //Relationships
         // -------------------------------------------

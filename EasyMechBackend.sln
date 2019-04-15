@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9FE29EF4-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayerTest", "BusinessLayerTest\BusinessLayerTest.csproj", "{18288658-DBB1-4D65-AC36-4FD1FC35864A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilTest", "UtilTest\UtilTest.csproj", "{D815ACF4-7D09-459F-A9F1-0B5B36170E95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilTest", "UtilTest\UtilTest.csproj", "{D815ACF4-7D09-459F-A9F1-0B5B36170E95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -22,6 +22,9 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
+        public long ServiceDurchfuehrungId { get; set; }
+
+        [ForeignKey("ServiceDurchfuehrungId")]
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
 
