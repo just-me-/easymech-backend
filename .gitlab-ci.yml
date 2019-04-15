@@ -21,7 +21,7 @@ sonar:
     - chcp 65001
     - Scripts\\sonar_run.bat
   tags:
-    - windows
+    - epj
 
 build:
   stage: build
