@@ -9,7 +9,9 @@ namespace EasyMechBackend.Util
     {
         public static string ClipTo128Chars(this string s)
         {
-            if (s == null) { return null; }
+            if (s == null) {
+              return null;
+            }
             if (s.Length > 128)
             {
                 s = s.Remove(128);
