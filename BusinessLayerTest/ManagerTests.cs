@@ -3,12 +3,14 @@ using EasyMechBackend.DataAccessLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace BusinessLayerTest
 {
     [TestClass]
     public class ManagerBaseTests
     {
+        // placeholder
         [TestMethod]
         public void TestMethod1()
         {
@@ -58,7 +60,64 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetKundeByIdTest()
         {
-            Assert.IsTrue(true);
+            Kunde k = KundeManager.GetKundeById(1);
+            Assert.AreEqual(1, k.Id);
         }
+
+        [TestMethod]
+        public void GetKundeByNonexistantIdTest()
+        {            
+            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(11112));
+        }
+
+        [TestMethod]
+        public void GetKundenTest()
+        {
+            List<Kunde> kundenliste = KundeManager.GetKunden();
+            Assert.IsTrue(kundenliste.Any());
+        }
+
+        [TestMethod]
+        public void UpdateKundeTest()
+        {
+            Kunde originalKunde = KundeManager.GetKundeById(1);
+            originalKunde.Firma = "Updated AG";
+            KundeManager.UpdateKunde(originalKunde);
+            Kunde updatedKunde = KundeManager.GetKundeById(1);
+            Assert.AreEqual("Updated AG", updatedKunde.Firma);
+        }
+        
+        [TestMethod]
+        public void SetKundeInactiveTest()
+        {
+            Kunde originalKunde = KundeManager.GetKundeById(1);
+            originalKunde.IsActive = true;
+            KundeManager.UpdateKunde(originalKunde);
+            Kunde kunde = KundeManager.GetKundeById(1);
+            KundeManager.SetKundeInactive(kunde);
+            Kunde deactivatedKunde = KundeManager.GetKundeById(1);
+            Assert.AreEqual(false, deactivatedKunde.IsActive);
+        }
+
+        [TestMethod]
+        public void DeleteKundeTest()
+        {
+            Kunde k = new Kunde
+            {
+                Id = 1234567,
+                Firma = "Test AG",
+                IsActive = true
+            };
+            KundeManager.AddKunde(k);
+            KundeManager.DeleteKunde(k);            
+            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(1234567));
+        }
+
+        [TestMethod]
+        public void GetSearchResultsTest()
+        {
+
+        }
+
     }
 }
