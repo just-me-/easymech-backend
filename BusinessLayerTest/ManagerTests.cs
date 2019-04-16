@@ -65,20 +65,20 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
-        public void GetKundeByNonexistantIdTest()
+        public void GetKundeByNonexistantIdTest() // Geht net
         {            
             Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(11112));
         }
 
         [TestMethod]
-        public void GetKundenTest()
+        public void GetKundenTest() // Geht net
         {
             List<Kunde> kundenliste = KundeManager.GetKunden();
             Assert.IsTrue(kundenliste.Any());
         }
 
         [TestMethod]
-        public void UpdateKundeTest()
+        public void UpdateKundeTest() // Geht net
         {
             Kunde originalKunde = KundeManager.GetKundeById(1);
             originalKunde.Firma = "Updated AG";
@@ -88,7 +88,7 @@ namespace BusinessLayerTest
         }
         
         [TestMethod]
-        public void SetKundeInactiveTest()
+        public void SetKundeInactiveTest() // Geht net
         {
             Kunde originalKunde = KundeManager.GetKundeById(1);
             originalKunde.IsActive = true;
@@ -100,7 +100,7 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
-        public void DeleteKundeTest()
+        public void DeleteKundeTest() // Geht net
         {
             Kunde k = new Kunde
             {
