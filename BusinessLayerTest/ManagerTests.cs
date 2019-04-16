@@ -11,11 +11,6 @@ namespace BusinessLayerTest
     public class ManagerBaseTests
     {
         // placeholder
-        [TestMethod]
-        public void TestMethod1()
-        {
-            Assert.IsTrue(true);
-        }
     }
 
     [TestClass]
@@ -58,7 +53,7 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
-        public void GetKundeByIdTest()
+        public void GetKundeByIdTest() // Get net
         {
             Kunde k = KundeManager.GetKundeById(1);
             Assert.AreEqual(1, k.Id);
@@ -66,7 +61,7 @@ namespace BusinessLayerTest
 
         [TestMethod]
         public void GetKundeByNonexistantIdTest() // Geht net
-        {            
+        {
             Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(11112));
         }
 
@@ -86,7 +81,7 @@ namespace BusinessLayerTest
             Kunde updatedKunde = KundeManager.GetKundeById(1);
             Assert.AreEqual("Updated AG", updatedKunde.Firma);
         }
-        
+
         [TestMethod]
         public void SetKundeInactiveTest() // Geht net
         {
@@ -109,14 +104,8 @@ namespace BusinessLayerTest
                 IsActive = true
             };
             KundeManager.AddKunde(k);
-            KundeManager.DeleteKunde(k);            
+            KundeManager.DeleteKunde(k);
             Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(1234567));
-        }
-
-        [TestMethod]
-        public void GetSearchResultsTest()
-        {
-
         }
 
     }
