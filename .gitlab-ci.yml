@@ -4,14 +4,26 @@ stages:
   - build
   - test
   - deploy
+  - sonar
 
 variables:
   project: "EasyMechBackend"
   repo: "easymech-backend"
+  SONARSCANNER: “C:\\GitLab-Runner\\gitlab-runner.exe”
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq sshpass
   - "dotnet restore"
+  
+sonar:
+  stage: sonar
+  script:
+    - chcp 65001
+    - Scripts\\sonar_run.bat
+  only:
+    - develop
+  tags:
+    - epj
 
 build:
   stage: build
