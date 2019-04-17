@@ -32,13 +32,20 @@ namespace BusinessLayerTest
             {
                 Kunde k = new Kunde
                 {
-                    Id = 1,
+                    Id = 12345,
                     Firma = "Test AG",
                     IsActive = true
                 };
                 k.Validate();
-                context.Add(k);
-                context.SaveChanges();
+                try
+                {
+                    context.Add(k);
+                    context.SaveChanges();
+                }
+                catch (System.ArgumentException e)
+                {
+                    string error = e.Message;
+                }
             }
 
             return options;
@@ -60,64 +67,96 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetKundeByIdTest()
         {
-            Kunde k = KundeManager.GetKundeById(1);
-            Assert.AreEqual(1, k.Id);
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                Kunde k = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                Assert.AreEqual(12345, k.Id);
+            }
+
         }
 
         [TestMethod]
         public void GetKundeByNonexistantIdTest()
-        {            
-            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(11112));
+        {
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                Assert.ThrowsException<System.InvalidOperationException>(() => context.Kunden.Single(kunde => kunde.Id == 100000));
+                
+            }
         }
 
         [TestMethod]
         public void GetKundenTest()
         {
-            List<Kunde> kundenliste = KundeManager.GetKunden();
-            Assert.IsTrue(kundenliste.Any());
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                List<Kunde> kundenliste = context.Kunden.ToList();
+                Assert.IsTrue(kundenliste.Any());
+            }
         }
 
         [TestMethod]
         public void UpdateKundeTest()
         {
-            Kunde originalKunde = KundeManager.GetKundeById(1);
-            originalKunde.Firma = "Updated AG";
-            KundeManager.UpdateKunde(originalKunde);
-            Kunde updatedKunde = KundeManager.GetKundeById(1);
-            Assert.AreEqual("Updated AG", updatedKunde.Firma);
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                Kunde originalKunde = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                originalKunde.Firma = "Updated AG";
+                context.Entry(originalKunde).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+                Kunde updatedKunde = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                Assert.AreEqual("Updated AG", updatedKunde.Firma);
+            }
         }
-        
+
         [TestMethod]
         public void SetKundeInactiveTest()
         {
-            Kunde originalKunde = KundeManager.GetKundeById(1);
-            originalKunde.IsActive = true;
-            KundeManager.UpdateKunde(originalKunde);
-            Kunde kunde = KundeManager.GetKundeById(1);
-            KundeManager.SetKundeInactive(kunde);
-            Kunde deactivatedKunde = KundeManager.GetKundeById(1);
-            Assert.AreEqual(false, deactivatedKunde.IsActive);
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                Kunde originalKunde = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                originalKunde.IsActive = false;
+                context.Entry(originalKunde).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+                Kunde updatedKunde = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                Assert.AreEqual(false, updatedKunde.IsActive);
+            }
         }
 
         [TestMethod]
         public void DeleteKundeTest()
         {
-            Kunde k = new Kunde
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
             {
-                Id = 1234567,
-                Firma = "Test AG",
-                IsActive = true
-            };
-            KundeManager.AddKunde(k);
-            KundeManager.DeleteKunde(k);            
-            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(1234567));
+                Kunde k = context.Kunden.SingleOrDefault(kunde => kunde.Id == 12345);
+                context.Remove(k);
+                context.SaveChanges();
+                Assert.ThrowsException<System.InvalidOperationException>(() => context.Kunden.Single(kunde => kunde.Id == 12345));
+
+            }
         }
 
         [TestMethod]
         public void GetSearchResultsTest()
         {
+            Kunde searchEntity = new Kunde
+            {
+                Id = 12345,
+                Firma = "Test AG",
+                IsActive = true
+            };
+            var options = InitDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
 
+                Assert.IsTrue(true);
+            }
         }
-
     }
 }
