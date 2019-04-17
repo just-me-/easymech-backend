@@ -46,14 +46,10 @@ namespace EasyMechBackend.DataAccessLayer
         public bool? IsActive { get; set; }
 
 
-        //Upcoming Milestone2:
-
-
         //Relationships
         // -------------------------------------------
-        //public List<Maschine> Maschinen { get; set; }
+        public ICollection<Maschine> Maschinen { get; set; }
         // -------------------------------------------
-
 
 
         public void Validate()
@@ -91,7 +87,7 @@ namespace EasyMechBackend.DataAccessLayer
             #endregion
 
 
-            //Option with DRY - weniger unsaube
+            //Option with DRY - weniger unsauber
             Firma = Firma.ClipTo128Chars();
             Vorname = Vorname.ClipTo128Chars();
             Nachname = Nachname.ClipTo128Chars();
