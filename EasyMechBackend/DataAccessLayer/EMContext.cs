@@ -14,8 +14,8 @@ namespace EasyMechBackend.DataAccessLayer
         public EMContext() : base() { } //Das son Ding jetzt hier...
 
         public DbSet<Kunde> Kunden { get; set; }
-        //public DbSet<Maschine> Maschinen { get; set; }
-        //public DbSet<Fahrzeugtyp> Fahrzeugtypen { get; set; }
+        public DbSet<Maschine> Maschinen { get; set; }
+        public DbSet<Fahrzeugtyp> Fahrzeugtypen { get; set; }
 
         //public DbSet<Reservation> Reservationen { get; set; }
         //public DbSet<Transaktion> Transaktion { get; set; }
