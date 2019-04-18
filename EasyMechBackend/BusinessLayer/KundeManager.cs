@@ -75,16 +75,10 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        public static Kunde GetKundeById(long id, bool isTest = false)
+        public static Kunde GetKundeById(long id)
         {
-            var options = new DbContextOptionsBuilder<EMContext>().Options;
-            if (isTest)
-            {
-                options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "getKundenTestDB")
-                            .Options;
-            }
-            using (EMContext c = new EMContext(options))
+            
+            using (EMContext c = new EMContext())
             {
                 Kunde k = c.Kunden.SingleOrDefault(kunde => kunde.Id == id);
                 if (k == null)

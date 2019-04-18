@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer
 {
@@ -34,6 +35,23 @@ namespace EasyMechBackend.DataAccessLayer
 
         public Kunde Besitzer { get; set; }
         // -------------------------------------------
+        public void Validate()
+        {
+            ClipTo128Chars();
+            FillRequiredFields();
+        }
 
+        private void FillRequiredFields()
+        {
+            if (IsActive == null) IsActive = true;
+        }
+
+        private void ClipTo128Chars()
+        {
+            Seriennummer = Seriennummer.ClipTo128Chars();
+            Mastnummer = Mastnummer.ClipTo128Chars();
+            Motorennummer = Motorennummer.ClipTo128Chars();
+
+        }
     }
 }
