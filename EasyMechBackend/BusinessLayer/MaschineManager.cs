@@ -10,17 +10,17 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class MaschineManager : ManagerBase
     {
-        private EMContext _context;
+        public EMContext Context { get; set; }
 
         public MaschineManager(EMContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         public List<Maschine> GetMaschinen()
         {
             var query =
-                from k in _context.Maschinen
+                from k in Context.Maschinen
                 where k.IsActive.Value
                 orderby k.Id descending
                 select k;
@@ -29,7 +29,7 @@ namespace EasyMechBackend.BusinessLayer
 
         public Maschine GetMaschineById(long id)
         {
-            Maschine m = _context.Maschinen.SingleOrDefault(maschine => maschine.Id == id);
+            Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == id);
             if (m == null)
             {
                 throw new InvalidOperationException($"Kunde with id {id} is not in database");
@@ -40,16 +40,16 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine AddMaschine(Maschine m)
         {
             m.Validate();
-            _context.Add(m);
-            _context.SaveChanges();
+            Context.Add(m);
+            Context.SaveChanges();
             return m;
         }
 
         public Maschine UpdateMaschine(Maschine m)
         {
             m.Validate();
-            _context.Entry(m).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
+            Context.Entry(m).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            Context.SaveChanges();
             return m;
         }
 
@@ -61,8 +61,8 @@ namespace EasyMechBackend.BusinessLayer
 
         public void DeleteMaschine(Maschine m)
         {        
-                _context.Remove(m);
-                _context.SaveChanges();            
+                Context.Remove(m);
+                Context.SaveChanges();            
         }
 
         public List<Maschine> GetSearchResult(Maschine searchEntity)
