@@ -23,7 +23,7 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(128)]
         public string Motorennummer { get; set; }
 
-        public int Bertriebsdauer { get; set; }
+        public int Betriebsdauer { get; set; }
 
         [Required]
         public bool? IsActive { get; set; }
@@ -35,6 +35,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         public Kunde Besitzer { get; set; }
         // -------------------------------------------
+
         public void Validate()
         {
             ClipTo128Chars();

@@ -51,6 +51,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             return dto;
         }
 
+
+
         public static List<Kunde> ConvertToEntities(this IEnumerable<KundeDto> dtos)
         {
             return ConvertGenericList(dtos, ConvertToEntity);
@@ -60,6 +62,45 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             return ConvertGenericList(entities, ConvertToDto);
         }
 
+        #endregion
+        #region Maschine
+        public static Maschine ConvertToEntity(this MaschineDto dto)
+        {
+            if (dto == null) { return null; }
+
+            Maschine m = new Maschine();
+            m.Id = dto.Id;
+            m.Seriennummer = dto.Seriennummer;
+            m.Mastnummer = dto.Mastnummer;
+            m.Motorennummer = dto.Motorennummer;
+            m.Betriebsdauer = dto.Betriebsdauer;            
+            m.IsActive = dto.IsActive;
+            return m;
+        }
+
+        public static MaschineDto ConvertToDto(this Maschine entity)
+        {
+            if (entity == null) { return null; }
+
+            MaschineDto dto = new MaschineDto();
+            dto.Id = entity.Id;
+            dto.Seriennummer = entity.Seriennummer;
+            dto.Mastnummer = entity.Mastnummer;
+            dto.Motorennummer = entity.Motorennummer;
+            dto.Betriebsdauer = entity.Betriebsdauer;
+            dto.IsActive = entity.IsActive;
+            return dto;
+        }
+
+        public static List<Maschine> ConvertToEntities(this IEnumerable<MaschineDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<MaschineDto> ConvertToDtos(this IEnumerable<Maschine> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+        
         #endregion
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
