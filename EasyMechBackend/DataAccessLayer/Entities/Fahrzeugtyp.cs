@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer
 {
@@ -42,6 +43,15 @@ namespace EasyMechBackend.DataAccessLayer
         public List<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
+        public void Validate()
+        {
+            ClipTo128Chars();
+        }
 
+        private void ClipTo128Chars()
+        {
+            Fabrikat = Fabrikat.ClipTo128Chars();
+            Motortyp = Motortyp.ClipTo128Chars();
+        }
     }
 }

@@ -8,77 +8,70 @@ using EasyMechBackend.Util;
 
 namespace EasyMechBackend.BusinessLayer
 {
-    public class MaschineManager : ManagerBase
+    public class FahrzeugtypManager : ManagerBase
     {
         public EMContext Context { get; set; }
 
-        public MaschineManager(EMContext context)
+        public FahrzeugtypManager(EMContext context)
         {
             Context = context;
         }
 
-        public List<Maschine> GetMaschinen()
+        public List<Fahrzeugtyp> GetFahrzeugtypen()
         {
             var query =
-                from m in Context.Maschinen
-                where m.IsActive.Value
-                orderby m.Id descending
-                select m;
+                from f in Context.Fahrzeugtypen
+                orderby f.Id descending
+                select f;
             return query.ToList();
         }
 
-        public Maschine GetMaschineById(long id)
+        public Fahrzeugtyp GetFahrzeugtypById(long id)
         {
-            Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == id);
+            Fahrzeugtyp m = Context.Fahrzeugtypen.SingleOrDefault(fahrzeugtyp => fahrzeugtyp.Id == id);
             if (m == null)
             {
-                throw new InvalidOperationException($"Maschine with id {id} is not in database");
+                throw new InvalidOperationException($"Fahrzeugtyp with id {id} is not in database");
             }
             return m;
         }
 
-        public Maschine AddMaschine(Maschine m)
+        public Fahrzeugtyp AddFahrzeugtyp(Fahrzeugtyp f)
         {
-            m.Validate();
-            Context.Add(m);
+            f.Validate();
+            Context.Add(f);
             Context.SaveChanges();
-            return m;
+            return f;
         }
 
-        public Maschine UpdateMaschine(Maschine m)
+        public Fahrzeugtyp UpdateFahrzeugtyp(Fahrzeugtyp f)
         {
-            m.Validate();
-            Context.Entry(m).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            f.Validate();
+            Context.Entry(f).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             Context.SaveChanges();
-            return m;
+            return f;
         }
 
-        public void SetMaschineInactive(Maschine m)
-        {
-                m.IsActive = false;
-                UpdateMaschine(m);            
-        }
-
-        public void DeleteMaschine(Maschine m)
+        public void DeleteFahrzeugtyp(Fahrzeugtyp f)
         {        
-                Context.Remove(m);
+                Context.Remove(f);
                 Context.SaveChanges();            
         }
 
-        public List<Maschine> GetSearchResult(Maschine searchEntity)
+        public List<Fahrzeugtyp> GetSearchResult(Fahrzeugtyp searchEntity)
         {
             if (searchEntity.Id != 0)
             {
-                return new List<Maschine>
+                return new List<Fahrzeugtyp>
                 {
-                    GetMaschineById(searchEntity.Id)
+                    GetFahrzeugtypById(searchEntity.Id)
                 };
             }
 
-            List<Maschine> allMaschinen = GetMaschinen();
-            IEnumerable<Maschine> searchResult = allMaschinen;
+            List<Fahrzeugtyp> allFahrzeugtypen = GetFahrzeugtypen();
+            IEnumerable<Fahrzeugtyp> searchResult = allFahrzeugtypen;
 
-            PropertyInfo[] props = typeof(Maschine).GetProperties();
+            PropertyInfo[] props = typeof(Fahrzeugtyp).GetProperties();
 
             foreach (var prop in props)
             {
@@ -102,9 +95,8 @@ namespace EasyMechBackend.BusinessLayer
             }
             else
             {
-                return new List<Maschine>();
+                return new List<Fahrzeugtyp>();
             }
-
         }
     }
 }

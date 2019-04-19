@@ -100,7 +100,58 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             return ConvertGenericList(entities, ConvertToDto);
         }
-        
+
+        #endregion
+        #region Fahrzeugtyp
+        public static Fahrzeugtyp ConvertToEntity(this FahrzeugtypDto dto)
+        {
+            if (dto == null) { return null; }
+
+            Fahrzeugtyp f = new Fahrzeugtyp();
+            f.Id = dto.Id;
+            f.Fabrikat = dto.Fabrikat;
+            f.Motortyp = dto.Fabrikat;
+            f.Nutzlast = dto.Nutzlast;
+            f.Hubkraft = dto.Hubkraft;
+            f.Hubhöhe = dto.Hubhöhe;
+            f.Eigengewicht = dto.Eigengewicht;
+            f.Jahrgang = dto.Jahrgang;
+            f.Fahrzeughöhe = dto.Fahrzeughöhe;
+            f.Fahrzeuglänge = dto.Fahrzeuglänge;
+            f.Fahrzeugbreite = dto.Fahrzeugbreite;
+            f.Pneugrösse = dto.Pneugrösse;
+            return f;
+        }
+
+        public static FahrzeugtypDto ConvertToDto(this Fahrzeugtyp entity)
+        {
+            if (entity == null) { return null; }
+
+            FahrzeugtypDto dto = new FahrzeugtypDto();
+            dto.Id = entity.Id;
+            dto.Fabrikat = entity.Fabrikat;
+            dto.Motortyp = entity.Fabrikat;
+            dto.Nutzlast = entity.Nutzlast;
+            dto.Hubkraft = entity.Hubkraft;
+            dto.Hubhöhe = entity.Hubhöhe;
+            dto.Eigengewicht = entity.Eigengewicht;
+            dto.Jahrgang = entity.Jahrgang;
+            dto.Fahrzeughöhe = entity.Fahrzeughöhe;
+            dto.Fahrzeuglänge = entity.Fahrzeuglänge;
+            dto.Fahrzeugbreite = entity.Fahrzeugbreite;
+            dto.Pneugrösse = entity.Pneugrösse;
+            return dto;
+        }
+
+        public static List<Fahrzeugtyp> ConvertToEntities(this IEnumerable<FahrzeugtypDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<FahrzeugtypDto> ConvertToDtos(this IEnumerable<Fahrzeugtyp> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+
         #endregion
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
