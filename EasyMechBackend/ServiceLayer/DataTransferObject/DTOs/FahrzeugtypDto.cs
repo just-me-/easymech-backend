@@ -14,7 +14,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public int Hubkraft { get; set; }
         public int Hubhöhe { get; set; }
         public int Eigengewicht { get; set; }
-        public int Jahrgang { get; set; }
         public int Fahrzeughöhe { get; set; }
         public int Fahrzeuglänge { get; set; }
         public int Fahrzeugbreite { get; set; }

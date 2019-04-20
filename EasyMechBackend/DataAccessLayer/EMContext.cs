@@ -34,9 +34,9 @@ namespace EasyMechBackend.DataAccessLayer
                 .HasMany(m => m.Maschinen)
                 .WithOne(k => k.Besitzer);
 
-            modelBuilder.Entity<Fahrzeugtyp>()
-                .HasMany(m => m.Maschinen)
-                .WithOne(f => f.Typ);
+            //modelBuilder.Entity<Fahrzeugtyp>()
+            //    .HasMany(m => m.Maschinen)
+            //    .WithOne(f => f.Typ);
         }
 
         //Logging

@@ -15,6 +15,15 @@ namespace EasyMechBackend.BusinessLayer
         public MaschineManager(EMContext context)
         {
             Context = context;
+
+            if(!GetMaschinen().Any())
+            {
+                Maschine m1 = new Maschine
+                {
+                    Seriennummer = "111"
+                };
+                AddMaschine(m1);
+            }
         }
 
         public List<Maschine> GetMaschinen()

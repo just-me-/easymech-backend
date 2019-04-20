@@ -11,7 +11,9 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public string Seriennummer { get; set; }
         public string Mastnummer { get; set; }
         public string Motorennummer { get; set; }
-        public int Betriebsdauer { get; set; }        
+        public int Betriebsdauer { get; set; }
+        public int Jahrgang { get; set; }
+        public string Notiz { get; set; }
         public bool? IsActive { get; set; }
     }
 }

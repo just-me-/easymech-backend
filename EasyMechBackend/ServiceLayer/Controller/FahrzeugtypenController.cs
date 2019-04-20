@@ -13,7 +13,7 @@ namespace EasyMechBackend.ServiceLayer
 {
     [Route("[controller]")]
     [ApiController]
-    public class FahrzeugtypController : ControllerBase
+    public class FahrzeugtypenController : ControllerBase
     {
         private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
         private static readonly string OKTAG = ResponseObject<Object>.OKTAG;

@@ -28,8 +28,6 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Eigengewicht { get; set; }
 
-        public int Jahrgang { get; set; }
-
         public int Fahrzeughöhe { get; set; }
 
         public int Fahrzeuglänge { get; set; }
@@ -40,7 +38,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        public List<Maschine> Maschinen { get; set; }
+        //public List<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
         public void Validate()

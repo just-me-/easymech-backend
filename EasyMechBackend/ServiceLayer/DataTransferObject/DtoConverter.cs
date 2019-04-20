@@ -73,7 +73,9 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             m.Seriennummer = dto.Seriennummer;
             m.Mastnummer = dto.Mastnummer;
             m.Motorennummer = dto.Motorennummer;
-            m.Betriebsdauer = dto.Betriebsdauer;            
+            m.Betriebsdauer = dto.Betriebsdauer;
+            m.Jahrgang = dto.Jahrgang;
+            m.Notiz = dto.Notiz;
             m.IsActive = dto.IsActive;
             return m;
         }
@@ -88,6 +90,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             dto.Mastnummer = entity.Mastnummer;
             dto.Motorennummer = entity.Motorennummer;
             dto.Betriebsdauer = entity.Betriebsdauer;
+            dto.Jahrgang = entity.Jahrgang;
+            dto.Notiz = entity.Notiz;
             dto.IsActive = entity.IsActive;
             return dto;
         }
@@ -115,7 +119,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             f.Hubkraft = dto.Hubkraft;
             f.Hubhöhe = dto.Hubhöhe;
             f.Eigengewicht = dto.Eigengewicht;
-            f.Jahrgang = dto.Jahrgang;
             f.Fahrzeughöhe = dto.Fahrzeughöhe;
             f.Fahrzeuglänge = dto.Fahrzeuglänge;
             f.Fahrzeugbreite = dto.Fahrzeugbreite;
@@ -135,7 +138,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             dto.Hubkraft = entity.Hubkraft;
             dto.Hubhöhe = entity.Hubhöhe;
             dto.Eigengewicht = entity.Eigengewicht;
-            dto.Jahrgang = entity.Jahrgang;
             dto.Fahrzeughöhe = entity.Fahrzeughöhe;
             dto.Fahrzeuglänge = entity.Fahrzeuglänge;
             dto.Fahrzeugbreite = entity.Fahrzeugbreite;

@@ -25,13 +25,17 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Betriebsdauer { get; set; }
 
+        public int Jahrgang { get; set; }
+
+        public string Notiz { get; set; }
+
         [Required]
         public bool? IsActive { get; set; }
 
         //Relationships
         // -------------------------------------------
-        [Required]
-        public Fahrzeugtyp Typ { get; set; }
+        //[Required]
+        //public Fahrzeugtyp Typ { get; set; }
 
         public Kunde Besitzer { get; set; }
         // -------------------------------------------
