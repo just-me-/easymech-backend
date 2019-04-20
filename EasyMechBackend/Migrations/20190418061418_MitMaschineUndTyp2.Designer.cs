@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190418061418_MitMaschineUndTyp2")]
+    partial class MitMaschineUndTyp2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +40,8 @@ namespace EasyMechBackend.Migrations
                     b.Property<int>("Hubhöhe");
 
                     b.Property<int>("Hubkraft");
+
+                    b.Property<int>("Jahrgang");
 
                     b.Property<string>("Motortyp")
                         .HasMaxLength(128);
@@ -96,14 +100,12 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long?>("BesitzerId");
+                    b.Property<int>("Bertriebsdauer");
 
-                    b.Property<int>("Betriebsdauer");
+                    b.Property<long?>("BesitzerId");
 
                     b.Property<bool?>("IsActive")
                         .IsRequired();
-
-                    b.Property<int>("Jahrgang");
 
                     b.Property<string>("Mastnummer")
                         .HasMaxLength(128);
@@ -111,14 +113,16 @@ namespace EasyMechBackend.Migrations
                     b.Property<string>("Motorennummer")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Notiz");
-
                     b.Property<string>("Seriennummer")
                         .HasMaxLength(128);
+
+                    b.Property<long>("TypId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BesitzerId");
+
+                    b.HasIndex("TypId");
 
                     b.ToTable("Maschine","public");
                 });
@@ -128,6 +132,11 @@ namespace EasyMechBackend.Migrations
                     b.HasOne("EasyMechBackend.DataAccessLayer.Kunde", "Besitzer")
                         .WithMany("Maschinen")
                         .HasForeignKey("BesitzerId");
+
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Fahrzeugtyp", "Typ")
+                        .WithMany("Maschinen")
+                        .HasForeignKey("TypId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

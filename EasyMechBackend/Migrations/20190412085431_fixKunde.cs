@@ -7,10 +7,10 @@ namespace EasyMechBackend.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Timestamp",
-                schema: "public",
-                table: "Kunden");
+            //migrationBuilder.DropColumn(
+            //    name: "Timestamp",
+            //    schema: "public",
+            //    table: "Kunden");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Vorname",

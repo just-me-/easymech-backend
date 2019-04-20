@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Fahrzeugtyp", Schema = "public")]
-    [NotMapped]
     public class Fahrzeugtyp
     {
         [Key]
@@ -28,8 +28,6 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Eigengewicht { get; set; }
 
-        public int Jahrgang { get; set; }
-
         public int Fahrzeughöhe { get; set; }
 
         public int Fahrzeuglänge { get; set; }
@@ -40,9 +38,18 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        public List<Maschine> Maschinen { get; set; }
+        //public List<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
+        public void Validate()
+        {
+            ClipTo128Chars();
+        }
 
+        private void ClipTo128Chars()
+        {
+            Fabrikat = Fabrikat.ClipTo128Chars();
+            Motortyp = Motortyp.ClipTo128Chars();
+        }
     }
 }

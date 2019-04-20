@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Maschine", Schema = "public")]
-    [NotMapped]
     public class Maschine
     {
         [Key]
@@ -23,18 +23,40 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(128)]
         public string Motorennummer { get; set; }
 
-        public int Bertriebsdauer { get; set; }
+        public int Betriebsdauer { get; set; }
+
+        public int Jahrgang { get; set; }
+
+        public string Notiz { get; set; }
 
         [Required]
         public bool? IsActive { get; set; }
 
         //Relationships
         // -------------------------------------------
-        [Required]
-        public Fahrzeugtyp Typ { get; set; }
+        //[Required]
+        //public Fahrzeugtyp Typ { get; set; }
 
         public Kunde Besitzer { get; set; }
         // -------------------------------------------
 
+        public void Validate()
+        {
+            ClipTo128Chars();
+            FillRequiredFields();
+        }
+
+        private void FillRequiredFields()
+        {
+            if (IsActive == null) IsActive = true;
+        }
+
+        private void ClipTo128Chars()
+        {
+            Seriennummer = Seriennummer.ClipTo128Chars();
+            Mastnummer = Mastnummer.ClipTo128Chars();
+            Motorennummer = Motorennummer.ClipTo128Chars();
+
+        }
     }
 }
