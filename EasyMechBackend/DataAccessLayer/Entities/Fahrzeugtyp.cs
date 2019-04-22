@@ -24,17 +24,17 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Hubkraft { get; set; }
 
-        public int Hubhöhe { get; set; }
+        public int Hubhoehe { get; set; }
 
         public int Eigengewicht { get; set; }
 
-        public int Fahrzeughöhe { get; set; }
+        public int Fahrzeughoehe { get; set; }
 
-        public int Fahrzeuglänge { get; set; }
+        public int Fahrzeuglaenge { get; set; }
 
         public int Fahrzeugbreite { get; set; }
 
-        public int Pneugrösse { get; set; }
+        public int Pneugroesse { get; set; }
 
         //Relationships
         // -------------------------------------------

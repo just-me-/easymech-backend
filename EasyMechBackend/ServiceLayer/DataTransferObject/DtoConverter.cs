@@ -16,18 +16,20 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (dto == null) { return null; }
 
-            Kunde k = new Kunde();
-            k.Id = dto.Id;
-            k.Firma = dto.Firma;
-            k.Vorname = dto.Vorname;
-            k.Nachname = dto.Nachname;
-            k.Adresse = dto.Adresse;
-            k.PLZ = dto.PLZ;
-            k.Ort = dto.Ort;
-            k.Email = dto.Email;
-            k.Telefon = dto.Telefon;
-            k.Notiz = dto.Notiz;
-            k.IsActive = dto.IsActive;
+            Kunde k = new Kunde
+            {
+                Id = dto.Id,
+                Firma = dto.Firma,
+                Vorname = dto.Vorname,
+                Nachname = dto.Nachname,
+                Adresse = dto.Adresse,
+                PLZ = dto.PLZ,
+                Ort = dto.Ort,
+                Email = dto.Email,
+                Telefon = dto.Telefon,
+                Notiz = dto.Notiz,
+                IsActive = dto.IsActive
+            };
             return k;
         }
 
@@ -35,18 +37,20 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (entity == null) { return null; }
 
-            KundeDto dto = new KundeDto();
-            dto.Id = entity.Id;
-            dto.Firma = entity.Firma;
-            dto.Vorname = entity.Vorname;
-            dto.Nachname = entity.Nachname;
-            dto.Adresse = entity.Adresse;
-            dto.PLZ = entity.PLZ;
-            dto.Ort = entity.Ort;
-            dto.Email = entity.Email;
-            dto.Telefon = entity.Telefon;
-            dto.Notiz = entity.Notiz;
-            dto.IsActive = entity.IsActive;
+            KundeDto dto = new KundeDto
+            {
+                Id = entity.Id,
+                Firma = entity.Firma,
+                Vorname = entity.Vorname,
+                Nachname = entity.Nachname,
+                Adresse = entity.Adresse,
+                PLZ = entity.PLZ,
+                Ort = entity.Ort,
+                Email = entity.Email,
+                Telefon = entity.Telefon,
+                Notiz = entity.Notiz,
+                IsActive = entity.IsActive
+            };
 
             return dto;
         }
@@ -68,15 +72,17 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (dto == null) { return null; }
 
-            Maschine m = new Maschine();
-            m.Id = dto.Id;
-            m.Seriennummer = dto.Seriennummer;
-            m.Mastnummer = dto.Mastnummer;
-            m.Motorennummer = dto.Motorennummer;
-            m.Betriebsdauer = dto.Betriebsdauer;
-            m.Jahrgang = dto.Jahrgang;
-            m.Notiz = dto.Notiz;
-            m.IsActive = dto.IsActive;
+            Maschine m = new Maschine
+            {
+                Id = dto.Id,
+                Seriennummer = dto.Seriennummer,
+                Mastnummer = dto.Mastnummer,
+                Motorennummer = dto.Motorennummer,
+                Betriebsdauer = dto.Betriebsdauer,
+                Jahrgang = dto.Jahrgang,
+                Notiz = dto.Notiz,
+                IsActive = dto.IsActive
+            };
             return m;
         }
 
@@ -84,15 +90,17 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (entity == null) { return null; }
 
-            MaschineDto dto = new MaschineDto();
-            dto.Id = entity.Id;
-            dto.Seriennummer = entity.Seriennummer;
-            dto.Mastnummer = entity.Mastnummer;
-            dto.Motorennummer = entity.Motorennummer;
-            dto.Betriebsdauer = entity.Betriebsdauer;
-            dto.Jahrgang = entity.Jahrgang;
-            dto.Notiz = entity.Notiz;
-            dto.IsActive = entity.IsActive;
+            MaschineDto dto = new MaschineDto
+            {
+                Id = entity.Id,
+                Seriennummer = entity.Seriennummer,
+                Mastnummer = entity.Mastnummer,
+                Motorennummer = entity.Motorennummer,
+                Betriebsdauer = entity.Betriebsdauer,
+                Jahrgang = entity.Jahrgang,
+                Notiz = entity.Notiz,
+                IsActive = entity.IsActive
+            };
             return dto;
         }
 
@@ -111,18 +119,20 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (dto == null) { return null; }
 
-            Fahrzeugtyp f = new Fahrzeugtyp();
-            f.Id = dto.Id;
-            f.Fabrikat = dto.Fabrikat;
-            f.Motortyp = dto.Fabrikat;
-            f.Nutzlast = dto.Nutzlast;
-            f.Hubkraft = dto.Hubkraft;
-            f.Hubhöhe = dto.Hubhöhe;
-            f.Eigengewicht = dto.Eigengewicht;
-            f.Fahrzeughöhe = dto.Fahrzeughöhe;
-            f.Fahrzeuglänge = dto.Fahrzeuglänge;
-            f.Fahrzeugbreite = dto.Fahrzeugbreite;
-            f.Pneugrösse = dto.Pneugrösse;
+            Fahrzeugtyp f = new Fahrzeugtyp
+            {
+                Id = dto.Id,
+                Fabrikat = dto.Fabrikat,
+                Motortyp = dto.Fabrikat,
+                Nutzlast = dto.Nutzlast,
+                Hubkraft = dto.Hubkraft,
+                Hubhoehe = dto.Hubhoehe,
+                Eigengewicht = dto.Eigengewicht,
+                Fahrzeughoehe = dto.Fahrzeughoehe,
+                Fahrzeuglaenge = dto.Fahrzeuglaenge,
+                Fahrzeugbreite = dto.Fahrzeugbreite,
+                Pneugroesse = dto.Pneugroesse
+            };
             return f;
         }
 
@@ -130,18 +140,20 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         {
             if (entity == null) { return null; }
 
-            FahrzeugtypDto dto = new FahrzeugtypDto();
-            dto.Id = entity.Id;
-            dto.Fabrikat = entity.Fabrikat;
-            dto.Motortyp = entity.Fabrikat;
-            dto.Nutzlast = entity.Nutzlast;
-            dto.Hubkraft = entity.Hubkraft;
-            dto.Hubhöhe = entity.Hubhöhe;
-            dto.Eigengewicht = entity.Eigengewicht;
-            dto.Fahrzeughöhe = entity.Fahrzeughöhe;
-            dto.Fahrzeuglänge = entity.Fahrzeuglänge;
-            dto.Fahrzeugbreite = entity.Fahrzeugbreite;
-            dto.Pneugrösse = entity.Pneugrösse;
+            FahrzeugtypDto dto = new FahrzeugtypDto
+            {
+                Id = entity.Id,
+                Fabrikat = entity.Fabrikat,
+                Motortyp = entity.Fabrikat,
+                Nutzlast = entity.Nutzlast,
+                Hubkraft = entity.Hubkraft,
+                Hubhoehe = entity.Hubhoehe,
+                Eigengewicht = entity.Eigengewicht,
+                Fahrzeughoehe = entity.Fahrzeughoehe,
+                Fahrzeuglaenge = entity.Fahrzeuglaenge,
+                Fahrzeugbreite = entity.Fahrzeugbreite,
+                Pneugroesse = entity.Pneugroesse
+            };
             return dto;
         }
 

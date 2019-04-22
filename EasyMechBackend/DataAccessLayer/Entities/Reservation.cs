@@ -17,7 +17,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         public DateTime Startdatum { get; set; }
 
-        public DateTime Rückgabedatum { get; set; }
+        public DateTime Rueckgabedatum { get; set; }
 
         //Relationships
         // -------------------------------------------
