@@ -123,7 +123,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             {
                 Id = dto.Id,
                 Fabrikat = dto.Fabrikat,
-                Motortyp = dto.Fabrikat,
+                Motortyp = dto.Motortyp,
                 Nutzlast = dto.Nutzlast,
                 Hubkraft = dto.Hubkraft,
                 Hubhoehe = dto.Hubhoehe,
@@ -144,7 +144,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             {
                 Id = entity.Id,
                 Fabrikat = entity.Fabrikat,
-                Motortyp = entity.Fabrikat,
+                Motortyp = entity.Motortyp,
                 Nutzlast = entity.Nutzlast,
                 Hubkraft = entity.Hubkraft,
                 Hubhoehe = entity.Hubhoehe,
