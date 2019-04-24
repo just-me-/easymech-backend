@@ -49,6 +49,7 @@ namespace EasyMechBackend.DataAccessLayer
         //Relationships
         // -------------------------------------------
         public ICollection<Maschine> Maschinen { get; set; }
+        public ICollection<Transaktion> Transaktionen { get; set; }
         // -------------------------------------------
 
 

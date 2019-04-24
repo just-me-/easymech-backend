@@ -35,14 +35,14 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        //Besitzer
         public long? BesitzerId { get; set; }
 
         [ForeignKey(nameof(BesitzerId))]
         public Kunde Besitzer { get; set; }
 
 
-        //Maschinentyp
+
+
         public long MaschinenTypId { get; set; }
 
         [ForeignKey(nameof(MaschinenTypId))]
@@ -51,6 +51,8 @@ namespace EasyMechBackend.DataAccessLayer
 
 
 
+        // -------------------------------------------
+        public ICollection<Transaktion> Transaktionen { get; set; }
         // -------------------------------------------
 
         public void Validate()
