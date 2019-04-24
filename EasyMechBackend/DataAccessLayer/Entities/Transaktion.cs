@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.DataAccessLayer
 {
 
-    public enum TransaktionsTyp { Verkauf = 0, Einkauf = 1 };
+    
 
 
     [Table("Transaktionen", Schema = "public")]
     public class Transaktion
     {
-        
 
+        public enum TransaktionsTyp { Verkauf = 0, Einkauf = 1 };
 
         [Key]
         public long Id { get; set; }
@@ -36,7 +36,7 @@ namespace EasyMechBackend.DataAccessLayer
         public Maschine Maschine { get; set; }
 
 
-        public long KundenId { get; set; }
+        public long? KundenId { get; set; }
         [ForeignKey("KundenId")]
         public Kunde Kunde { get; set; }
         // -------------------------------------------

@@ -7,40 +7,44 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    [NotMapped]
+    [Table("Reservationen", Schema = "public")]
     public class Reservation
     {
         [Key]
         public long Id { get; set; }
 
+        [MaxLength(256)]
         public string Standort { get; set; }
 
         public DateTime Startdatum { get; set; }
 
-        public DateTime Rueckgabedatum { get; set; }
+        public DateTime Enddatum { get; set; }
+
 
         //Relationships
         // -------------------------------------------
-        public long MaschinenId { get; set; }
 
         [ForeignKey("MaschinenId")]
+        [Required]
         public Maschine Maschine { get; set; }
+        public long MaschinenId { get; set; }
 
-        public long KundenId { get; set; }
+
 
         [ForeignKey("KundenId")]
         public Kunde Kunde { get; set; }
+        public long? KundenId { get; set; }
 
-        public long UebergabeId { get; set; }
 
-        [ForeignKey("UebergabeId")]
-        public FahrzeugUebergabe FahrzeugUebergabe { get; set; }
-
-        public long RuecknahmeId { get; set; }
-
-        [ForeignKey("RuecknahmeId")]
-        public FahrzeugRuecknahme Fahrzeugruecknahme { get; set; }
+        // ------------Navigation Properties----------
+        public FahrzeugUebergabe Uebergabe { get; set; }
         // -------------------------------------------
+
+
+        //
+        //Assistant Property !! Lazy Loading not active !! Will not work. Ka warum ich es hinschreib überhaupt.
+        [NotMapped]
+        public FahrzeugRuecknahme Ruecknahme { get => Uebergabe.Ruecknahme; }
 
     }
 
