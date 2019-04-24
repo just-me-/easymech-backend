@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.DataAccessLayer
 {
     [Table("Materialposten", Schema = "public")]
-    [NotMapped]
     public class Materialposten
     {
         [Key]
         public long Id { get; set; }        
         
+        [Required]
         public double Stueckpreis { get; set; }
 
+        [Required]
         public int Anzahl { get; set; }
 
         [MaxLength(256)]
@@ -23,6 +24,9 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
+        public long ServiceDurchfuehrungId { get; set; }
+        [ForeignKey(nameof(ServiceDurchfuehrungId))]
+        [Required]
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
 

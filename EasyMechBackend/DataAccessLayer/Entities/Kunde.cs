@@ -51,6 +51,7 @@ namespace EasyMechBackend.DataAccessLayer
         public ICollection<Maschine> Maschinen { get; set; }
         public ICollection<Transaktion> Transaktionen { get; set; }
         public ICollection<Reservation> Reservationen { get; set; }
+        public ICollection<GeplanterService> Services { get; set; }
         // -------------------------------------------
 
 
