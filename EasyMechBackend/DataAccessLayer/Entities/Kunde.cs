@@ -43,7 +43,7 @@ namespace EasyMechBackend.DataAccessLayer
         public string Notiz { get; set; }
 
         [Required]
-        public bool? IsActive { get; set; }
+        public bool? IstAktiv { get; set; }
 
 
         //Relationships
@@ -61,7 +61,7 @@ namespace EasyMechBackend.DataAccessLayer
         private void FillRequiredFields()
         {
             if (Firma == null) Firma = "";
-            if (IsActive == null) IsActive = true;
+            if (IstAktiv == null) IstAktiv = true;
         }
 
         private void ClipTo128Chars()

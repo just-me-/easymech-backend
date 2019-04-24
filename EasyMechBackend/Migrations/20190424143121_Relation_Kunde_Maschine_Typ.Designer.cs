@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190424143121_Relation_Kunde_Maschine_Typ")]
+    partial class Relation_Kunde_Maschine_Typ
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace EasyMechBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(128);
 
-                    b.Property<bool?>("IstAktiv")
+                    b.Property<bool?>("IsActive")
                         .IsRequired();
 
                     b.Property<string>("Nachname")
@@ -100,7 +102,7 @@ namespace EasyMechBackend.Migrations
 
                     b.Property<int>("Betriebsdauer");
 
-                    b.Property<bool?>("IstAktiv")
+                    b.Property<bool?>("IsActive")
                         .IsRequired();
 
                     b.Property<int>("Jahrgang");

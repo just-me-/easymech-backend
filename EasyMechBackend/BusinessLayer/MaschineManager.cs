@@ -30,7 +30,7 @@ namespace EasyMechBackend.BusinessLayer
         {
             var query =
                 from m in Context.Maschinen
-                where m.IsActive.Value
+                where m.IstAktiv.Value
                 orderby m.Id descending
                 select m;
             return query.ToList();
@@ -64,7 +64,7 @@ namespace EasyMechBackend.BusinessLayer
 
         public void SetMaschineInactive(Maschine m)
         {
-                m.IsActive = false;
+                m.IstAktiv = false;
                 UpdateMaschine(m);            
         }
 

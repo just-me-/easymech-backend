@@ -29,7 +29,7 @@ namespace BusinessLayerTest
                 {
                     Id = 1,
                     Firma = "Test AG",
-                    IsActive = true
+                    IstAktiv = true
                 };
                 k.Validate();
                 context.Add(k);

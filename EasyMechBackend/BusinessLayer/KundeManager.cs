@@ -39,7 +39,7 @@ namespace EasyMechBackend.BusinessLayer
                     PLZ = "9475",
                     Ort = "Sevelen",
                     Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
-                    IsActive = true
+                    IstAktiv = true
                 };
 
                 Kunde k3 = new Kunde
@@ -51,7 +51,7 @@ namespace EasyMechBackend.BusinessLayer
                     PLZ = "0",
                     Ort = "",
                     Notiz = "Sekretärin rastet aus und hämmert auf Tastatur rum: +*ç%&/()=à£\\\"éàé!!è!è£èè£è{@#°{@°{#°¢°¬¢§¬¬§¬§}°@}",
-                    IsActive = true
+                    IstAktiv = true
                 };
 
                 AddKunde(k1);
@@ -68,7 +68,7 @@ namespace EasyMechBackend.BusinessLayer
             {
                 var query =
                 from k in c.Kunden
-                where k.IsActive.Value
+                where k.IstAktiv.Value
                 orderby k.Id descending
                 select k;
                 return query.ToList();
@@ -115,7 +115,7 @@ namespace EasyMechBackend.BusinessLayer
         {
             using (EMContext c = new EMContext())
             {
-                k.IsActive = false;
+                k.IstAktiv = false;
                 UpdateKunde(k);
             }
         }

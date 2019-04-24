@@ -28,7 +28,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Email = dto.Email,
                 Telefon = dto.Telefon,
                 Notiz = dto.Notiz,
-                IsActive = dto.IsActive
+                IstAktiv = dto.IstAktiv
             };
             return k;
         }
@@ -49,7 +49,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Email = entity.Email,
                 Telefon = entity.Telefon,
                 Notiz = entity.Notiz,
-                IsActive = entity.IsActive
+                IstAktiv = entity.IstAktiv
             };
 
             return dto;
@@ -81,7 +81,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Betriebsdauer = dto.Betriebsdauer,
                 Jahrgang = dto.Jahrgang,
                 Notiz = dto.Notiz,
-                IsActive = dto.IsActive
+                IstAktiv = dto.IstAktiv
             };
             return m;
         }
@@ -99,7 +99,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Betriebsdauer = entity.Betriebsdauer,
                 Jahrgang = entity.Jahrgang,
                 Notiz = entity.Notiz,
-                IsActive = entity.IsActive
+                IstAktiv = entity.IstAktiv
             };
             return dto;
         }

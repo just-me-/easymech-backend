@@ -30,14 +30,27 @@ namespace EasyMechBackend.DataAccessLayer
         public string Notiz { get; set; }
 
         [Required]
-        public bool? IsActive { get; set; }
+        public bool? IstAktiv { get; set; }
+
 
         //Relationships
         // -------------------------------------------
-        //[Required]
-        //public Fahrzeugtyp Typ { get; set; }
+        //Besitzer
+        public long? BesitzerId { get; set; }
 
+        [ForeignKey(nameof(BesitzerId))]
         public Kunde Besitzer { get; set; }
+
+
+        //Maschinentyp
+        public long MaschinenTypId { get; set; }
+
+        [ForeignKey(nameof(MaschinenTypId))]
+        [Required]
+        public Fahrzeugtyp Typ { get; set; }
+
+
+
         // -------------------------------------------
 
         public void Validate()
@@ -48,7 +61,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         private void FillRequiredFields()
         {
-            if (IsActive == null) IsActive = true;
+            if (IstAktiv == null) IstAktiv = true;
         }
 
         private void ClipTo128Chars()
