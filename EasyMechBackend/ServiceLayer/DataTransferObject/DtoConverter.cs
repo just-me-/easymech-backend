@@ -81,7 +81,9 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Betriebsdauer = dto.Betriebsdauer,
                 Jahrgang = dto.Jahrgang,
                 Notiz = dto.Notiz,
-                IstAktiv = dto.IstAktiv
+                IstAktiv = dto.IstAktiv,
+                BesitzerId = dto.BesitzerId,
+                MaschinenTypId = dto.FahrzeugTypId
             };
             return m;
         }
@@ -99,7 +101,9 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Betriebsdauer = entity.Betriebsdauer,
                 Jahrgang = entity.Jahrgang,
                 Notiz = entity.Notiz,
-                IstAktiv = entity.IstAktiv
+                IstAktiv = entity.IstAktiv,
+                BesitzerId = entity.BesitzerId,
+                FahrzeugTypId = entity.MaschinenTypId
             };
             return dto;
         }

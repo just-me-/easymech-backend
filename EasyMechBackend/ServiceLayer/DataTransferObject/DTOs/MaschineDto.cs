@@ -15,5 +15,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public int Jahrgang { get; set; }
         public string Notiz { get; set; }
         public bool? IstAktiv { get; set; }
+        public long? BesitzerId { get; set; }
+        public long FahrzeugTypId { get; set; }
     }
 }
