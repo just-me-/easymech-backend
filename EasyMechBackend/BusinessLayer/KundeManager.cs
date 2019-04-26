@@ -10,12 +10,14 @@ using System.Threading.Tasks;
 namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
-    { 
-
+    {
+        public EMContext Context { get; set; }
         //Fill Dummy Data for Dev
         #region dummydata
-        static KundeManager()
+        public KundeManager(EMContext context)
         {
+            Context = context;
+
             if (!GetKunden().Any())
             {
                 Kunde k1 = new Kunde
@@ -62,76 +64,58 @@ namespace EasyMechBackend.BusinessLayer
 
         #endregion
 
-        public static List<Kunde> GetKunden()
+        public List<Kunde> GetKunden()
         {
-            using (EMContext c = new EMContext())
-            {
-                var query =
-                from k in c.Kunden
-                where k.IstAktiv.Value
-                orderby k.Id descending
-                select k;
-                return query.ToList();
-            }
+            var query =
+            from k in Context.Kunden
+            where k.IstAktiv.Value
+            orderby k.Id descending
+            select k;
+            return query.ToList();
         }
 
-        public static Kunde GetKundeById(long id)
+        public Kunde GetKundeById(long id)
         {
-            
-            using (EMContext c = new EMContext())
+            Kunde k = Context.Kunden.SingleOrDefault(kunde => kunde.Id == id);
+            if (k == null)
             {
-                Kunde k = c.Kunden.SingleOrDefault(kunde => kunde.Id == id);
-                if (k == null)
-                {
-                    throw new InvalidOperationException($"Kunde with id {id} is not in database");
-                }
-                return k;
+                throw new InvalidOperationException($"Kunde with id {id} is not in database");
             }
+            return k;
         }
 
-        public static Kunde AddKunde(Kunde k)
+        public Kunde AddKunde(Kunde k)
         {
-            using (EMContext c = new EMContext())
-            {
-                k.Validate();
-                c.Add(k);
-                c.SaveChanges();
-                return k;
-            }
+            k.Validate();
+            Context.Add(k);
+            Context.SaveChanges();
+            return k;
         }
 
-        public static Kunde UpdateKunde(Kunde k)
+        public Kunde UpdateKunde(Kunde k)
         {
-            using (EMContext c = new EMContext())
-            {
-                k.Validate();
-                c.Entry(k).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                c.SaveChanges();
-                return k;
-            }
+            k.Validate();
+            Context.Entry(k).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            Context.SaveChanges();
+            return k;
         }
 
-        public static void SetKundeInactive(Kunde k)
+        public void SetKundeInactive(Kunde k)
         {
-            using (EMContext c = new EMContext())
-            {
-                k.IstAktiv = false;
-                UpdateKunde(k);
-            }
+            k.IstAktiv = false;
+            UpdateKunde(k);
         }
 
-        public static void DeleteKunde(Kunde k)
+        public void DeleteKunde(Kunde k)
         {
-            using (EMContext c = new EMContext())
-            {
-                c.Remove(k);
-                c.SaveChanges();
-            }
+            Context.Remove(k);
+            Context.SaveChanges();
+
         }
 
-        public static List<Kunde> GetSearchResult(Kunde searchEntity)
+        public List<Kunde> GetSearchResult(Kunde searchEntity)
         {
-            if( searchEntity.Id != 0)
+            if (searchEntity.Id != 0)
             {
                 return new List<Kunde>
                 {
@@ -140,31 +124,29 @@ namespace EasyMechBackend.BusinessLayer
 
             }
 
-
             List<Kunde> allKunden = GetKunden();
             IEnumerable<Kunde> searchResult = allKunden;
-
-
             PropertyInfo[] props = typeof(Kunde).GetProperties();
 
-            foreach (var prop in props) {
+            foreach (var prop in props)
+            {
 
-                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
+                //id and istAktiv are not subject for searching -> these are the only ones with onn-string fields
                 if (prop.PropertyType != typeof(string)) continue;
 
 
                 string potentialSearchTerm = (string)prop.GetValue(searchEntity);
                 if (potentialSearchTerm.HasSearchTerm())
                 {
-                    searchResult = searchResult.Where(k => {
+                    searchResult = searchResult.Where(k =>
+                    {
                         string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
                         return contentOfCustomerThatIsEvaluated != null &&
                                contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
 
-                        });
+                    });
                 }
             }
-
 
             if (searchResult.Any())
             {
@@ -174,7 +156,6 @@ namespace EasyMechBackend.BusinessLayer
             {
                 return new List<Kunde>();
             }
-
         }
     }
 }

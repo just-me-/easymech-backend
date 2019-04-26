@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace BusinessLayerTest
 {
@@ -17,98 +18,138 @@ namespace BusinessLayerTest
     public class KundeManagerTest
     {
 
-        DbContextOptions<EMContext> InitDBwithKundeHelper()
+        private DbContextOptions<EMContext> ResetDBwithKundeHelper()
         {
             var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "getKundenTestDB")
+                            .UseInMemoryDatabase(databaseName: "KundeTestDB")
                             .Options;
 
             using (var context = new EMContext(options))
             {
-                Kunde k = new Kunde
+                KundeManager kundeManager = new KundeManager(context);
+                foreach (Kunde k in kundeManager.GetKunden())
+                {
+                    context.Remove(k);
+                }
+                context.SaveChanges();
+                Kunde k1 = new Kunde
                 {
                     Id = 1,
-                    Firma = "Test AG",
-                    IstAktiv = true
+                    Firma = "Firma",
+                    Vorname = "Tom",
+                    Nachname = "K",
+                    PLZ = "7000",
+                    Ort = "Chur",
+                    Email = "t@b.ch",
+                    Telefon = "+41 81 123 45 68",
+                    Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
                 };
-                k.Validate();
-                context.Add(k);
+                k1.Validate();
+                context.Add(k1);
                 context.SaveChanges();
             }
 
             return options;
         }
-
-
         [TestMethod]
         public void AddKundeTest()
         {
-            var options = InitDBwithKundeHelper();
-
+            var options = ResetDBwithKundeHelper();
             using (var context = new EMContext(options))
             {
-                Assert.AreEqual(1, context.Kunden.Count());
-                Assert.AreEqual("Test AG", context.Kunden.Single().Firma);
+                int id = 2;
+                Kunde k = new Kunde
+                {
+                    Id = id,
+                    Firma = "Firma 2",
+                    Vorname = "Tom",
+                    Nachname = "K",
+                    PLZ = "7000",
+                    Ort = "Chur",
+                    Email = "t@b.ch",
+                    Telefon = "+41 81 123 45 68"
+                };
+                KundeManager kundeManager = new KundeManager(context);
+                kundeManager.AddKunde(k);
+                var addedKunde = context.Kunden.Single(kunde => kunde.Id == id);
+                Assert.AreEqual("Firma 2", addedKunde.Firma);
+            }
+        }
+        [TestMethod]
+        public void GetKundenTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                var kundenList = kundeManager.GetKunden();
+                Assert.AreEqual(1, kundenList.Count);
+            }
+        }
+        [TestMethod]
+        public void GetKundeByIdTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                var kunde = kundeManager.GetKundeById(1);
+                Assert.AreEqual("Firma", kunde.Firma);
+            }
+        }
+        [TestMethod]
+        public void GetKundeByNonexistantIdTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                Assert.ThrowsException<InvalidOperationException>(() => kundeManager.GetKundeById(666));
+            }
+        }
+        [TestMethod]
+        public void UpdateKundeTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                var originalTyp = kundeManager.GetKundeById(1);
+                originalTyp.Firma = "Updated Firma";
+                kundeManager.UpdateKunde(originalTyp);
+                var updatedTyp = kundeManager.GetKundeById(1);
+                Assert.AreEqual("Updated Firma", updatedTyp.Firma);
             }
         }
 
-        /*
         [TestMethod]
-        public void GetKundeByIdTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
+        public void DeleteKundeTest()
         {
-            Kunde k = KundeManager.GetKundeById(1);
-            Assert.AreEqual(1, k.Id);
-        }
-
-        [TestMethod]
-        public void GetKundeByNonexistantIdTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
-        {
-            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(11112));
-        }
-
-        [TestMethod]
-        public void GetKundenTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
-        {
-            List<Kunde> kundenliste = KundeManager.GetKunden();
-            Assert.IsTrue(kundenliste.Any());
-        }
-
-        [TestMethod]
-        public void UpdateKundeTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
-        {
-            Kunde originalKunde = KundeManager.GetKundeById(1);
-            originalKunde.Firma = "Updated AG";
-            KundeManager.UpdateKunde(originalKunde);
-            Kunde updatedKunde = KundeManager.GetKundeById(1);
-            Assert.AreEqual("Updated AG", updatedKunde.Firma);
-        }
-
-        [TestMethod]
-        public void SetKundeInactiveTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
-        {
-            Kunde originalKunde = KundeManager.GetKundeById(1);
-            originalKunde.IsActive = true;
-            KundeManager.UpdateKunde(originalKunde);
-            Kunde kunde = KundeManager.GetKundeById(1);
-            KundeManager.SetKundeInactive(kunde);
-            Kunde deactivatedKunde = KundeManager.GetKundeById(1);
-            Assert.AreEqual(false, deactivatedKunde.IsActive);
-        }
-
-        [TestMethod]
-        public void DeleteKundeTest() // Läuft nicht auf CI wegen Zugriffsverweigerung
-        {
-            Kunde k = new Kunde
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
             {
-                Id = 1234567,
-                Firma = "Test AG",
-                IsActive = true
-            };
-            KundeManager.AddKunde(k);
-            KundeManager.DeleteKunde(k);
-            Assert.ThrowsException<System.InvalidOperationException>(() => KundeManager.GetKundeById(1234567));
+                KundeManager kundeManager = new KundeManager(context);
+                var originalTyp = kundeManager.GetKundeById(1);
+                kundeManager.DeleteKunde(originalTyp);
+                Assert.IsTrue(!context.Kunden.Any());
+            }
         }
-        */
 
+        [TestMethod]
+        public void GetSearchResultKundeTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                Kunde f = new Kunde
+                {
+                    Id = 0,
+                    Firma = "Firma"
+                };
+                var resultList = kundeManager.GetSearchResult(f);
+                Assert.AreEqual(1, resultList.First().Id);
+            }
+        }
     }
 }
