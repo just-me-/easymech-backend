@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    [NotMapped]
+    [Table("GeplanterService", Schema = "public")]
     public class GeplanterService
     {
         [Key]
@@ -22,19 +22,22 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        public long MaschinenId { get; set; }
+        
 
         [ForeignKey("MaschinenId")]
+        [Required]
         public Maschine Maschine { get; set; }
+        public long MaschinenId { get; set; }
 
-        public long KundenId { get; set; }
+
+        
 
         [ForeignKey("KundenId")]
         public Kunde Kunde { get; set; }
+        public long KundenId { get; set; }
 
-        public long ServiceDurchfuehrungsId { get; set; }
-
-        [ForeignKey("ServiceDurchfuehrungsId")]
+        
+        //NavProp
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
         // -------------------------------------------
 

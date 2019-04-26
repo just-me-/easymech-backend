@@ -11,32 +11,28 @@ namespace EasyMechBackend.DataAccessLayer
     public class EMContext : DbContext
     {
         public EMContext(DbContextOptions<EMContext> options) : base(options) { }
-        public EMContext() : base() { } //Das son Ding jetzt hier...
+        public EMContext() : base() { }
+
 
         public DbSet<Kunde> Kunden { get; set; }
         public DbSet<Maschine> Maschinen { get; set; }
         public DbSet<Fahrzeugtyp> Fahrzeugtypen { get; set; }
 
-        //public DbSet<Reservation> Reservationen { get; set; }
-        //public DbSet<Transaktion> Transaktion { get; set; }
-        //public DbSet<GeplanterService> GeplanteServices { get; set; }
+        public DbSet<Transaktion> Transaktionen { get; set; }
 
-        //public DbSet<FahrzeugUebergabe> FahrzeugUebergaben { get; set; }
-        //public DbSet<FahrzeugRuecknahme> FahrzeugRuecknahmen { get; set; }
-        //public DbSet<ServiceDurchfuehrung> ServiceDurchfuehrungen { get; set; }
-        //public DbSet<Materialposten> Materialposten { get; set; }
-        //public DbSet<Arbeitsschritt> Arbeitsschritte { get; set; }
+        public DbSet<Reservation> Reservationen { get; set; }
+        public DbSet<FahrzeugUebergabe> FahrzeugUebergaben { get; set; }
+        public DbSet<FahrzeugRuecknahme> FahrzeugRuecknahmen { get; set; }
+
+        public DbSet<GeplanterService> GeplanteServices { get; set; }
+        public DbSet<ServiceDurchfuehrung> ServiceDurchfuehrungen { get; set; }
+        public DbSet<Materialposten> Materialposten { get; set; }
+        public DbSet<Arbeitsschritt> Arbeitsschritte { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
-            modelBuilder.Entity<Kunde>()
-                .HasMany(m => m.Maschinen)
-                .WithOne(k => k.Besitzer);
 
-            //modelBuilder.Entity<Fahrzeugtyp>()
-            //    .HasMany(m => m.Maschinen)
-            //    .WithOne(f => f.Typ);
         }
 
         //Logging

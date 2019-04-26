@@ -17,6 +17,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public string Email { get; set; }
         public string Telefon { get; set; }
         public string Notiz { get; set; }
-        public bool? IsActive { get; set; }
+        public bool? IstAktiv { get; set; }
     }
 }

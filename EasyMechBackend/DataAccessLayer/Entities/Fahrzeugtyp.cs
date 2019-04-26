@@ -38,7 +38,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        //public List<Maschine> Maschinen { get; set; }
+        public ICollection<Maschine> Maschinen { get; set; }
         // -------------------------------------------
 
         public void Validate()

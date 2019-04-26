@@ -12,6 +12,7 @@ namespace EasyMechBackend.BusinessLayer
     {
         public EMContext Context { get; set; }
 
+
         public FahrzeugtypManager(EMContext context)
         {
             Context = context;

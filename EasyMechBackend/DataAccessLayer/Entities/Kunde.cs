@@ -43,13 +43,18 @@ namespace EasyMechBackend.DataAccessLayer
         public string Notiz { get; set; }
 
         [Required]
-        public bool? IsActive { get; set; }
+        public bool? IstAktiv { get; set; }
 
 
         //Relationships
         // -------------------------------------------
         public ICollection<Maschine> Maschinen { get; set; }
+        public ICollection<Transaktion> Transaktionen { get; set; }
+        public ICollection<Reservation> Reservationen { get; set; }
+        public ICollection<GeplanterService> Services { get; set; }
         // -------------------------------------------
+
+
 
 
         public void Validate()
@@ -61,7 +66,7 @@ namespace EasyMechBackend.DataAccessLayer
         private void FillRequiredFields()
         {
             if (Firma == null) Firma = "";
-            if (IsActive == null) IsActive = true;
+            if (IstAktiv == null) IstAktiv = true;
         }
 
         private void ClipTo128Chars()
