@@ -55,7 +55,7 @@ namespace BusinessLayerTest
                 FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
                 fahrzeugtypManager.AddFahrzeugtyp(f);
                 var addedFahrzeugtyp = context.Fahrzeugtypen.Single(fahrzeugtyp => fahrzeugtyp.Id == id);
-                Assert.IsTrue(addedFahrzeugtyp.Fabrikat.Equals("Tester grande"));
+                Assert.AreEqual("Tester grande", addedFahrzeugtyp.Fabrikat);
             }
         } 
         [TestMethod]
