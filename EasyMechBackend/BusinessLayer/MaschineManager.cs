@@ -10,8 +10,6 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class MaschineManager : ManagerBase
     {
-        public EMContext Context { get; set; }
-
         public MaschineManager(EMContext context)
         {
             Context = context;
@@ -57,7 +55,8 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine UpdateMaschine(Maschine m)
         {
             m.Validate();
-            Context.Entry(m).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var group = Context.Maschinen.First(kunde => kunde.Id == m.Id);
+            Context.Entry(group).CurrentValues.SetValues(m);
             Context.SaveChanges();
             return m;
         }

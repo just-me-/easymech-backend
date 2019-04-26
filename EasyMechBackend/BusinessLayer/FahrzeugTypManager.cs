@@ -10,9 +10,6 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class FahrzeugtypManager : ManagerBase
     {
-        public EMContext Context { get; set; }
-
-
         public FahrzeugtypManager(EMContext context)
         {
             Context = context;
@@ -48,7 +45,8 @@ namespace EasyMechBackend.BusinessLayer
         public Fahrzeugtyp UpdateFahrzeugtyp(Fahrzeugtyp f)
         {
             f.Validate();
-            Context.Entry(f).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var group = Context.Fahrzeugtypen.First(kunde => kunde.Id == f.Id);
+            Context.Entry(group).CurrentValues.SetValues(f);
             Context.SaveChanges();
             return f;
         }

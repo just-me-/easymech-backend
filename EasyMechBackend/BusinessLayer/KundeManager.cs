@@ -11,7 +11,6 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
     {
-        public EMContext Context { get; set; }
         //Fill Dummy Data for Dev
         #region dummydata
         public KundeManager(EMContext context)
@@ -95,7 +94,8 @@ namespace EasyMechBackend.BusinessLayer
         public Kunde UpdateKunde(Kunde k)
         {
             k.Validate();
-            Context.Entry(k).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var group = Context.Kunden.First(kunde => kunde.Id == k.Id);
+            Context.Entry(group).CurrentValues.SetValues(k);
             Context.SaveChanges();
             return k;
         }
@@ -110,7 +110,6 @@ namespace EasyMechBackend.BusinessLayer
         {
             Context.Remove(k);
             Context.SaveChanges();
-
         }
 
         public List<Kunde> GetSearchResult(Kunde searchEntity)
