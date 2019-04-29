@@ -31,7 +31,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     var maschinentypDtos = manager.GetMaschinentypen().ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<MaschinentypDto>>(maschinentypDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
@@ -55,7 +55,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     MaschinentypDto maschinentypDto = manager.GetMaschinentypById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return new ResponseObject<MaschinentypDto>(maschinentypDto);
@@ -78,7 +78,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     MaschinentypDto dto = manager.AddMaschinentyp(maschinentyp.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {dto.Id} added");
                     return new ResponseObject<MaschinentypDto>(dto);
@@ -111,7 +111,7 @@ namespace EasyMechBackend.ServiceLayer
                     {
                         return new ResponseObject<MaschinentypDto>("ID in URL does not match ID in the request's body data");
                     }
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     MaschinentypDto changedMaschinentypDto = manager.UpdateMaschinentyp(maschinentyp.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {id} updated");
                     return new ResponseObject<MaschinentypDto>(changedMaschinentypDto);
@@ -140,7 +140,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     var maschinentyp = manager.GetMaschinentypById(id);
                     manager.DeleteMaschinentyp(maschinentyp);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Maschinentyp {id}");
@@ -174,7 +174,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var manager = new MaschinentypManager();
                     var maschinentypDtos = manager.GetSearchResult(f.ConvertToEntity()).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<MaschinentypDto>>(maschinentypDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");

@@ -30,7 +30,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     var kundenDtos = manager.GetKunden().ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
@@ -54,7 +54,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     KundeDto kundeDto = manager.GetKundeById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return new ResponseObject<KundeDto>(kundeDto);
@@ -77,7 +77,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     KundeDto dto = manager.AddKunde(kunde.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: kunde {dto.Id} added");
                     return new ResponseObject<KundeDto>(dto);
@@ -110,7 +110,7 @@ namespace EasyMechBackend.ServiceLayer
                     {
                         return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data");
                     }
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     KundeDto changedKundeDto = manager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Kunde {id} updated");
                     return new ResponseObject<KundeDto>(changedKundeDto);
@@ -139,7 +139,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     var kunde = manager.GetKundeById(id);
                     manager.SetKundeInactive(kunde);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
@@ -168,7 +168,7 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
-                    var manager = new KundeManager(new DataAccessLayer.EMContext());
+                    var manager = new KundeManager();
                     var kundenDtos = manager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
