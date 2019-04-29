@@ -83,7 +83,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Notiz = dto.Notiz,
                 IstAktiv = dto.IstAktiv,
                 BesitzerId = dto.BesitzerId,
-                MaschinenTypId = dto.MaschinenTypId
+                MaschinentypId = dto.MaschinentypId
             };
             return m;
         }
@@ -103,7 +103,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Notiz = entity.Notiz,
                 IstAktiv = entity.IstAktiv,
                 BesitzerId = entity.BesitzerId,
-                MaschinenTypId = entity.MaschinenTypId
+                MaschinentypId = entity.MaschinentypId
             };
             return dto;
         }

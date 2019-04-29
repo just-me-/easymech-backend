@@ -32,6 +32,10 @@ namespace EasyMechBackend.DataAccessLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
+            modelBuilder.Entity<Maschinentyp>()
+                .HasMany(t => t.Maschinen)
+                .WithOne(t => t.Maschinentyp)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
 

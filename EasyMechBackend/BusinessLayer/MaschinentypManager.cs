@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
 
@@ -57,9 +58,23 @@ namespace EasyMechBackend.BusinessLayer
         }
 
         public void DeleteMaschinentyp(Maschinentyp f)
-        {        
-                Context.Remove(f);
-                Context.SaveChanges();            
+        {
+
+            var query =
+                from m in Context.Maschinen
+                where m.MaschinentypId == f.Id
+                select m;
+
+            bool restricted = query.Any();
+
+            if (restricted)
+            {
+                throw new ForeignKeyRestrictionException($"Error: Maschinentyp {f.Id} ({f.Fabrikat}) is still set as other machine's type and can't be deleted!");
+            }
+            else {
+            Context.Remove(f);
+            Context.SaveChanges();
+            }
         }
 
         public List<Maschinentyp> GetSearchResult(Maschinentyp searchEntity)

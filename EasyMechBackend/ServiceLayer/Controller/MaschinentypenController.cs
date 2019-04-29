@@ -6,6 +6,7 @@ using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using log4net;
+using EasyMechBackend.Common.Exceptions;
 
 namespace EasyMechBackend.ServiceLayer
 
@@ -144,6 +145,11 @@ namespace EasyMechBackend.ServiceLayer
                     manager.DeleteMaschinentyp(maschinentyp);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Maschinentyp {id}");
                     return new ResponseObject<MaschinentypDto>(null, OKTAG, $"Delete Maschinentyp {id}");
+                }
+                catch (ForeignKeyRestrictionException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Foreign Key Restriction Exception: {e.Message}");
+                    return new ResponseObject<MaschinentypDto>(e.Message);
                 }
                 catch (DbUpdateException e)
                 {

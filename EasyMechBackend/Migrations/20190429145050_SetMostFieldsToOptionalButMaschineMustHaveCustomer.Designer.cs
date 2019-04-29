@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190429145050_SetMostFieldsToOptionalButMaschineMustHaveCustomer")]
+    partial class SetMostFieldsToOptionalButMaschineMustHaveCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -320,10 +322,10 @@ namespace EasyMechBackend.Migrations
                         .HasForeignKey("BesitzerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Maschinentyp", "Maschinentyp")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Maschinentyp", "Typ")
                         .WithMany("Maschinen")
                         .HasForeignKey("MaschinentypId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.MaschinenRuecknahme", b =>

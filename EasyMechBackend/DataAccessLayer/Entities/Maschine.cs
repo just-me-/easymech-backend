@@ -23,9 +23,9 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(128)]
         public string Motorennummer { get; set; }
 
-        public int Betriebsdauer { get; set; }
+        public int? Betriebsdauer { get; set; }
 
-        public int Jahrgang { get; set; }
+        public int? Jahrgang { get; set; }
 
         public string Notiz { get; set; }
 
@@ -37,14 +37,15 @@ namespace EasyMechBackend.DataAccessLayer
         // -------------------------------------------
      
         [ForeignKey(nameof(BesitzerId))]
-        public Kunde Besitzer { get; set; }
-        public long? BesitzerId { get; set; }
-
-
-        [ForeignKey(nameof(MaschinenTypId))]
         [Required]
-        public Maschinentyp Typ { get; set; }
-        public long MaschinenTypId { get; set; }
+        public Kunde Besitzer { get; set; }
+        public long BesitzerId { get; set; }
+
+
+        [ForeignKey(nameof(MaschinentypId))]
+        [Required]
+        public Maschinentyp Maschinentyp { get; set; }
+        public long MaschinentypId { get; set; }
 
         // -------------------------------------------
 
