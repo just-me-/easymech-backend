@@ -13,7 +13,7 @@ namespace EasyMechBackend.ServiceLayer
 {
     [Route("[controller]")]
     [ApiController]
-    public class FahrzeugtypenController : ControllerBase
+    public class MaschinentypenController : ControllerBase
     {
         private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
         private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
@@ -22,108 +22,108 @@ namespace EasyMechBackend.ServiceLayer
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
-        // GET: /Fahrzeugtypen/
+        // GET: /Maschinentypen/
         [HttpGet]
-        public async Task<ActionResult<ResponseObject<IEnumerable<FahrzeugtypDto>>>> GetFahrzeugtypen()
+        public async Task<ActionResult<ResponseObject<IEnumerable<MaschinentypDto>>>> GetMaschinentypen()
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    var fahrzeugtypDtos = manager.GetFahrzeugtypen().ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<FahrzeugtypDto>>(fahrzeugtypDtos);
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var maschinentypDtos = manager.GetMaschinentypen().ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<MaschinentypDto>>(maschinentypDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<FahrzeugtypDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message);
                 }
             });
 
             return await task;
         }
 
-        // GET: /Fahrzeugtypen/2
+        // GET: /Maschinentypen/2
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseObject<FahrzeugtypDto>>> GetFahrzeugtyp(long id)
+        public async Task<ActionResult<ResponseObject<MaschinentypDto>>> GetMaschinentyp(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    FahrzeugtypDto fahrzeugtypDto = manager.GetFahrzeugtypById(id).ConvertToDto();
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    MaschinentypDto maschinentypDto = manager.GetMaschinentypById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
-                    return new ResponseObject<FahrzeugtypDto>(fahrzeugtypDto);
+                    return new ResponseObject<MaschinentypDto>(maschinentypDto);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message);
                 }
             });
 
             return await task;
         }
 
-        // POST: fahrzeugtypen/
+        // POST: maschinentypen/
         [HttpPost]
-        public async Task<ActionResult<ResponseObject<FahrzeugtypDto>>> PostFahrzeugtyp(FahrzeugtypDto fahrzeugtyp)
+        public async Task<ActionResult<ResponseObject<MaschinentypDto>>> PostMaschinentyp(MaschinentypDto maschinentyp)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    FahrzeugtypDto dto = manager.AddFahrzeugtyp(fahrzeugtyp.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Fahrzeugtyp {dto.Id} added");
-                    return new ResponseObject<FahrzeugtypDto>(dto);
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    MaschinentypDto dto = manager.AddMaschinentyp(maschinentyp.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {dto.Id} added");
+                    return new ResponseObject<MaschinentypDto>(dto);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<FahrzeugtypDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>("DB Update Exception: " + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message);
                 }
             });
 
             return await task;
         }
 
-        // PUT: fahrzeugtypen/5
+        // PUT: maschinentypen/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseObject<FahrzeugtypDto>>> PutFahrzeugtyp(long id, FahrzeugtypDto fahrzeugtyp)
+        public async Task<ActionResult<ResponseObject<MaschinentypDto>>> PutMaschinentyp(long id, MaschinentypDto maschinentyp)
         {
 
             var task = Task.Run(() =>
             {
                 try
                 {
-                    if (id != fahrzeugtyp.Id)
+                    if (id != maschinentyp.Id)
                     {
-                        return new ResponseObject<FahrzeugtypDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<MaschinentypDto>("ID in URL does not match ID in the request's body data");
                     }
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    FahrzeugtypDto changedFahrzeugtypDto = manager.UpdateFahrzeugtyp(fahrzeugtyp.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Fahrzeugtyp {id} updated");
-                    return new ResponseObject<FahrzeugtypDto>(changedFahrzeugtypDto);
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    MaschinentypDto changedMaschinentypDto = manager.UpdateMaschinentyp(maschinentyp.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {id} updated");
+                    return new ResponseObject<MaschinentypDto>(changedMaschinentypDto);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message);
                 }
 
             });
@@ -131,53 +131,53 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
-        // DELETE: fahrzeugtypen/5
+        // DELETE: maschinentypen/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseObject<FahrzeugtypDto>>> DeleteFahrzeugtyp(long id)
+        public async Task<ActionResult<ResponseObject<MaschinentypDto>>> DeleteMaschinentyp(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    var fahrzeugtyp = manager.GetFahrzeugtypById(id);
-                    manager.DeleteFahrzeugtyp(fahrzeugtyp);
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Fahrzeugtyp {id}");
-                    return new ResponseObject<FahrzeugtypDto>(null, OKTAG, $"Delete Fahrzeugtyp {id}");
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var maschinentyp = manager.GetMaschinentypById(id);
+                    manager.DeleteMaschinentyp(maschinentyp);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Maschinentyp {id}");
+                    return new ResponseObject<MaschinentypDto>(null, OKTAG, $"Delete Maschinentyp {id}");
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<FahrzeugtypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message);
                 }
 
             });
             return await task;
         }
 
-        // POST: fahrzeugtypen/suchen
+        // POST: Maschinentypen/suchen
         [HttpPost("suchen")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<FahrzeugtypDto>>>> GetSearchResult(FahrzeugtypDto f)
+        public async Task<ActionResult<ResponseObject<IEnumerable<MaschinentypDto>>>> GetSearchResult(MaschinentypDto f)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new FahrzeugtypManager(new DataAccessLayer.EMContext());
-                    var fahrzeugtypDtos = manager.GetSearchResult(f.ConvertToEntity()).ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<FahrzeugtypDto>>(fahrzeugtypDtos);
+                    var manager = new MaschinentypManager(new DataAccessLayer.EMContext());
+                    var maschinentypDtos = manager.GetSearchResult(f.ConvertToEntity()).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<MaschinentypDto>>(maschinentypDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<FahrzeugtypDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message);
                 }
             });
 

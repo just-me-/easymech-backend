@@ -10,23 +10,23 @@ using System.Linq;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class FahrzeugtypManagerTests
+    public class MaschinentypManagerTests
     {
-        private DbContextOptions<EMContext> ResetDBwithFahrzeugtypHelper()
+        private DbContextOptions<EMContext> ResetDBwithMaschinentypHelper()
         {
             var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "FahrzeugtypTestDB")
+                            .UseInMemoryDatabase(databaseName: "MaschinentypTestDB")
                             .Options;
 
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                foreach (Fahrzeugtyp t in fahrzeugtypManager.GetFahrzeugtypen())
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                foreach (Maschinentyp t in maschinentypManager.GetMaschinentypen())
                 {
                     context.Remove(t);
                 }
                 context.SaveChanges();
-                Fahrzeugtyp f = new Fahrzeugtyp
+                Maschinentyp f = new Maschinentyp
                 {
                     Id = 1,
                     Fabrikat = "Tester grande",
@@ -40,98 +40,98 @@ namespace BusinessLayerTest
             return options;
         }
         [TestMethod]
-        public void AddFahrzeugtypTest()
+        public void AddMaschinentypTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 int id = 2;
-                Fahrzeugtyp f = new Fahrzeugtyp
+                Maschinentyp f = new Maschinentyp
                 {
                     Id = id,
                     Fabrikat = "Tester grande",
                     Nutzlast = 2000
                 };
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                fahrzeugtypManager.AddFahrzeugtyp(f);
-                var addedFahrzeugtyp = context.Fahrzeugtypen.Single(fahrzeugtyp => fahrzeugtyp.Id == id);
-                Assert.AreEqual("Tester grande", addedFahrzeugtyp.Fabrikat);
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                maschinentypManager.AddMaschinentyp(f);
+                var addedMaschinentyp = context.Maschinentypen.Single(maschinentyp => maschinentyp.Id == id);
+                Assert.AreEqual("Tester grande", addedMaschinentyp.Fabrikat);
             }
         } 
         [TestMethod]
-        public void GetFahrzeugtypenTest()
+        public void GetMaschinentypenTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                var fahrzeugtypenList = fahrzeugtypManager.GetFahrzeugtypen();
-                Assert.AreEqual(1, fahrzeugtypenList.Count);
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                var maschinentypenList = maschinentypManager.GetMaschinentypen();
+                Assert.AreEqual(1, maschinentypenList.Count);
             }
         }
         [TestMethod]
-        public void GetFahrzeugtypByIdTest()
+        public void GetMaschinentypByIdTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                var fahrzeugtyp1 = fahrzeugtypManager.GetFahrzeugtypById(1);
-                Assert.AreEqual("Tester grande", fahrzeugtyp1.Fabrikat);
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                var maschinentyp1 = maschinentypManager.GetMaschinentypById(1);
+                Assert.AreEqual("Tester grande", maschinentyp1.Fabrikat);
             }
         }
         [TestMethod]
-        public void GetFahrzeugtypByNonexistantIdTest()
+        public void GetMaschinentypByNonexistantIdTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                Assert.ThrowsException<InvalidOperationException>(() => fahrzeugtypManager.GetFahrzeugtypById(666));
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                Assert.ThrowsException<InvalidOperationException>(() => maschinentypManager.GetMaschinentypById(666));
             }
         }
         [TestMethod]
-        public void UpdateFahrzeugtypTest()
+        public void UpdateMaschinentypTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                var originalTyp = fahrzeugtypManager.GetFahrzeugtypById(1);
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                var originalTyp = maschinentypManager.GetMaschinentypById(1);
                 originalTyp.Fabrikat = "Updated Fabrikat";
-                fahrzeugtypManager.UpdateFahrzeugtyp(originalTyp);
-                var updatedTyp = fahrzeugtypManager.GetFahrzeugtypById(1);
+                maschinentypManager.UpdateMaschinentyp(originalTyp);
+                var updatedTyp = maschinentypManager.GetMaschinentypById(1);
                 Assert.AreEqual("Updated Fabrikat", updatedTyp.Fabrikat);
             }
         }
 
         [TestMethod]
-        public void DeleteFahrzeugtypTest()
+        public void DeleteMaschinentypTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                var originalTyp = fahrzeugtypManager.GetFahrzeugtypById(1);
-                fahrzeugtypManager.DeleteFahrzeugtyp(originalTyp);
-                Assert.IsTrue(!context.Fahrzeugtypen.Any());
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                var originalTyp = maschinentypManager.GetMaschinentypById(1);
+                maschinentypManager.DeleteMaschinentyp(originalTyp);
+                Assert.IsTrue(!context.Maschinentypen.Any());
             }
         }
 
         [TestMethod]
-        public void GetSearchResultFahrzeugtypTest()
+        public void GetSearchResultMaschinentypTest()
         {
-            var options = ResetDBwithFahrzeugtypHelper();
+            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
-                FahrzeugtypManager fahrzeugtypManager = new FahrzeugtypManager(context);
-                Fahrzeugtyp f = new Fahrzeugtyp
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                Maschinentyp f = new Maschinentyp
                 {
                     Id = 0,
                     Fabrikat = "Tester grande",
                     Nutzlast = 2000
                 };
-                var resultList = fahrzeugtypManager.GetSearchResult(f);
+                var resultList = maschinentypManager.GetSearchResult(f);
                 Assert.AreEqual(1, resultList.First().Id);
             }
         }

@@ -37,14 +37,14 @@ namespace EasyMechBackend.DataAccessLayer
 
 
         // ------------Navigation Properties----------
-        public FahrzeugUebergabe Uebergabe { get; set; }
+        public MaschinenUebergabe Uebergabe { get; set; }
         // -------------------------------------------
 
 
         //
         //Assistant Property !! Lazy Loading not active !! Will not work. Ka warum ich es hinschreib überhaupt.
         [NotMapped]
-        public FahrzeugRuecknahme Ruecknahme { get => Uebergabe.Ruecknahme; }
+        public MaschinenRuecknahme Ruecknahme { get => Uebergabe.Ruecknahme; }
 
     }
 

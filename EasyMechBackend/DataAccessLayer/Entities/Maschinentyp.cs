@@ -8,8 +8,8 @@ using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    [Table("Fahrzeugtyp", Schema = "public")]
-    public class Fahrzeugtyp
+    [Table("Maschinentyp", Schema = "public")]
+    public class Maschinentyp
     {
         [Key]
         public long Id { get; set; }
@@ -28,11 +28,11 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int Eigengewicht { get; set; }
 
-        public int Fahrzeughoehe { get; set; }
+        public int Maschinenhoehe { get; set; }
 
-        public int Fahrzeuglaenge { get; set; }
+        public int Maschinenlaenge { get; set; }
 
-        public int Fahrzeugbreite { get; set; }
+        public int Maschinenbreite { get; set; }
 
         public int Pneugroesse { get; set; }
 

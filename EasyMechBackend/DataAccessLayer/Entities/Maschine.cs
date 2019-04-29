@@ -43,7 +43,7 @@ namespace EasyMechBackend.DataAccessLayer
 
         [ForeignKey(nameof(MaschinenTypId))]
         [Required]
-        public Fahrzeugtyp Typ { get; set; }
+        public Maschinentyp Typ { get; set; }
         public long MaschinenTypId { get; set; }
 
         // -------------------------------------------

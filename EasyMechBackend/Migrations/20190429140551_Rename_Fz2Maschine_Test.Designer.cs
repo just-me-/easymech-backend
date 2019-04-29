@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190429140551_Rename_Fz2Maschine_Test")]
+    partial class Rename_Fz2Maschine_Test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +40,55 @@ namespace EasyMechBackend.Migrations
                     b.HasIndex("ServiceDurchfuehrungId");
 
                     b.ToTable("Arbeitsschritt","public");
+                });
+
+            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Fahrzeugtyp", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Eigengewicht");
+
+                    b.Property<string>("Fabrikat")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("Fahrzeugbreite");
+
+                    b.Property<int>("Fahrzeughoehe");
+
+                    b.Property<int>("Fahrzeuglaenge");
+
+                    b.Property<int>("Hubhoehe");
+
+                    b.Property<int>("Hubkraft");
+
+                    b.Property<string>("Motortyp")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("Nutzlast");
+
+                    b.Property<int>("Pneugroesse");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fahrzeugtyp","public");
+                });
+
+            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.FahrzeugUebergabe", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Datum");
+
+                    b.Property<long>("ReservationsId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationsId")
+                        .IsUnique();
+
+                    b.ToTable("FahrzeugUebergabe","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.GeplanterService", b =>
@@ -148,63 +199,14 @@ namespace EasyMechBackend.Migrations
 
                     b.Property<DateTime>("Datum");
 
-                    b.Property<long>("MaschinenUebergabeId");
+                    b.Property<long>("UebergabeId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MaschinenUebergabeId")
+                    b.HasIndex("UebergabeId")
                         .IsUnique();
 
                     b.ToTable("MaschinenRuecknahme","public");
-                });
-
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Maschinentyp", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Eigengewicht");
-
-                    b.Property<string>("Fabrikat")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("Hubhoehe");
-
-                    b.Property<int>("Hubkraft");
-
-                    b.Property<int>("Maschinenbreite");
-
-                    b.Property<int>("Maschinenhoehe");
-
-                    b.Property<int>("Maschinenlaenge");
-
-                    b.Property<string>("Motortyp")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("Nutzlast");
-
-                    b.Property<int>("Pneugroesse");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Maschinentyp","public");
-                });
-
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.MaschinenUebergabe", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Datum");
-
-                    b.Property<long>("ReservationsId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationsId")
-                        .IsUnique();
-
-                    b.ToTable("MaschinenUebergabe","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Materialposten", b =>
@@ -300,6 +302,14 @@ namespace EasyMechBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.FahrzeugUebergabe", b =>
+                {
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Reservation", "Reservation")
+                        .WithOne("Uebergabe")
+                        .HasForeignKey("EasyMechBackend.DataAccessLayer.FahrzeugUebergabe", "ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.GeplanterService", b =>
                 {
                     b.HasOne("EasyMechBackend.DataAccessLayer.Kunde", "Kunde")
@@ -319,7 +329,7 @@ namespace EasyMechBackend.Migrations
                         .WithMany("Maschinen")
                         .HasForeignKey("BesitzerId");
 
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Maschinentyp", "Typ")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Fahrzeugtyp", "Typ")
                         .WithMany("Maschinen")
                         .HasForeignKey("MaschinenTypId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -327,17 +337,9 @@ namespace EasyMechBackend.Migrations
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.MaschinenRuecknahme", b =>
                 {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.MaschinenUebergabe", "MaschinenUebergabe")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.FahrzeugUebergabe", "FahrzeugUebergabe")
                         .WithOne("Ruecknahme")
-                        .HasForeignKey("EasyMechBackend.DataAccessLayer.MaschinenRuecknahme", "MaschinenUebergabeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.MaschinenUebergabe", b =>
-                {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Reservation", "Reservation")
-                        .WithOne("Uebergabe")
-                        .HasForeignKey("EasyMechBackend.DataAccessLayer.MaschinenUebergabe", "ReservationsId")
+                        .HasForeignKey("EasyMechBackend.DataAccessLayer.MaschinenRuecknahme", "UebergabeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {
-    public class FahrzeugtypDto : DtoBase
+    public class MaschinentypDto : DtoBase
     {
         public long Id { get; set; }
         public string Fabrikat { get; set; }
@@ -14,9 +14,9 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public int Hubkraft { get; set; }
         public int Hubhoehe { get; set; }
         public int Eigengewicht { get; set; }
-        public int Fahrzeughoehe { get; set; }
-        public int Fahrzeuglaenge { get; set; }
-        public int Fahrzeugbreite { get; set; }
+        public int Maschinenhoehe { get; set; }
+        public int Maschinenlaenge { get; set; }
+        public int Maschinenbreite { get; set; }
         public int Pneugroesse { get; set; }
     }
 }
