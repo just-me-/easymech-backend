@@ -3,14 +3,8 @@ using System;
 
 namespace EasyMechBackend.BusinessLayer
 {
-    public class ManagerBase : IDisposable
+    public class ManagerBase
     {
         public EMContext Context { get; set; }
-
-        public void Dispose()
-        {
-            Context.Dispose();
-            Context = null;
-        }
     }
 }
