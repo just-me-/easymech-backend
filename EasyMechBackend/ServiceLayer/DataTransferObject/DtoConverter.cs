@@ -171,6 +171,53 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
+        #region Transaktion
+
+        public static Transaktion ConvertToEntity(this TransaktionDto dto)
+        {
+            if (dto == null) { return null; }
+
+            Transaktion t = new Transaktion
+            {
+                Id = dto.Id,
+                Preis = dto.Preis,
+                Typ = dto.Typ,
+                Datum = dto.Datum,
+                MaschinenId = dto.MaschinenId,
+                KundenId = dto.KundenId
+            };
+            return t;
+        }
+
+        public static TransaktionDto ConvertToDto(this Transaktion entity)
+        {
+            if (entity == null) { return null; }
+
+            TransaktionDto dto = new TransaktionDto
+            {
+                Id = entity.Id,
+                Preis = entity.Preis,
+                Typ = entity.Typ,
+                Datum = entity.Datum,
+                MaschinenId = entity.MaschinenId,
+                KundenId = entity.KundenId
+            };
+
+            return dto;
+        }
+
+
+
+        public static List<Transaktion> ConvertToEntities(this IEnumerable<TransaktionDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<TransaktionDto> ConvertToDtos(this IEnumerable<Transaktion> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+
+        #endregion
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {
