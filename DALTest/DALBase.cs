@@ -10,8 +10,6 @@ namespace DALTest
        
         protected bool HaveSameData(object o1, object o2)
         {
-            bool haveSameData;
-
             foreach (PropertyInfo prop in o1.GetType().GetProperties())
             {
                 if (prop.GetValue(o1) == null && prop.GetValue(o2) == null)

@@ -100,7 +100,7 @@ namespace BusinessLayerTest
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine1 = maschineManager.GetMaschineById(1);
-                Assert.AreEqual("123xyz", maschine1.Seriennummer);
+                Assert.AreEqual("123xyz!!", maschine1.Seriennummer);
             }
         }
         [TestMethod]

@@ -46,6 +46,7 @@ namespace EasyMechBackend
 
 
             //Keycloak
+            /*
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -68,6 +69,7 @@ namespace EasyMechBackend
                     }
                 };
             });
+            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

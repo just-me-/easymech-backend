@@ -65,7 +65,7 @@ namespace UtilTest
         [TestMethod]
         public void TestPositiveSearchTermEdgeCase()
         {
-            string s = "bla";
+            string s = "ch";
             bool r = s.HasSearchTerm();
             Assert.IsTrue(r);
         }

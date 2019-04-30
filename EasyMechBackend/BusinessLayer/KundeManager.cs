@@ -92,7 +92,8 @@ namespace EasyMechBackend.BusinessLayer
             foreach (var prop in props)
             {
 
-                //id and istAktiv are not subject for searching -> these are the only ones with onn-string fields
+                //id and istAktiv are not subject for searching -> these are the only ones with non-string fields
+                //no other fields than string fields have to be treated.
                 if (prop.PropertyType != typeof(string)) continue;
 
 
@@ -103,7 +104,7 @@ namespace EasyMechBackend.BusinessLayer
                     {
                         string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
                         return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
+                               contentOfCustomerThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
 
                     });
                 }

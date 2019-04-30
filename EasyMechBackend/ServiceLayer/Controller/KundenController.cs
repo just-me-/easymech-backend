@@ -12,7 +12,7 @@ namespace EasyMechBackend.ServiceLayer
 
 
 {
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     [ApiController]
     public class KundenController : ControllerBase

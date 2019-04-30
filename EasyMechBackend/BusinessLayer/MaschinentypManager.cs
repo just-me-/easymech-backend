@@ -76,46 +76,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             }
         }
-
-        public List<Maschinentyp> GetSearchResult(Maschinentyp searchEntity)
-        {
-            if (searchEntity.Id != 0)
-            {
-                return new List<Maschinentyp>
-                {
-                    GetMaschinentypById(searchEntity.Id)
-                };
-            }
-
-            List<Maschinentyp> allMaschinentypen = GetMaschinentypen();
-            IEnumerable<Maschinentyp> searchResult = allMaschinentypen;
-
-            PropertyInfo[] props = typeof(Maschinentyp).GetProperties();
-
-            foreach (var prop in props)
-            {
-                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
-                if (prop.PropertyType != typeof(string)) continue;
-
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
-                {
-                    searchResult = searchResult.Where(m => {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(m);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
-                    });
-                }
-            }
-
-            if (searchResult.Any())
-            {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Maschinentyp>();
-            }
-        }
+        
+        
     }
 }
