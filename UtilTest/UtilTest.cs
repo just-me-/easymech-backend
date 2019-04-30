@@ -87,4 +87,47 @@ namespace UtilTest
         }
     }
 
+
+    [TestClass]
+    public class ContainsCaseInsensitive
+    {
+        readonly string baseString = "AbCd123";
+
+        [TestMethod]
+        public void TestRegular()
+        {
+            string s = "bCd";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestCaseInsensitivity()
+        {
+            string s = "BcD";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestNumbers()
+        {
+            string s = "bCd123";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestEmpty()
+        {
+            string s = "";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+            //returns true according to string.Contains() rules which apply here as well
+        }
+
+        [TestMethod]
+        public void TestNegativeResult()
+        {
+            string s = "abcf";
+            Assert.IsFalse(baseString.ContainsCaseInsensitive(s));
+        }
+    }
+
 }
