@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayerTest", "Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilTest", "UtilTest\UtilTest.csproj", "{D815ACF4-7D09-459F-A9F1-0B5B36170E95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DALTest", "DALTest\DALTest.csproj", "{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{D815ACF4-7D09-459F-A9F1-0B5B36170E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D815ACF4-7D09-459F-A9F1-0B5B36170E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D815ACF4-7D09-459F-A9F1-0B5B36170E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{18288658-DBB1-4D65-AC36-4FD1FC35864A} = {9FE29EF4-05D4-4F63-B563-F9F530546BE4}
 		{D815ACF4-7D09-459F-A9F1-0B5B36170E95} = {9FE29EF4-05D4-4F63-B563-F9F530546BE4}
+		{2A0816E5-DB45-4D78-B5CC-4F9329B0DBA1} = {9FE29EF4-05D4-4F63-B563-F9F530546BE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25CF630A-CE38-42CC-95E3-C33C1F1882BD}
