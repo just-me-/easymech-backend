@@ -139,7 +139,7 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     var manager = new TransaktionManager();
                     var transaktion = manager.GetTransaktionById(id);
-                    manager.deleteTransaktion(transaktion);
+                    manager.DeleteTransaktion(transaktion);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Transaktion {id} to inactive");
                     return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive");
                 }

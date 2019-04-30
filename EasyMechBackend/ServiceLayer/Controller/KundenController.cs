@@ -22,7 +22,7 @@ namespace EasyMechBackend.ServiceLayer
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
-        // GET: /Kunden/
+        // GET: /Kunden
         [HttpGet]
         public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetKunden()
         {
@@ -31,7 +31,7 @@ namespace EasyMechBackend.ServiceLayer
                 try
                 {
                     var manager = new KundeManager();
-                    var kundenDtos = manager.GetKunden().ConvertToDtos();
+                    var kundenDtos = manager.GetKunden(false).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
@@ -43,6 +43,29 @@ namespace EasyMechBackend.ServiceLayer
                 }
             });
 
+            return await task;
+        }
+
+        // GET: /Kunden/all
+        [HttpGet("all")]
+        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetAllKunden()
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new KundeManager();
+                    var kundenDtos = manager.GetKunden(true).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                }
+            });
             return await task;
         }
 

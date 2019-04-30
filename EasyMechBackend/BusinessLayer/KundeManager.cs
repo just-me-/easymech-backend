@@ -16,53 +16,6 @@ namespace EasyMechBackend.BusinessLayer
         public KundeManager(EMContext context)
         {
             Context = context;
-
-            #region dummydata
-            if (!GetKunden().Any())
-            {
-
-
-                Kunde k1 = new Kunde
-                {
-                    Firma = "Toms Vergnügungspark",
-                    Vorname = "Tom",
-                    Nachname = "K",
-                    PLZ = "7000",
-                    Ort = "Chur",
-                    Email = "t@b.ch",
-                    Telefon = "+41 81 123 45 68",
-                    Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
-                };
-
-
-                Kunde k2 = new Kunde
-                {
-                    Firma = "DJ Fire",
-                    Vorname = "Dario",
-                    Nachname = "Fuoco",
-                    PLZ = "9475",
-                    Ort = "Sevelen",
-                    Email = "DJ-Fire (at) geilepartysimbunker (dot) com",
-                    IstAktiv = true
-                };
-
-                Kunde k3 = new Kunde
-                {
-                    Firma = "Hack0r",
-                    Vorname = "<script>alert(\"Fail\")</script>",
-                    Nachname = "O'Brian",
-                    Adresse = "Strasse 1",
-                    PLZ = "0",
-                    Ort = "",
-                    Notiz = "Sekretärin rastet aus und hämmert auf Tastatur rum: +*ç%&/()=à£\\\"éàé!!è!è£èè£è{@#°{@°{#°¢°¬¢§¬¬§¬§}°@}",
-                    IstAktiv = true
-                };
-
-                AddKunde(k1);
-                AddKunde(k2);
-                AddKunde(k3);
-            }
-            #endregion
         }
 
         public KundeManager()
@@ -72,11 +25,11 @@ namespace EasyMechBackend.BusinessLayer
 
 
 
-        public List<Kunde> GetKunden()
+        public List<Kunde> GetKunden(bool withInactive)
         {
             var query =
             from k in Context.Kunden
-            where k.IstAktiv.Value
+            where k.IstAktiv.Value || withInactive
             orderby k.Id descending
             select k;
             return query.ToList();
@@ -132,7 +85,7 @@ namespace EasyMechBackend.BusinessLayer
 
             }
 
-            List<Kunde> allKunden = GetKunden();
+            List<Kunde> allKunden = GetKunden(false);
             IEnumerable<Kunde> searchResult = allKunden;
             PropertyInfo[] props = typeof(Kunde).GetProperties();
 
