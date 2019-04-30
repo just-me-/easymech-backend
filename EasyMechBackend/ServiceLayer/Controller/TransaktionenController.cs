@@ -9,11 +9,10 @@ using log4net;
 
 namespace EasyMechBackend.ServiceLayer
 
-
 {
     [Route("[controller]")]
     [ApiController]
-    public class KundenController : ControllerBase
+    public class TransaktionenController : ControllerBase
     {
         private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
         private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
@@ -22,108 +21,107 @@ namespace EasyMechBackend.ServiceLayer
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
-        // GET: /Kunden/
+        // GET: /Transaktionen/
         [HttpGet]
-        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetKunden()
+        public async Task<ActionResult<ResponseObject<IEnumerable<TransaktionDto>>>> GetTransaktionen()
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new KundeManager();
-                    var kundenDtos = manager.GetKunden().ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    var manager = new TransaktionManager();
+                    var transaktionDtos = manager.GetTransaktionen().ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<TransaktionDto>>(transaktionDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
                 }
             });
-
             return await task;
         }
 
-        // GET: /Kunden/2
+        // GET: /Transaktionen/2
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseObject<KundeDto>>> GetKunde(long id)
+        public async Task<ActionResult<ResponseObject<TransaktionDto>>> GetTransaktion(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new KundeManager();
-                    KundeDto kundeDto = manager.GetKundeById(id).ConvertToDto();
+                    var manager = new TransaktionManager();
+                    TransaktionDto transaktionDto = manager.GetTransaktionById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
-                    return new ResponseObject<KundeDto>(kundeDto);
+                    return new ResponseObject<TransaktionDto>(transaktionDto);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message);
                 }
             });
 
             return await task;
         }
 
-        // POST: kunden/
+        // POST: Transaktionen/
         [HttpPost]
-        public async Task<ActionResult<ResponseObject<KundeDto>>> PostKunde(KundeDto kunde)
+        public async Task<ActionResult<ResponseObject<TransaktionDto>>> PostTransaktion(TransaktionDto transaktion)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new KundeManager();
-                    KundeDto dto = manager.AddKunde(kunde.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: kunde {dto.Id} added");
-                    return new ResponseObject<KundeDto>(dto);
+                    var manager = new TransaktionManager();
+                    TransaktionDto dto = manager.AddTransaktion(transaktion.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Transaktion {dto.Id} added");
+                    return new ResponseObject<TransaktionDto>(dto);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message);
                 }
             });
 
             return await task;
         }
 
-        // PUT: kunden/5
+        // PUT: Transaktionen/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseObject<KundeDto>>> PutKunde(long id, KundeDto kunde)
+        public async Task<ActionResult<ResponseObject<TransaktionDto>>> PutTransaktion(long id, TransaktionDto transaktion)
         {
 
             var task = Task.Run(() =>
             {
                 try
                 {
-                    if (id != kunde.Id)
+                    if (id != transaktion.Id)
                     {
-                        return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<TransaktionDto>("ID in URL does not match ID in the request's body data");
                     }
-                    var manager = new KundeManager();
-                    KundeDto changedKundeDto = manager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Kunde {id} updated");
-                    return new ResponseObject<KundeDto>(changedKundeDto);
+                    var manager = new TransaktionManager();
+                    TransaktionDto changedTransaktionDto = manager.UpdateTransaktion(transaktion.ConvertToEntity()).ConvertToDto();
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Transaktion {id} updated");
+                    return new ResponseObject<TransaktionDto>(changedTransaktionDto);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message);
                 }
 
             });
@@ -131,56 +129,55 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
-        // DELETE: kunden/5
+        // DELETE: Transaktionen/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseObject<KundeDto>>> DeleteKunde(long id)
+        public async Task<ActionResult<ResponseObject<TransaktionDto>>> DeleteTransaktion(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new KundeManager();
-                    var kunde = manager.GetKundeById(id);
-                    manager.SetKundeInactive(kunde);
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
-                    return new ResponseObject<KundeDto>(null, OKTAG, $"Set Kunde {id} to inactive");
+                    var manager = new TransaktionManager();
+                    var transaktion = manager.GetTransaktionById(id);
+                    manager.deleteTransaktion(transaktion);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Transaktion {id} to inactive");
+                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive");
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message);
                 }
 
             });
             return await task;
         }
 
-        // POST: kunden/suchen
+        // POST: transaktionen/suchen
         [HttpPost("suchen")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetSearchResult(KundeDto k)
+        public async Task<ActionResult<ResponseObject<IEnumerable<TransaktionDto>>>> GetSearchResult(TransaktionDto k)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
-                    var manager = new KundeManager();
-                    var kundenDtos = manager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<KundeDto>>(kundenDtos);
+                    var manager = new TransaktionManager();
+                    var transaktionDtos = manager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<TransaktionDto>>(transaktionDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
                 }
             });
-
             return await task;
         }
     }

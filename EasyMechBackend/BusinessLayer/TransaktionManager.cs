@@ -16,6 +16,11 @@ namespace EasyMechBackend.BusinessLayer
             Context = context;
         }
 
+        public TransaktionManager()
+        {
+            Context = new EMContext();
+        }
+
         public List<Transaktion> GetTransaktionen()
         {
             var query =
@@ -70,17 +75,11 @@ namespace EasyMechBackend.BusinessLayer
             return k;
         }
 
-        //public void SetTransaktionInactive(Transaktion k)
-        //{
-        //    k.IstAktiv = false;
-        //    UpdateTransaktion(k);
-        //}
-
-        //public void DeleteTransaktion(Transaktion k)
-        //{
-        //    Context.Remove(k);
-        //    Context.SaveChanges();
-        //}
+        public void DeleteTransaktion(Transaktion k)
+        {
+            Context.Remove(k);
+            Context.SaveChanges();
+        }
 
         public List<Transaktion> GetSearchResult(Transaktion searchEntity)
         {
