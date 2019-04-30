@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
 
@@ -43,7 +44,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine AddMaschine(Maschine m)
         {
             m.Validate();
-
+            EnsureUniqueness(m);
             Context.Add(m);
             Context.SaveChanges();
             return m;
@@ -52,6 +53,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine UpdateMaschine(Maschine m)
         {
             m.Validate();
+            EnsureUniqueness(m);
             var group = Context.Maschinen.First(kunde => kunde.Id == m.Id);
             Context.Entry(group).CurrentValues.SetValues(m);
             Context.SaveChanges();
@@ -110,6 +112,16 @@ namespace EasyMechBackend.BusinessLayer
                 return new List<Maschine>();
             }
 
+        }
+        private void EnsureUniqueness(Maschine m)
+        {
+            var query = from e in Context.Maschinen
+                        where e.Seriennummer == m.Seriennummer && e.Seriennummer != null
+                        select m;
+            if (query.Any() )
+            {
+                throw new UniquenessException($"Die Fahrzeug-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
+            }
         }
     }
 }

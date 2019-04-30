@@ -54,6 +54,8 @@ namespace EasyMechBackend
             {
                 o.Authority = Configuration["Jwt:Authority"];
                 o.Audience = Configuration["Jwt:Audience"];
+                if (o.Audience != "easymech-backend-dev") { throw new Exception("assertion"); }
+                if (o.Audience != @"https://idp.easymech.ch/auth/realms/master/") { throw new Exception("assertion"); }
                 o.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = c =>
@@ -85,7 +87,7 @@ namespace EasyMechBackend
             app.UseHttpsRedirection();
             app.UseMvc();
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
         }
     }
 }
