@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace EasyMechBackend.DataAccessLayer
 {
-    [Table("FahrzeugUebergabe", Schema = "public")]
-    public class FahrzeugUebergabe
+    [Table("MaschinenRuecknahme", Schema = "public")]
+    public class MaschinenRuecknahme
     {
         [Key]
         public long Id { get; set; }        
@@ -17,12 +17,9 @@ namespace EasyMechBackend.DataAccessLayer
 
         //Relationships
         // -------------------------------------------
-        [ForeignKey(nameof(ReservationsId))]
-        public Reservation Reservation { get; set; }
-        public long ReservationsId { get; set; }
-
-        //NavProp
-        public FahrzeugRuecknahme Ruecknahme { get; set; }
+        [ForeignKey(nameof(MaschinenUebergabeId))]
+        public MaschinenUebergabe MaschinenUebergabe { get; set; }
+        public long MaschinenUebergabeId { get; set; }
         // -------------------------------------------
 
     }

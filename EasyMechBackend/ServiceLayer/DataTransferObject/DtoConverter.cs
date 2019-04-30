@@ -83,7 +83,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Notiz = dto.Notiz,
                 IstAktiv = dto.IstAktiv,
                 BesitzerId = dto.BesitzerId,
-                MaschinenTypId = dto.FahrzeugTypId
+                MaschinentypId = dto.MaschinentypId
             };
             return m;
         }
@@ -103,7 +103,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Notiz = entity.Notiz,
                 IstAktiv = entity.IstAktiv,
                 BesitzerId = entity.BesitzerId,
-                FahrzeugTypId = entity.MaschinenTypId
+                MaschinentypId = entity.MaschinentypId
             };
             return dto;
         }
@@ -118,12 +118,12 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        #region Fahrzeugtyp
-        public static Fahrzeugtyp ConvertToEntity(this FahrzeugtypDto dto)
+        #region Maschinentyp
+        public static Maschinentyp ConvertToEntity(this MaschinentypDto dto)
         {
             if (dto == null) { return null; }
 
-            Fahrzeugtyp f = new Fahrzeugtyp
+            Maschinentyp f = new Maschinentyp
             {
                 Id = dto.Id,
                 Fabrikat = dto.Fabrikat,
@@ -132,19 +132,19 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Hubkraft = dto.Hubkraft,
                 Hubhoehe = dto.Hubhoehe,
                 Eigengewicht = dto.Eigengewicht,
-                Fahrzeughoehe = dto.Fahrzeughoehe,
-                Fahrzeuglaenge = dto.Fahrzeuglaenge,
-                Fahrzeugbreite = dto.Fahrzeugbreite,
+                Maschinenhoehe = dto.Maschinenhoehe,
+                Maschinenlaenge = dto.Maschinenlaenge,
+                Maschinenbreite = dto.Maschinenbreite,
                 Pneugroesse = dto.Pneugroesse
             };
             return f;
         }
 
-        public static FahrzeugtypDto ConvertToDto(this Fahrzeugtyp entity)
+        public static MaschinentypDto ConvertToDto(this Maschinentyp entity)
         {
             if (entity == null) { return null; }
 
-            FahrzeugtypDto dto = new FahrzeugtypDto
+            MaschinentypDto dto = new MaschinentypDto
             {
                 Id = entity.Id,
                 Fabrikat = entity.Fabrikat,
@@ -153,19 +153,19 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 Hubkraft = entity.Hubkraft,
                 Hubhoehe = entity.Hubhoehe,
                 Eigengewicht = entity.Eigengewicht,
-                Fahrzeughoehe = entity.Fahrzeughoehe,
-                Fahrzeuglaenge = entity.Fahrzeuglaenge,
-                Fahrzeugbreite = entity.Fahrzeugbreite,
+                Maschinenhoehe = entity.Maschinenhoehe,
+                Maschinenlaenge = entity.Maschinenlaenge,
+                Maschinenbreite = entity.Maschinenbreite,
                 Pneugroesse = entity.Pneugroesse
             };
             return dto;
         }
 
-        public static List<Fahrzeugtyp> ConvertToEntities(this IEnumerable<FahrzeugtypDto> dtos)
+        public static List<Maschinentyp> ConvertToEntities(this IEnumerable<MaschinentypDto> dtos)
         {
             return ConvertGenericList(dtos, ConvertToEntity);
         }
-        public static List<FahrzeugtypDto> ConvertToDtos(this IEnumerable<Fahrzeugtyp> entities)
+        public static List<MaschinentypDto> ConvertToDtos(this IEnumerable<Maschinentyp> entities)
         {
             return ConvertGenericList(entities, ConvertToDto);
         }

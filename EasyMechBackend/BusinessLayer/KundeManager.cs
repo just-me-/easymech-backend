@@ -12,13 +12,16 @@ namespace EasyMechBackend.BusinessLayer
     public class KundeManager : ManagerBase
     {
         //Fill Dummy Data for Dev
-        #region dummydata
+        
         public KundeManager(EMContext context)
         {
             Context = context;
 
+            #region dummydata
             if (!GetKunden().Any())
             {
+
+
                 Kunde k1 = new Kunde
                 {
                     Firma = "Toms Vergnügungspark",
@@ -59,9 +62,15 @@ namespace EasyMechBackend.BusinessLayer
                 AddKunde(k2);
                 AddKunde(k3);
             }
+            #endregion
         }
 
-        #endregion
+        public KundeManager()
+        {
+            Context = new EMContext();
+        }
+
+
 
         public List<Kunde> GetKunden()
         {

@@ -3,38 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
 
 namespace EasyMechBackend.BusinessLayer
 {
-    public class FahrzeugtypManager : ManagerBase
+    public class MaschinentypManager : ManagerBase
     {
-        public FahrzeugtypManager(EMContext context)
+        public MaschinentypManager(EMContext context)
         {
             Context = context;
         }
 
-        public List<Fahrzeugtyp> GetFahrzeugtypen()
+        public MaschinentypManager()
+        {
+            Context = new EMContext();
+        }
+
+        public List<Maschinentyp> GetMaschinentypen()
         {
             var query =
-                from f in Context.Fahrzeugtypen
+                from f in Context.Maschinentypen
                 orderby f.Id descending
                 select f;
             return query.ToList();
         }
 
-        public Fahrzeugtyp GetFahrzeugtypById(long id)
+        public Maschinentyp GetMaschinentypById(long id)
         {
-            Fahrzeugtyp m = Context.Fahrzeugtypen.SingleOrDefault(fahrzeugtyp => fahrzeugtyp.Id == id);
+            Maschinentyp m = Context.Maschinentypen.SingleOrDefault(maschinentyp => maschinentyp.Id == id);
             if (m == null)
             {
-                throw new InvalidOperationException($"Fahrzeugtyp with id {id} is not in database");
+                throw new InvalidOperationException($"Maschinentyp with id {id} is not in database");
             }
             return m;
         }
 
-        public Fahrzeugtyp AddFahrzeugtyp(Fahrzeugtyp f)
+        public Maschinentyp AddMaschinentyp(Maschinentyp f)
         {
             f.Validate();
             Context.Add(f);
@@ -42,35 +48,49 @@ namespace EasyMechBackend.BusinessLayer
             return f;
         }
 
-        public Fahrzeugtyp UpdateFahrzeugtyp(Fahrzeugtyp f)
+        public Maschinentyp UpdateMaschinentyp(Maschinentyp f)
         {
             f.Validate();
-            var group = Context.Fahrzeugtypen.First(kunde => kunde.Id == f.Id);
+            var group = Context.Maschinentypen.First(kunde => kunde.Id == f.Id);
             Context.Entry(group).CurrentValues.SetValues(f);
             Context.SaveChanges();
             return f;
         }
 
-        public void DeleteFahrzeugtyp(Fahrzeugtyp f)
-        {        
-                Context.Remove(f);
-                Context.SaveChanges();            
+        public void DeleteMaschinentyp(Maschinentyp f)
+        {
+
+            var query =
+                from m in Context.Maschinen
+                where m.MaschinentypId == f.Id
+                select m;
+
+            bool restricted = query.Any();
+
+            if (restricted)
+            {
+                throw new ForeignKeyRestrictionException($"Error: Maschinentyp {f.Id} ({f.Fabrikat}) is still set as other machine's type and can't be deleted!");
+            }
+            else {
+            Context.Remove(f);
+            Context.SaveChanges();
+            }
         }
 
-        public List<Fahrzeugtyp> GetSearchResult(Fahrzeugtyp searchEntity)
+        public List<Maschinentyp> GetSearchResult(Maschinentyp searchEntity)
         {
             if (searchEntity.Id != 0)
             {
-                return new List<Fahrzeugtyp>
+                return new List<Maschinentyp>
                 {
-                    GetFahrzeugtypById(searchEntity.Id)
+                    GetMaschinentypById(searchEntity.Id)
                 };
             }
 
-            List<Fahrzeugtyp> allFahrzeugtypen = GetFahrzeugtypen();
-            IEnumerable<Fahrzeugtyp> searchResult = allFahrzeugtypen;
+            List<Maschinentyp> allMaschinentypen = GetMaschinentypen();
+            IEnumerable<Maschinentyp> searchResult = allMaschinentypen;
 
-            PropertyInfo[] props = typeof(Fahrzeugtyp).GetProperties();
+            PropertyInfo[] props = typeof(Maschinentyp).GetProperties();
 
             foreach (var prop in props)
             {
@@ -94,7 +114,7 @@ namespace EasyMechBackend.BusinessLayer
             }
             else
             {
-                return new List<Fahrzeugtyp>();
+                return new List<Maschinentyp>();
             }
         }
     }

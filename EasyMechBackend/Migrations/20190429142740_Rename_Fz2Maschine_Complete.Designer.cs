@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190429142740_Rename_Fz2Maschine_Complete")]
+    partial class Rename_Fz2Maschine_Complete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,16 +112,16 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("BesitzerId");
+                    b.Property<long?>("BesitzerId");
 
-                    b.Property<int?>("Betriebsdauer");
+                    b.Property<int>("Betriebsdauer");
 
                     b.Property<bool?>("IstAktiv")
                         .IsRequired();
 
-                    b.Property<int?>("Jahrgang");
+                    b.Property<int>("Jahrgang");
 
-                    b.Property<long>("MaschinentypId");
+                    b.Property<long>("MaschinenTypId");
 
                     b.Property<string>("Mastnummer")
                         .HasMaxLength(128);
@@ -136,7 +138,7 @@ namespace EasyMechBackend.Migrations
 
                     b.HasIndex("BesitzerId");
 
-                    b.HasIndex("MaschinentypId");
+                    b.HasIndex("MaschinenTypId");
 
                     b.ToTable("Maschine","public");
                 });
@@ -163,27 +165,27 @@ namespace EasyMechBackend.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("Eigengewicht");
+                    b.Property<int>("Eigengewicht");
 
                     b.Property<string>("Fabrikat")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("Hubhoehe");
+                    b.Property<int>("Hubhoehe");
 
-                    b.Property<int?>("Hubkraft");
+                    b.Property<int>("Hubkraft");
 
-                    b.Property<int?>("Maschinenbreite");
+                    b.Property<int>("Maschinenbreite");
 
-                    b.Property<int?>("Maschinenhoehe");
+                    b.Property<int>("Maschinenhoehe");
 
-                    b.Property<int?>("Maschinenlaenge");
+                    b.Property<int>("Maschinenlaenge");
 
                     b.Property<string>("Motortyp")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("Nutzlast");
+                    b.Property<int>("Nutzlast");
 
-                    b.Property<int?>("Pneugroesse");
+                    b.Property<int>("Pneugroesse");
 
                     b.HasKey("Id");
 
@@ -317,13 +319,12 @@ namespace EasyMechBackend.Migrations
                 {
                     b.HasOne("EasyMechBackend.DataAccessLayer.Kunde", "Besitzer")
                         .WithMany("Maschinen")
-                        .HasForeignKey("BesitzerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BesitzerId");
 
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Maschinentyp", "Maschinentyp")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Maschinentyp", "Typ")
                         .WithMany("Maschinen")
-                        .HasForeignKey("MaschinentypId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("MaschinenTypId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.MaschinenRuecknahme", b =>
