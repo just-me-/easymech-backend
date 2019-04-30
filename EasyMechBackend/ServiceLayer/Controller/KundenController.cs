@@ -6,11 +6,13 @@ using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyMechBackend.ServiceLayer
 
 
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class KundenController : ControllerBase

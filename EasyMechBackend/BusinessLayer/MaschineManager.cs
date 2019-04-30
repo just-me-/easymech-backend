@@ -43,6 +43,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine AddMaschine(Maschine m)
         {
             m.Validate();
+
             Context.Add(m);
             Context.SaveChanges();
             return m;
