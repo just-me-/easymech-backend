@@ -166,5 +166,30 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
+        // POST: Maschinentypen/suchen
+        [HttpPost("suchen")]
+        public async Task<ActionResult<ResponseObject<IEnumerable<MaschinentypDto>>>> GetSearchResult(MaschinentypDto f)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new MaschinentypManager();
+                    var maschinentypDtos = manager.GetSearchResult(f.ConvertToEntity()).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<MaschinentypDto>>(maschinentypDtos);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message);
+                }
+            });
+
+            return await task;
+        }
+
+
     }
 }

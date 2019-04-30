@@ -87,6 +87,7 @@ namespace EasyMechBackend.BusinessLayer
 
             PropertyInfo[] props = typeof(Maschine).GetProperties();
 
+            //Notiz: Das ding hier wär komplett generisch handlebar ;-)
             foreach (var prop in props)
             {
                 // Handling String Fields with lower case contains

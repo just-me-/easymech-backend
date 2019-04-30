@@ -76,7 +76,81 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             }
         }
-        
-        
+
+        public List<Maschinentyp> GetSearchResult(Maschinentyp searchEntity)
+        {
+            if (searchEntity.Id != 0)
+            {
+                return new List<Maschinentyp>
+                {
+                    GetMaschinentypById(searchEntity.Id)
+                };
+            }
+
+            List<Maschinentyp> allMaschinentypen = GetMaschinentypen();
+            IEnumerable<Maschinentyp> searchResult = allMaschinentypen;
+
+            PropertyInfo[] props = typeof(Maschinentyp).GetProperties();
+
+            foreach (var prop in props)
+            {
+                // Handling String Fields with lower case contains
+                if (prop.PropertyType == typeof(string))
+                {
+
+                    string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                    if (potentialSearchTerm.HasSearchTerm())
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            string contentOfEntityThatIsEvaluated = (string)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated != null &&
+                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        });
+                    }
+                }
+
+                // Handling int or int? Fields with exact match
+                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
+                {
+                    int targetValue = (int?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            int contentOfEntityThatIsEvaluated = (int)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+                //Handling long (PK, FK) with exact matching
+                //checks id again which is 0 at this point but we let the church in the village here.
+                //seperate treatment necessary as int can't be castet to long?
+                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
+                {
+                    long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            long contentOfEntityThatIsEvaluated = (long)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
+
+            }
+
+            if (searchResult.Any())
+            {
+                return searchResult.ToList();
+            }
+            else
+            {
+                return new List<Maschinentyp>();
+            }
+        }
+
     }
 }

@@ -119,5 +119,25 @@ namespace BusinessLayerTest
         }
 
 
+
+        [TestMethod]
+        public void GetSearchResultMaschinentypTest()
+        {
+            var options = ResetDBwithMaschinentypHelper();
+            using (var context = new EMContext(options))
+            {
+                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+                Maschinentyp f = new Maschinentyp
+                {
+                    Id = 0,
+                    Fabrikat = "Tester grande",
+                    Nutzlast = 2000
+                };
+                var resultList = maschinentypManager.GetSearchResult(f);
+                Assert.AreEqual(1, resultList.First().Id);
+            }
+        }
+
+
     }
 }
