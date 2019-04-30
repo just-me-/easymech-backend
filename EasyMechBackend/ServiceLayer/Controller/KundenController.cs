@@ -18,7 +18,7 @@ namespace EasyMechBackend.ServiceLayer
         private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
         private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
 
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+        private static readonly ILog log = LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 

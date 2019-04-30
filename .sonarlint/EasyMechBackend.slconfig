@@ -1,0 +1,12 @@
+{
+  "ServerUri": "http://sinv-56057.edu.hsr.ch:40004",
+  "Organization": null,
+  "ProjectKey": "Easymech-Backend-Development",
+  "ProjectName": "EasyMech Analysis",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AWnOkqE2c_b4mWI62m-w",
+      "ProfileTimestamp": "2019-04-26T11:18:42+02:00"
+    }
+  }
+}

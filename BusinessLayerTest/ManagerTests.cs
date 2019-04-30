@@ -27,7 +27,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
-                foreach (Kunde k in kundeManager.GetKunden())
+                foreach (Kunde k in kundeManager.GetKunden(false))
                 {
                     context.Remove(k);
                 }
@@ -82,7 +82,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
-                var kundenList = kundeManager.GetKunden();
+                var kundenList = kundeManager.GetKunden(false);
                 Assert.AreEqual(1, kundenList.Count);
             }
         }
