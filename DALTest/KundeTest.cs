@@ -8,7 +8,6 @@ namespace DALTest
     public class KundeTest : DalBase
     {
 
-
         [TestMethod]
         public void ValidateSimple()
         {

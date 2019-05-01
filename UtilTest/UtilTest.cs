@@ -1,5 +1,6 @@
 using EasyMechBackend.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace UtilTest
 {
@@ -120,6 +121,15 @@ namespace UtilTest
             string s = "";
             Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
             //returns true according to string.Contains() rules which apply here as well
+            //this way we dont filter any possible search matches
+        }
+
+        [TestMethod]
+        public void TestNull()
+        {
+            string s = null;
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+            //for our purpose "true" makes more sense (does not filter results)
         }
 
         [TestMethod]

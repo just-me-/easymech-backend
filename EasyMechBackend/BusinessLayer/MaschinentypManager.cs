@@ -118,7 +118,7 @@ namespace EasyMechBackend.BusinessLayer
                     {
                         searchResult = searchResult.Where(m =>
                         {
-                            int contentOfEntityThatIsEvaluated = (int)prop.GetValue(m);
+                            int contentOfEntityThatIsEvaluated = (int?)prop.GetValue(m) ?? 0;
                             return contentOfEntityThatIsEvaluated == targetValue;
                         });
                     }
@@ -133,7 +133,7 @@ namespace EasyMechBackend.BusinessLayer
                     {
                         searchResult = searchResult.Where(m =>
                         {
-                            long contentOfEntityThatIsEvaluated = (long)prop.GetValue(m);
+                            long contentOfEntityThatIsEvaluated = (long?)prop.GetValue(m) ?? 0;
                             return contentOfEntityThatIsEvaluated == targetValue;
                         });
                     }
