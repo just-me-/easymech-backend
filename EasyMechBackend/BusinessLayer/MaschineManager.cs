@@ -151,7 +151,7 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureUniqueness(Maschine m)
         {
             var query = from e in Context.Maschinen
-                        where e.Seriennummer == m.Seriennummer && e.Seriennummer != null
+                        where e.Seriennummer == m.Seriennummer && e.Seriennummer != null && m.Id != e.Id
                         select m;
             if (query.Any() )
             {
