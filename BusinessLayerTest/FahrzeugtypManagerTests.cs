@@ -118,6 +118,8 @@ namespace BusinessLayerTest
             }
         }
 
+
+
         [TestMethod]
         public void GetSearchResultMaschinentypTest()
         {
@@ -135,6 +137,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(1, resultList.First().Id);
             }
         }
+
 
     }
 }

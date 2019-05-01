@@ -1,5 +1,6 @@
 using EasyMechBackend.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace UtilTest
 {
@@ -65,7 +66,7 @@ namespace UtilTest
         [TestMethod]
         public void TestPositiveSearchTermEdgeCase()
         {
-            string s = "bla";
+            string s = "ch";
             bool r = s.HasSearchTerm();
             Assert.IsTrue(r);
         }
@@ -84,6 +85,58 @@ namespace UtilTest
             string s = null;
             bool r = s.HasSearchTerm();
             Assert.IsFalse(r);
+        }
+    }
+
+
+    [TestClass]
+    public class ContainsCaseInsensitive
+    {
+        readonly string baseString = "AbCd123";
+
+        [TestMethod]
+        public void TestRegular()
+        {
+            string s = "bCd";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestCaseInsensitivity()
+        {
+            string s = "BcD";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestNumbers()
+        {
+            string s = "bCd123";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+        }
+
+        [TestMethod]
+        public void TestEmpty()
+        {
+            string s = "";
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+            //returns true according to string.Contains() rules which apply here as well
+            //this way we dont filter any possible search matches
+        }
+
+        [TestMethod]
+        public void TestNull()
+        {
+            string s = null;
+            Assert.IsTrue(baseString.ContainsCaseInsensitive(s));
+            //for our purpose "true" makes more sense (does not filter results)
+        }
+
+        [TestMethod]
+        public void TestNegativeResult()
+        {
+            string s = "abcf";
+            Assert.IsFalse(baseString.ContainsCaseInsensitive(s));
         }
     }
 

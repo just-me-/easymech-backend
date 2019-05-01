@@ -22,7 +22,15 @@ namespace EasyMechBackend.Util
 
         public static bool HasSearchTerm(this string s)
         {
-            return s?.Length >= 3;
+            return s?.Length >= 2;
+        }
+
+        public static bool ContainsCaseInsensitive(this string s1, string s2)
+        {
+            if (s2 == null) return true;
+            string a1 = s1.ToLower();
+            string a2 = s2.ToLower();
+            return a1.Contains(a2);
         }
     }
 }

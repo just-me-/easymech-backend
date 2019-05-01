@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.Common.Exceptions;
 
 namespace BusinessLayerTest
 {
@@ -29,7 +30,7 @@ namespace BusinessLayerTest
                 Maschine m2 = new Maschine
                 {
                     Id = 1,
-                    Seriennummer = "123xyz",
+                    Seriennummer = "123xyz!!",
                     Jahrgang = 1999,
                     IstAktiv = true
                 };
@@ -58,7 +59,28 @@ namespace BusinessLayerTest
                 var addedMaschine = context.Maschinen.Single(maschine => maschine.Id == id);
                 Assert.AreEqual("123xyz", addedMaschine.Seriennummer);
             }
-        } 
+        }
+
+        [TestMethod]
+        public void AddMaschineWithExistingSeriennummerTest()
+        {
+            var options = ResetDBwithMaschineHelper();
+            using (var context = new EMContext(options))
+            {
+                int id = 2;
+                Maschine m = new Maschine
+                {
+                    Id = id,
+                    Seriennummer = "123xyz!!",
+                };
+                MaschineManager maschineManager = new MaschineManager(context);
+
+                Assert.ThrowsException<UniquenessException>(() =>
+                {
+                    maschineManager.AddMaschine(m);
+                });
+            }
+        }
         [TestMethod]
         public void GetMaschinenTest()
         {
@@ -78,7 +100,7 @@ namespace BusinessLayerTest
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine1 = maschineManager.GetMaschineById(1);
-                Assert.AreEqual("123xyz", maschine1.Seriennummer);
+                Assert.AreEqual("123xyz!!", maschine1.Seriennummer);
             }
         }
         [TestMethod]

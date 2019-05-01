@@ -94,18 +94,52 @@ namespace EasyMechBackend.BusinessLayer
 
             foreach (var prop in props)
             {
-                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
-                if (prop.PropertyType != typeof(string)) continue;
-
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
+                // Handling String Fields with lower case contains
+                if (prop.PropertyType == typeof(string))
                 {
-                    searchResult = searchResult.Where(m => {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(m);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
-                    });
+
+                    string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                    if (potentialSearchTerm.HasSearchTerm())
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            string contentOfEntityThatIsEvaluated = (string)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated != null &&
+                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        });
+                    }
                 }
+
+                // Handling int or int? Fields with exact match
+                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
+                {
+                    int targetValue = (int?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            int contentOfEntityThatIsEvaluated = (int?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+                //Handling long (PK, FK) with exact matching
+                //checks id again which is 0 at this point but we let the church in the village here.
+                //seperate treatment necessary as int can't be castet to long?
+                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
+                {
+                    long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            long contentOfEntityThatIsEvaluated = (long?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
+
             }
 
             if (searchResult.Any())
@@ -117,5 +151,6 @@ namespace EasyMechBackend.BusinessLayer
                 return new List<Maschinentyp>();
             }
         }
+
     }
 }
