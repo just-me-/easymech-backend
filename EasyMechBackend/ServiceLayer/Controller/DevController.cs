@@ -34,27 +34,27 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     log.Warn($"Test Clean Up Script was Called!");
 
-
                     var m1 = new MaschineManager();
-                    m1.DeleteMaschine(new DataAccessLayer.Maschine { Id = testId });
+                    var e1 = m1.GetMaschineById(testId);
+                    m1.DeleteMaschine(e1);
 
                     var m2 = new MaschinentypManager();
-                    m2.DeleteMaschinentyp(new DataAccessLayer.Maschinentyp { Id = testId });
+                    var e2 = m2.GetMaschinentypById(testId);
+                    m2.DeleteMaschinentyp(e2);
 
                     var m3 = new KundeManager();
-                    m3.DeleteKunde(new DataAccessLayer.Kunde { Id = testId });
-
-
-
+                    var e3 = m3.GetKundeById(testId);
+                    m3.DeleteKunde(e3);
+                    
                 }
                 catch (Exception e)
                 {
                     log.Error($"Test Clean Up Error {e.Message}");
+                    
                 }
             });
-
-
             return NoContent();
+
         }
 
         [HttpGet("log")]

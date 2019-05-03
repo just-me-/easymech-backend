@@ -71,9 +71,10 @@ namespace EasyMechBackend.BusinessLayer
             {
                 throw new ForeignKeyRestrictionException($"Error: Maschinentyp {f.Id} ({f.Fabrikat}) is still set as other machine's type and can't be deleted!");
             }
-            else {
-            Context.Remove(f);
-            Context.SaveChanges();
+            else
+            {
+                Context.Remove(f);
+                Context.SaveChanges();
             }
         }
 
