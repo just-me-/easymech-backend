@@ -1,16 +1,12 @@
 ﻿using EasyMechBackend.Util;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Kunden", Schema = "public")]
-    public class Kunde
+    public class Kunde : EntityWithValidate
     {
         [Key]
         public long Id { get; set; }
@@ -45,62 +41,30 @@ namespace EasyMechBackend.DataAccessLayer
         [Required]
         public bool? IstAktiv { get; set; }
 
-
-        //Relationships
-        // -------------------------------------------
         public ICollection<Maschine> Maschinen { get; set; }
         public ICollection<Transaktion> Transaktionen { get; set; }
         public ICollection<Reservation> Reservationen { get; set; }
         public ICollection<GeplanterService> Services { get; set; }
-        // -------------------------------------------
 
 
 
-
-        public void Validate()
-        {
-            ClipTo128Chars();
-            FillRequiredFields();
-        }
-
-        private void FillRequiredFields()
+        protected sealed override void FillRequiredProps()
         {
             if (Firma == null) Firma = "";
             if (IstAktiv == null) IstAktiv = true;
         }
 
-        private void ClipTo128Chars()
+        protected sealed override void ClipProps()
         {
 
-            //Option with reflection: Uses SetValue - ignores privacy - unsauber
-            #region unusedOption
-            //Code nur quickly testet
-            /*
-            PropertyInfo[] props = this.GetType().GetProperties();
-            foreach (var prop in props)
-            {
-
-                if (prop.PropertyType != typeof(string)) continue;
-                if (prop.Name == "Notiz") continue;
-
-
-                string content = (string)prop.GetValue(this);
-                prop.SetValue(this, content.ClipTo128Chars());
-                
-            }
-            */
-            #endregion
-
-
-            //Option with DRY - weniger unsauber
-            Firma = Firma.ClipTo128Chars();
-            Vorname = Vorname.ClipTo128Chars();
-            Nachname = Nachname.ClipTo128Chars();
-            Adresse = Adresse.ClipTo128Chars();
-            PLZ = PLZ.ClipTo128Chars();
-            Ort = Ort.ClipTo128Chars();
-            Email = Email.ClipTo128Chars();
-            Telefon = Telefon.ClipTo128Chars();
+            Firma = Firma.ClipToNChars(128);
+            Vorname = Vorname.ClipToNChars(128);
+            Nachname = Nachname.ClipToNChars(128);
+            Adresse = Adresse.ClipToNChars(128);
+            PLZ = PLZ.ClipToNChars(128);
+            Ort = Ort.ClipToNChars(128);
+            Email = Email.ClipToNChars(128);
+            Telefon = Telefon.ClipToNChars(128);
 
         }
     }

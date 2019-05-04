@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {
     public class ResponseObject<T>
         where T: class
     {
-
-        public static readonly string OKTAG = "ok";
-        public static readonly string ERRORTAG = "error";
+        public const string OKTAG = "ok";
+        public const string ERRORTAG = "error";
 
         public T Data { get; set; }
         public string Status { get; set; }

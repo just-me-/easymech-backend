@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("GeplanterService", Schema = "public")]
     public class GeplanterService
@@ -19,27 +16,20 @@ namespace EasyMechBackend.DataAccessLayer
         public DateTime Beginn { get; set; }
 
         public DateTime Ende { get; set; }
-
-        //Relationships
-        // -------------------------------------------
         
 
-        [ForeignKey("MaschinenId")]
+        [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
         public long MaschinenId { get; set; }
 
 
-        
-
-        [ForeignKey("KundenId")]
+        [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
         public long KundenId { get; set; }
 
         
-        //NavProp
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
-        // -------------------------------------------
 
     }
 

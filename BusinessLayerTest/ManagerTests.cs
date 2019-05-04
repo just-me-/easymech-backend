@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -120,6 +121,20 @@ namespace BusinessLayerTest
                 kundeManager.UpdateKunde(originalTyp);
                 var updatedTyp = kundeManager.GetKundeById(1);
                 Assert.AreEqual("Updated Firma", updatedTyp.Firma);
+            }
+        }
+
+        [TestMethod]
+        public void SetInactiveTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager man = new KundeManager(context);
+                var original = man.GetKundeById(1);
+                man.SetKundeInactive(original);
+                var updated = man.GetKundeById(1);
+                Assert.IsFalse(updated.IstAktiv ?? true);
             }
         }
 

@@ -1,28 +1,24 @@
 ﻿using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
     {
-        //Fill Dummy Data for Dev
-        
-        public KundeManager(EMContext context)
+
+        public KundeManager(EMContext context) : base(context)
         {
-            Context = context;
         }
+
 
         public KundeManager()
         {
-            Context = new EMContext();
         }
-
 
 
         public List<Kunde> GetKunden(bool withInactive)
@@ -76,14 +72,6 @@ namespace EasyMechBackend.BusinessLayer
 
         public List<Kunde> GetSearchResult(Kunde searchEntity)
         {
-            if (searchEntity.Id != 0)
-            {
-                return new List<Kunde>
-                {
-                    GetKundeById(searchEntity.Id)
-                };
-
-            }
 
             List<Kunde> allKunden = GetKunden(false);
             IEnumerable<Kunde> searchResult = allKunden;
@@ -91,33 +79,53 @@ namespace EasyMechBackend.BusinessLayer
 
             foreach (var prop in props)
             {
-
-                //id and istAktiv are not subject for searching -> these are the only ones with non-string fields
-                //no other fields than string fields have to be treated.
-                if (prop.PropertyType != typeof(string)) continue;
-
-
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
+                // Handling String Fields with lower case contains
+                if (prop.PropertyType == typeof(string))
                 {
-                    searchResult = searchResult.Where(k =>
+                    string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                    if (potentialSearchTerm.HasSearchTerm())
                     {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        searchResult = searchResult.Where(m =>
+                        {
+                            string contentOfEntityThatIsEvaluated = (string)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated != null &&
+                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        });
+                    }
+                }
 
-                    });
+                // Handling int or int? Fields with exact match
+                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
+                {
+                    int targetValue = (int?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            int contentOfEntityThatIsEvaluated = (int?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
+                //Handling long (PK, FK) with exact matching
+                //seperate treatment to int is necessary as int can't be castet to long?
+                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
+                {
+                    long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            long contentOfEntityThatIsEvaluated = (long?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
                 }
             }
 
-            if (searchResult.Any())
-            {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Kunde>();
-            }
+            return searchResult.ToList();
+
         }
     }
 }

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
-using log4net;
 using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 
 {
@@ -16,8 +16,7 @@ namespace EasyMechBackend.ServiceLayer
     [ApiController]
     public class MaschinentypenController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+        private const string OKTAG = ResponseObject<object>.OKTAG;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -7,6 +7,7 @@ using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -26,7 +27,9 @@ namespace BusinessLayerTest
                 {
                     context.Remove(m);
                 }
+
                 context.SaveChanges();
+
                 Maschine m2 = new Maschine
                 {
                     Id = 1,
@@ -34,12 +37,14 @@ namespace BusinessLayerTest
                     Jahrgang = 1999,
                     IstAktiv = true
                 };
+
                 m2.Validate();
                 context.Add(m2);
                 context.SaveChanges();
             }
             return options;
         }
+
         [TestMethod]
         public void AddMaschineTest()
         {
@@ -129,6 +134,20 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
+        public void SetInactiveTest()
+        {
+            var options = ResetDBwithMaschineHelper();
+            using (var context = new EMContext(options))
+            {
+                MaschineManager maschineManager = new MaschineManager(context);
+                var original = maschineManager.GetMaschineById(1);
+                maschineManager.SetMaschineInactive(original);
+                var updated = maschineManager.GetMaschineById(1);
+                Assert.IsFalse(updated.IstAktiv ?? true);
+            }
+        }
+
+        [TestMethod]
         public void DeleteMaschineTest()
         {
             var options = ResetDBwithMaschineHelper();
@@ -140,6 +159,7 @@ namespace BusinessLayerTest
                 Assert.IsTrue(!context.Maschinen.Any());
             }
         }
+
 
         [TestMethod]
         public void GetSearchResultMaschineTest()

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -115,6 +117,30 @@ namespace BusinessLayerTest
                 var originalTyp = maschinentypManager.GetMaschinentypById(1);
                 maschinentypManager.DeleteMaschinentyp(originalTyp);
                 Assert.IsTrue(!context.Maschinentypen.Any());
+            }
+        }
+
+        [TestMethod]
+        public void DeleteMaschinentypWithExistingMachinesTest()
+        {
+            var options = ResetDBwithMaschinentypHelper();
+            using (var context = new EMContext(options))
+            {
+                MaschineManager m_man = new MaschineManager(context);
+                MaschinentypManager t_man = new MaschinentypManager(context);
+
+                Maschine m1 = new Maschine
+                {
+                    Id = 1,
+                    MaschinentypId = 1
+                };
+                m_man.AddMaschine(m1);
+                
+                var t1 = t_man.GetMaschinentypById(1);
+                Assert.ThrowsException<ForeignKeyRestrictionException>(() => t_man.DeleteMaschinentyp(t1));
+
+                m_man.DeleteMaschine(m1);
+
             }
         }
 

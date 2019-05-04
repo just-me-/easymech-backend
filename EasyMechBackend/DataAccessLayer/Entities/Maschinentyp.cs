@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 using EasyMechBackend.Util;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Maschinentyp", Schema = "public")]
-    public class Maschinentyp
+    public class Maschinentyp : EntityWithValidate
     {
         [Key]
         public long Id { get; set; }
@@ -36,20 +33,18 @@ namespace EasyMechBackend.DataAccessLayer
 
         public int? Pneugroesse { get; set; }
 
-        //Relationships
-        // -------------------------------------------
         public ICollection<Maschine> Maschinen { get; set; }
-        // -------------------------------------------
 
-        public void Validate()
+
+        protected sealed override void ClipProps()
         {
-            ClipTo128Chars();
+            Fabrikat = Fabrikat.ClipToNChars(128);
+            Motortyp = Motortyp.ClipToNChars(128);
         }
 
-        private void ClipTo128Chars()
+        protected sealed override void FillRequiredProps()
         {
-            Fabrikat = Fabrikat.ClipTo128Chars();
-            Motortyp = Motortyp.ClipTo128Chars();
+            //no action
         }
     }
 }

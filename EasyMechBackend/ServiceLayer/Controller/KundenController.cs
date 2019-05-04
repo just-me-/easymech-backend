@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 
 {
@@ -17,8 +18,7 @@ namespace EasyMechBackend.ServiceLayer
     [ApiController]
     public class KundenController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+        private const string OKTAG = ResponseObject<object>.OKTAG;
 
         private static readonly ILog log = LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

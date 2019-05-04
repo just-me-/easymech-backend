@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
-
-    
-
-
     [Table("Transaktionen", Schema = "public")]
     public class Transaktion
     {
 
-        public enum TransaktionsTyp { Verkauf = 0, Einkauf = 1 };
+        public enum TransaktionsTyp { Verkauf = 0, Einkauf = 1 }
 
         [Key]
         public long Id { get; set; }
@@ -28,18 +21,14 @@ namespace EasyMechBackend.DataAccessLayer
 
         public DateTime? Datum { get; set; }
 
-        //Relationships
-        // -------------------------------------------
         public long MaschinenId { get; set; }
-        [ForeignKey("MaschinenId")]
+        [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
 
-
         public long? KundenId { get; set; }
-        [ForeignKey("KundenId")]
+        [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
-        // -------------------------------------------
 
     }
 }

@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.DataAccessLayer
 {
     public class EMContext : DbContext
     {
         public EMContext(DbContextOptions<EMContext> options) : base(options) { }
-        public EMContext() : base() { }
+        public EMContext() { }
 
 
         public DbSet<Kunde> Kunden { get; set; }

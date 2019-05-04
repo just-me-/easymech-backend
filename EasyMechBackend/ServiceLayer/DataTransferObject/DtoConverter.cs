@@ -1,9 +1,8 @@
-﻿using EasyMechBackend.DataAccessLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+using EasyMechBackend.DataAccessLayer.Entities;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {

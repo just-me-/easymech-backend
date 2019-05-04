@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Reservationen", Schema = "public")]
     public class Reservation
@@ -21,30 +18,24 @@ namespace EasyMechBackend.DataAccessLayer
         public DateTime Enddatum { get; set; }
 
 
-        //Relationships
-        // -------------------------------------------
-
-        [ForeignKey("MaschinenId")]
+        [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
         public long MaschinenId { get; set; }
 
 
 
-        [ForeignKey("KundenId")]
+        [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
         public long? KundenId { get; set; }
 
 
-        // ------------Navigation Properties----------
         public MaschinenUebergabe Uebergabe { get; set; }
-        // -------------------------------------------
 
 
-        //
-        //Assistant Property !! Lazy Loading not active !! Will not work. Ka warum ich es hinschreib überhaupt.
-        [NotMapped]
-        public MaschinenRuecknahme Ruecknahme { get => Uebergabe.Ruecknahme; }
+        
+        //Assistant Property !! Todo: See if this works out with lazy loading or such
+        [NotMapped] public MaschinenRuecknahme Ruecknahme => Uebergabe.Ruecknahme;
 
     }
 

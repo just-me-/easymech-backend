@@ -5,13 +5,13 @@ using System;
 namespace UtilTest
 {
     [TestClass]
-    public class Clip128
+    public class StringClipper
     {
         [TestMethod]
         public void TestShort()
         {
             string s = "bla";
-            string r = s.ClipTo128Chars();
+            string r = s.ClipToNChars(128);
             Assert.AreEqual(s,r);
         }
 
@@ -21,7 +21,7 @@ namespace UtilTest
             string s = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567XXXXXXXX";
             //                    10        20        30          40       50        60            70   80         90        100      110       120
             string e = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
-            string r = s.ClipTo128Chars();
+            string r = s.ClipToNChars(128);
             Assert.AreEqual(e, r);
         }
 
@@ -31,7 +31,7 @@ namespace UtilTest
             string s = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
             //                    10        20        30          40       50        60            70   80         90        100      110       120
             string e = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
-            string r = s.ClipTo128Chars();
+            string r = s.ClipToNChars(128);
             Assert.AreEqual(e, r);
         }
 
@@ -39,15 +39,24 @@ namespace UtilTest
         public void TestEmpty()
         {
             string s = "";
-            string r = s.ClipTo128Chars();
+            string r = s.ClipToNChars(128);
             Assert.AreEqual(s, r);
         }
         [TestMethod]
         public void TestNull()
         {
             string s = null;
-            string r = s.ClipTo128Chars();
+            string r = s.ClipToNChars(128);
             Assert.AreEqual(s, r);
+        }
+
+        [TestMethod]
+        public void Test0Input()
+        {
+            string s = "abc";
+            string r = s.ClipToNChars(0);
+            string e = "";
+            Assert.AreEqual(e, r);
         }
     }
 
