@@ -7,6 +7,9 @@ using EasyMechBackend.BusinessLayer;
 using System;
 using log4net;
 using System.IO;
+using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore;
 
 namespace EasyMechBackend.ServiceLayer
 
@@ -63,7 +66,7 @@ namespace EasyMechBackend.ServiceLayer
 
             using (var fileStream = new FileStream("easymech.log", FileMode.Open, FileAccess.Read))
             {
-                byte[] buffer = new byte[1024*32];
+                byte[] buffer = new byte[1024*128];
 
                 fileStream.Read(buffer, 0, 1024*32);
 
@@ -74,6 +77,18 @@ namespace EasyMechBackend.ServiceLayer
 
             }
         }
+
+
+        [HttpGet("log2")]
+        public void GetLog2()
+        {
+
+            Response.ContentType = "text/plain";
+            Response.StatusCode = 200;
+            Response.SendFileAsync("easymech.log");
+        }
+        
+
 
     }
 }

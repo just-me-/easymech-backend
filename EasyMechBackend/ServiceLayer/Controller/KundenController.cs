@@ -185,6 +185,36 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
+
+        // DELETE: kunden/5/hard
+        [HttpDelete("{id}/hard")]
+        public async Task<ActionResult<ResponseObject<KundeDto>>> DeleteKundeHard(long id)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new KundeManager();
+                    var kunde = manager.GetKundeById(id);
+                    manager.DeleteKunde(kunde);
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Deleting Kunde {id} from database");
+                    return new ResponseObject<KundeDto>(null, OKTAG, $"Deleted Kunde {id} from database");
+                }
+                catch (DbUpdateException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<KundeDto>(e.Message);
+                }
+
+            });
+            return await task;
+        }
+
         // POST: kunden/suchen
         [HttpPost("suchen")]
         public async Task<ActionResult<ResponseObject<IEnumerable<KundeDto>>>> GetSearchResult(KundeDto k)

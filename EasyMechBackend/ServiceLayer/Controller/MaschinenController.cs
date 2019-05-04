@@ -160,6 +160,35 @@ namespace EasyMechBackend.ServiceLayer
             return await task;
         }
 
+        // DELETE: maschinen/5
+        [HttpDelete("{id}/hard")]
+        public async Task<ActionResult<ResponseObject<MaschineDto>>> DeleteMaschineHard(long id)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new MaschineManager();
+                    var maschine = manager.GetMaschineById(id);
+                    manager.DeleteMaschine(maschine);
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Maschine {id} from database");
+                    return new ResponseObject<MaschineDto>(null, OKTAG, $"Delete Maschine {id} from database");
+                }
+                catch (DbUpdateException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
+                    return new ResponseObject<MaschineDto>(e.Message + e.InnerException.Message);
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<MaschineDto>(e.Message);
+                }
+
+            });
+            return await task;
+        }
+
         // POST: maschinen/suchen
         [HttpPost("suchen")]
         public async Task<ActionResult<ResponseObject<IEnumerable<MaschineDto>>>> GetSearchResult(MaschineDto m)
