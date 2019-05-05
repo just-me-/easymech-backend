@@ -3,15 +3,17 @@ using System;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
     [DbContext(typeof(EMContext))]
-    partial class EMContextModelSnapshot : ModelSnapshot
+    [Migration("20190505100525_ondeletebehaviors")]
+    partial class ondeletebehaviors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,11 +150,11 @@ namespace EasyMechBackend.Migrations
 
                     b.Property<DateTime>("Datum");
 
-                    b.Property<long>("ReservationsId");
+                    b.Property<long>("MaschinenUebergabeId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReservationsId")
+                    b.HasIndex("MaschinenUebergabeId")
                         .IsUnique();
 
                     b.ToTable("MaschinenRuecknahme","public");
@@ -328,9 +330,9 @@ namespace EasyMechBackend.Migrations
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.MaschinenRuecknahme", b =>
                 {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Reservation", "Reservation")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.MaschinenUebergabe", "MaschinenUebergabe")
                         .WithOne("Ruecknahme")
-                        .HasForeignKey("EasyMechBackend.DataAccessLayer.Entities.MaschinenRuecknahme", "ReservationsId")
+                        .HasForeignKey("EasyMechBackend.DataAccessLayer.Entities.MaschinenRuecknahme", "MaschinenUebergabeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

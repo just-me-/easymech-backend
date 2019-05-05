@@ -16,8 +16,6 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public Reservation Reservation { get; set; }
         public long ReservationsId { get; set; }
 
-        public MaschinenRuecknahme Ruecknahme { get; set; }
-
     }
 
 

@@ -41,6 +41,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschinentyp AddMaschinentyp(Maschinentyp f)
         {
             f.Validate();
+            EnsureUniqueness(f);
             Context.Add(f);
             Context.SaveChanges();
             return f;
@@ -49,6 +50,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschinentyp UpdateMaschinentyp(Maschinentyp f)
         {
             f.Validate();
+            EnsureUniqueness(f);
             var group = Context.Maschinentypen.First(kunde => kunde.Id == f.Id);
             Context.Entry(group).CurrentValues.SetValues(f);
             Context.SaveChanges();
@@ -60,14 +62,14 @@ namespace EasyMechBackend.BusinessLayer
 
             var query =
                 from m in Context.Maschinen
-                where m.MaschinentypId == f.Id
+                where m.MaschinentypId == f.Id && (m.IstAktiv ?? true)
                 select m;
 
             bool restricted = query.Any();
 
             if (restricted)
             {
-                throw new ForeignKeyRestrictionException($"Error: Maschinentyp {f.Id} ({f.Fabrikat}) is still set as other machine's type and can't be deleted!");
+                throw new ForeignKeyRestrictionException($"Maschinentyp {f.Id} ({f.Fabrikat}) wird noch benutzt.");
             }
             else
             {
@@ -140,6 +142,17 @@ namespace EasyMechBackend.BusinessLayer
             }
 
             return searchResult.ToList();
+        }
+
+
+        private void EnsureUniqueness(Maschinentyp t)
+        {
+            bool matches = Context.Maschinentypen.Any(e => e.Fabrikat == t.Fabrikat && e != null && e.Id != t.Id);
+
+            if (matches)
+            {
+                throw new UniquenessException($"Der Typ \"{t.Fabrikat}\" ist bereits im System registriert.");
+            }
         }
 
     }

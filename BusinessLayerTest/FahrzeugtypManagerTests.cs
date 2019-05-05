@@ -51,15 +51,34 @@ namespace BusinessLayerTest
                 Maschinentyp f = new Maschinentyp
                 {
                     Id = id,
-                    Fabrikat = "Tester grande",
+                    Fabrikat = "Tester grande 2",
                     Nutzlast = 2000
                 };
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
                 maschinentypManager.AddMaschinentyp(f);
                 var addedMaschinentyp = context.Maschinentypen.Single(maschinentyp => maschinentyp.Id == id);
-                Assert.AreEqual("Tester grande", addedMaschinentyp.Fabrikat);
+                Assert.AreEqual("Tester grande 2", addedMaschinentyp.Fabrikat);
             }
-        } 
+        }
+
+
+        [TestMethod]
+        public void AddDuplicateTypTest()
+        {
+            var options = ResetDBwithMaschinentypHelper();
+            using (var context = new EMContext(options))
+            {
+                Maschinentyp t = new Maschinentyp
+                {
+                    Id = 2,
+                    Fabrikat = "Tester grande"
+                };
+                MaschinentypManager man = new MaschinentypManager(context);
+                Assert.ThrowsException<UniquenessException>(() => man.AddMaschinentyp(t));
+            }
+        }
+
+
         [TestMethod]
         public void GetMaschinentypenTest()
         {

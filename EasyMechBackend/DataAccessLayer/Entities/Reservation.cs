@@ -31,11 +31,8 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
 
         public MaschinenUebergabe Uebergabe { get; set; }
+        public MaschinenRuecknahme Ruecknahme { get; set; }
 
-
-        
-        //Assistant Property !! Todo: See if this works out with lazy loading or such
-        [NotMapped] public MaschinenRuecknahme Ruecknahme => Uebergabe.Ruecknahme;
 
     }
 

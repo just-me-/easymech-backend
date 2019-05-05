@@ -12,9 +12,9 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         
         public DateTime Datum { get; set; }
 
-        [ForeignKey(nameof(MaschinenUebergabeId))]
-        public MaschinenUebergabe MaschinenUebergabe { get; set; }
-        public long MaschinenUebergabeId { get; set; }
+        [ForeignKey(nameof(ReservationsId))]
+        public Reservation Reservation { get; set; }
+        public long ReservationsId { get; set; }
     }
 
 

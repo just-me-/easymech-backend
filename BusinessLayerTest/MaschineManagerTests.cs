@@ -23,7 +23,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                foreach (Maschine m in maschineManager.GetMaschinen())
+                foreach (Maschine m in maschineManager.GetMaschinen(true))
                 {
                     context.Remove(m);
                 }
@@ -67,7 +67,7 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
-        public void AddMaschineWithExistingSeriennummerTest()
+        public void AddDuplicateMaschine()
         {
             var options = ResetDBwithMaschineHelper();
             using (var context = new EMContext(options))
@@ -93,7 +93,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                var maschinenList = maschineManager.GetMaschinen();
+                var maschinenList = maschineManager.GetMaschinen(false);
                 Assert.AreEqual(1, maschinenList.Count);
             }
         }
@@ -170,7 +170,7 @@ namespace BusinessLayerTest
                 MaschineManager maschineManager = new MaschineManager(context);
                 Maschine m = new Maschine
                 {
-                    Id = 0,
+                    Id = 1,
                     Seriennummer = "123xyz",
                     Jahrgang = 1999,
                 };

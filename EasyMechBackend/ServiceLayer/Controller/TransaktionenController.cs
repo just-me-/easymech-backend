@@ -37,7 +37,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message, ErrorCode.General);
                 }
             });
             return await task;
@@ -59,7 +59,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -82,12 +82,12 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -105,7 +105,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     if (id != transaktion.Id)
                     {
-                        return new ResponseObject<TransaktionDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<TransaktionDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new TransaktionManager();
                     TransaktionDto changedTransaktionDto = manager.UpdateTransaktion(transaktion.ConvertToEntity()).ConvertToDto();
@@ -115,12 +115,12 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -140,17 +140,17 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     var transaktion = manager.GetTransaktionById(id);
                     manager.DeleteTransaktion(transaktion);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Transaktion {id} to inactive");
-                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive");
+                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive", 0);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -174,7 +174,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message, ErrorCode.General);
                 }
             });
             return await task;

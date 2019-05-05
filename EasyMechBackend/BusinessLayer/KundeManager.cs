@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.BusinessLayer
@@ -44,6 +45,7 @@ namespace EasyMechBackend.BusinessLayer
         public Kunde AddKunde(Kunde k)
         {
             k.Validate();
+            EnsureUniqueness(k);
             Context.Add(k);
             Context.SaveChanges();
             return k;
@@ -52,6 +54,7 @@ namespace EasyMechBackend.BusinessLayer
         public Kunde UpdateKunde(Kunde k)
         {
             k.Validate();
+            EnsureUniqueness(k);
             var group = Context.Kunden.First(kunde => kunde.Id == k.Id);
             Context.Entry(group).CurrentValues.SetValues(k);
             Context.SaveChanges();
@@ -126,6 +129,18 @@ namespace EasyMechBackend.BusinessLayer
 
             return searchResult.ToList();
 
+        }
+
+
+        private void EnsureUniqueness(Kunde k)
+        {
+            var query = from laufvar in Context.Kunden
+                where laufvar.Firma == k.Firma && laufvar.Firma != null && laufvar.Id != k.Id
+                select laufvar;
+            if (query.Any())
+            {
+                throw new UniquenessException($"Die Firma \"{k.Firma}\" ist bereits im System registriert.");
+            }
         }
     }
 }

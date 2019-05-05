@@ -20,11 +20,11 @@ namespace EasyMechBackend.BusinessLayer
         {
         }
 
-        public List<Maschine> GetMaschinen()
+        public List<Maschine> GetMaschinen(bool withInactive)
         {
             var query =
                 from m in Context.Maschinen
-                where m.IstAktiv.Value
+                where m.IstAktiv.Value || withInactive
                 orderby m.Id descending
                 select m;
             return query.ToList();
@@ -74,7 +74,7 @@ namespace EasyMechBackend.BusinessLayer
         public List<Maschine> GetSearchResult(Maschine searchEntity)
         {
 
-            List<Maschine> allMaschinen = GetMaschinen();
+            List<Maschine> allMaschinen = GetMaschinen(false);
             IEnumerable<Maschine> searchResult = allMaschinen;
 
             PropertyInfo[] props = typeof(Maschine).GetProperties();
@@ -134,12 +134,13 @@ namespace EasyMechBackend.BusinessLayer
 
         private void EnsureUniqueness(Maschine m)
         {
-            var query = from e in Context.Maschinen
-                        where e.Seriennummer == m.Seriennummer && e.Seriennummer != null && m.Id != e.Id
-                        select m;
-            if (query.Any() )
+            var query = from laufvar in Context.Maschinen
+                        where laufvar.Seriennummer == m.Seriennummer && laufvar.Seriennummer != null && m.Id != laufvar.Id
+                        select laufvar;
+
+            if (query.Any())
             {
-                throw new UniquenessException($"Die Fahrzeug-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
+                throw new UniquenessException($"Die Maschinen-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
             }
         }
     }

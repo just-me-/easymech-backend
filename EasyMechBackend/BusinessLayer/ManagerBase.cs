@@ -17,7 +17,5 @@ namespace EasyMechBackend.BusinessLayer
             Context = new EMContext();
         }
 
-
-
     }
 }
