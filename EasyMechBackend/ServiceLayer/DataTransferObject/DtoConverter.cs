@@ -231,8 +231,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 KundenId = dto.KundenId,
                 Startdatum = dto.Startdatum,
                 Enddatum = dto.Enddatum,
-                Ruecknahme = dto.Ruecknahme,
-                Uebergabe = dto.Uebergabe,
+                Ruecknahme = dto.Ruecknahme.ConvertToEntity(),
+                Uebergabe = dto.Uebergabe.ConvertToEntity(),
                 Standort = dto.Standort
             };
             return t;
@@ -249,8 +249,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
                 KundenId = entity.KundenId,
                 Startdatum = entity.Startdatum,
                 Enddatum = entity.Enddatum,
-                Ruecknahme = entity.Ruecknahme,
-                Uebergabe = entity.Uebergabe,
+                Ruecknahme = entity.Ruecknahme.ConvertToDto(),
+                Uebergabe = entity.Uebergabe.ConvertToDto(),
                 Standort = entity.Standort
             };
 

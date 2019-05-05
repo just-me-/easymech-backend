@@ -26,7 +26,7 @@ namespace EasyMechBackend.BusinessLayer
         public List<Reservation> GetReservationen()
         {
             var query =
-            from r in Context.Reservationen
+            from r in Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme)
             orderby r.Startdatum descending
             select r;
             return query.ToList();
@@ -34,7 +34,7 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation GetReseervationById(long id)
         {
-            Reservation r = Context.Reservationen.SingleOrDefault(res => res.Id == id);
+            Reservation r = Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme).SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
                 throw new InvalidOperationException($"Reservation with id {id} is not in database");

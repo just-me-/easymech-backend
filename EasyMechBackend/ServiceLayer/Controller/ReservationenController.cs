@@ -223,12 +223,16 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // POST: Reservationen/2/Uebergabe
         [HttpPost("{id}/Uebergabe")]
-        public async Task<ActionResult<ResponseObject<ReservationDto>>> AddMaschinenuergabe(MaschinenUebergabeDto toAddUebergabeDto)
+        public async Task<ActionResult<ResponseObject<ReservationDto>>> AddMaschinenuergabe(long id, MaschinenUebergabeDto toAddUebergabeDto)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
+                    if (id != toAddUebergabeDto.ReservationsId)
+                    {
+                        return new ResponseObject<ReservationDto>(" Reservation ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
+                    }
                     var manager = new ReservationManager();
                     ReservationDto reservationAffected = manager.AddUebergabe(toAddUebergabeDto.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Resrevation {reservationAffected.Id} got Uergabe {reservationAffected.Uebergabe.Id}");
@@ -259,9 +263,9 @@ namespace EasyMechBackend.ServiceLayer.Controller
             {
                 try
                 {
-                    if (id != toEditUergabeDto.Id)
+                    if (id != toEditUergabeDto.ReservationsId)
                     {
-                        return new ResponseObject<ReservationDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
+                        return new ResponseObject<ReservationDto>("Reservation ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new ReservationManager();
                     var reservationAffected = manager.UpdateUebergabe(toEditUergabeDto.ConvertToEntity()).ConvertToDto();
@@ -316,12 +320,16 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // POST: Reservationen/2/Ruecknahme
         [HttpPost("{id}/Ruecknahme")]
-        public async Task<ActionResult<ResponseObject<ReservationDto>>> AddMaschinenRuecknahme(MaschinenRuecknahmeDto toAddRuecknahmeDto)
+        public async Task<ActionResult<ResponseObject<ReservationDto>>> AddMaschinenRuecknahme(long id, MaschinenRuecknahmeDto toAddRuecknahmeDto)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
+                    if (id != toAddRuecknahmeDto.ReservationsId)
+                    {
+                        return new ResponseObject<ReservationDto>("Reservation ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
+                    }
                     var manager = new ReservationManager();
                     ReservationDto reservationAffected = manager.AddRuecknahme(toAddRuecknahmeDto.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Resrevation {reservationAffected.Id} got Ruecknahme {reservationAffected.Ruecknahme.Id}");
@@ -352,9 +360,9 @@ namespace EasyMechBackend.ServiceLayer.Controller
             {
                 try
                 {
-                    if (id != toEditRuecknahmeDto.Id)
+                    if (id != toEditRuecknahmeDto.ReservationsId)
                     {
-                        return new ResponseObject<ReservationDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
+                        return new ResponseObject<ReservationDto>("Reservation ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new ReservationManager();
                     var reservationAffected = manager.UpdateRuecknahme(toEditRuecknahmeDto.ConvertToEntity()).ConvertToDto();

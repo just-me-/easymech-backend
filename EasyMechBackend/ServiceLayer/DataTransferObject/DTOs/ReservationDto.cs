@@ -21,8 +21,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject.DTOs
         public long? KundenId { get; set; }
 
 
-        public MaschinenUebergabe Uebergabe { get; set; }
-        public MaschinenRuecknahme Ruecknahme { get; set; }
+        public MaschinenUebergabeDto Uebergabe { get; set; }
+        public MaschinenRuecknahmeDto Ruecknahme { get; set; }
 
 
     }
