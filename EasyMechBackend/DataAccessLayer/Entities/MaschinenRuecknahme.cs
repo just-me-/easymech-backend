@@ -10,7 +10,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [Key]
         public long Id { get; set; }        
         
-        public DateTime Datum { get; set; }
+        public DateTime? Datum { get; set; }
 
         [ForeignKey(nameof(ReservationsId))]
         public Reservation Reservation { get; set; }

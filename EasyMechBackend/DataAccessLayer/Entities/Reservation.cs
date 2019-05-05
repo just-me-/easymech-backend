@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EasyMechBackend.Util;
 
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Reservationen", Schema = "public")]
-    public class Reservation
+    public class Reservation : EntityWithValidate
     {
         [Key]
         public long Id { get; set; }
@@ -13,9 +14,9 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [MaxLength(256)]
         public string Standort { get; set; }
 
-        public DateTime Startdatum { get; set; }
+        public DateTime? Startdatum { get; set; }
 
-        public DateTime Enddatum { get; set; }
+        public DateTime? Enddatum { get; set; }
 
 
         [ForeignKey(nameof(MaschinenId))]
@@ -30,10 +31,19 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public long? KundenId { get; set; }
 
 
-        public MaschinenUebergabe Uebergabe { get; set; }
-        public MaschinenRuecknahme Ruecknahme { get; set; }
+        public virtual MaschinenUebergabe Uebergabe { get; set; }
+        public virtual MaschinenRuecknahme Ruecknahme { get; set; }
 
 
+
+        protected sealed override void FillRequiredProps()
+        {
+        }
+
+        protected sealed override void ClipProps()
+        {
+            Standort = Standort.ClipToNChars(256);
+        }
     }
 
 
