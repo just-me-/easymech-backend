@@ -1,24 +1,21 @@
 ﻿using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.Util;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class TransaktionManager : ManagerBase
     {
-        public TransaktionManager(EMContext context)
+        public TransaktionManager(EMContext context) : base(context)
         {
-            Context = context;
         }
 
         public TransaktionManager()
         {
-            Context = new EMContext();
         }
 
         public List<Transaktion> GetTransaktionen()
@@ -116,14 +113,7 @@ namespace EasyMechBackend.BusinessLayer
                 }
             }
 
-            if (searchResult.Any())
-            {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Transaktion>();
-            }
+            return searchResult.ToList();
         }
     }
 }

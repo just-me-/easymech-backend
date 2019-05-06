@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Util;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class MaschinentypManager : ManagerBase
     {
-        public MaschinentypManager(EMContext context)
+        public MaschinentypManager(EMContext context) : base(context)
         {
-            Context = context;
         }
 
         public MaschinentypManager()
         {
-            Context = new EMContext();
         }
 
         public List<Maschinentyp> GetMaschinentypen()
@@ -43,6 +41,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschinentyp AddMaschinentyp(Maschinentyp f)
         {
             f.Validate();
+            EnsureUniqueness(f);
             Context.Add(f);
             Context.SaveChanges();
             return f;
@@ -51,6 +50,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschinentyp UpdateMaschinentyp(Maschinentyp f)
         {
             f.Validate();
+            EnsureUniqueness(f);
             var group = Context.Maschinentypen.First(kunde => kunde.Id == f.Id);
             Context.Entry(group).CurrentValues.SetValues(f);
             Context.SaveChanges();
@@ -62,18 +62,19 @@ namespace EasyMechBackend.BusinessLayer
 
             var query =
                 from m in Context.Maschinen
-                where m.MaschinentypId == f.Id
+                where m.MaschinentypId == f.Id && (m.IstAktiv ?? true)
                 select m;
 
             bool restricted = query.Any();
 
             if (restricted)
             {
-                throw new ForeignKeyRestrictionException($"Error: Maschinentyp {f.Id} ({f.Fabrikat}) is still set as other machine's type and can't be deleted!");
+                throw new ForeignKeyRestrictionException($"Maschinentyp {f.Id} ({f.Fabrikat}) wird noch benutzt.");
             }
-            else {
-            Context.Remove(f);
-            Context.SaveChanges();
+            else
+            {
+                Context.Remove(f);
+                Context.SaveChanges();
             }
         }
 
@@ -94,28 +95,65 @@ namespace EasyMechBackend.BusinessLayer
 
             foreach (var prop in props)
             {
-                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
-                if (prop.PropertyType != typeof(string)) continue;
-
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
+                // Handling String Fields with lower case contains
+                if (prop.PropertyType == typeof(string))
                 {
-                    searchResult = searchResult.Where(m => {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(m);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
-                    });
+                    string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                    if (potentialSearchTerm.HasSearchTerm())
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            string contentOfEntityThatIsEvaluated = (string)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated != null &&
+                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        });
+                    }
                 }
+
+                // Handling int or int? Fields with exact match
+                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
+                {
+                    int targetValue = (int?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            int contentOfEntityThatIsEvaluated = (int?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
+                //Handling long (PK, FK) with exact matching
+                //seperate treatment to int is necessary as int can't be castet to long?
+                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
+                {
+                    long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            long contentOfEntityThatIsEvaluated = (long?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
             }
 
-            if (searchResult.Any())
+            return searchResult.ToList();
+        }
+
+
+        private void EnsureUniqueness(Maschinentyp t)
+        {
+            bool matches = Context.Maschinentypen.Any(e => e.Fabrikat == t.Fabrikat && e != null && e.Id != t.Id);
+
+            if (matches)
             {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Maschinentyp>();
+                throw new UniquenessException($"Der Typ \"{t.Fabrikat}\" ist bereits im System registriert.");
             }
         }
+
     }
 }

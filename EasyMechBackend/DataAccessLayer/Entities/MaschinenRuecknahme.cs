@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("MaschinenRuecknahme", Schema = "public")]
     public class MaschinenRuecknahme
@@ -13,15 +10,11 @@ namespace EasyMechBackend.DataAccessLayer
         [Key]
         public long Id { get; set; }        
         
-        public DateTime Datum { get; set; }
+        public DateTime? Datum { get; set; }
 
-        //Relationships
-        // -------------------------------------------
-        [ForeignKey(nameof(MaschinenUebergabeId))]
-        public MaschinenUebergabe MaschinenUebergabe { get; set; }
-        public long MaschinenUebergabeId { get; set; }
-        // -------------------------------------------
-
+        [ForeignKey(nameof(ReservationsId))]
+        public Reservation Reservation { get; set; }
+        public long ReservationsId { get; set; }
     }
 
 

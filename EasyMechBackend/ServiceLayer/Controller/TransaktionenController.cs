@@ -5,17 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
-using log4net;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 {
     [Route("[controller]")]
     [ApiController]
     public class TransaktionenController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+        private const string OKTAG = ResponseObject<object>.OKTAG;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -38,7 +37,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message, ErrorCode.General);
                 }
             });
             return await task;
@@ -60,7 +59,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -83,12 +82,12 @@ namespace EasyMechBackend.ServiceLayer
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -106,7 +105,7 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     if (id != transaktion.Id)
                     {
-                        return new ResponseObject<TransaktionDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<TransaktionDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new TransaktionManager();
                     TransaktionDto changedTransaktionDto = manager.UpdateTransaktion(transaktion.ConvertToEntity()).ConvertToDto();
@@ -116,12 +115,12 @@ namespace EasyMechBackend.ServiceLayer
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -141,17 +140,17 @@ namespace EasyMechBackend.ServiceLayer
                     var transaktion = manager.GetTransaktionById(id);
                     manager.DeleteTransaktion(transaktion);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Transaktion {id} to inactive");
-                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive");
+                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive", 0);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message);
+                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -175,7 +174,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<TransaktionDto>>(e.Message, ErrorCode.General);
                 }
             });
             return await task;

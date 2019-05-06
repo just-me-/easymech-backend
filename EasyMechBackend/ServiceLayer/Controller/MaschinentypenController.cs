@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
-using log4net;
 using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 
 {
@@ -16,8 +16,7 @@ namespace EasyMechBackend.ServiceLayer
     [ApiController]
     public class MaschinentypenController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+        private const string OKTAG = ResponseObject<object>.OKTAG;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -40,7 +39,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -63,7 +62,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -83,15 +82,20 @@ namespace EasyMechBackend.ServiceLayer
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {dto.Id} added");
                     return new ResponseObject<MaschinentypDto>(dto);
                 }
+                catch (UniquenessException e)
+                {
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Uniqueness Exception: {e.Message}");
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.Uniqueness);
+                }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschinentypDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -109,22 +113,28 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     if (id != maschinentyp.Id)
                     {
-                        return new ResponseObject<MaschinentypDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<MaschinentypDto>("ID in URL does not match ID in the request's body data", ErrorCode.DBUpdate);
                     }
                     var manager = new MaschinentypManager();
                     MaschinentypDto changedMaschinentypDto = manager.UpdateMaschinentyp(maschinentyp.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Maschinentyp {id} updated");
                     return new ResponseObject<MaschinentypDto>(changedMaschinentypDto);
                 }
+
+                catch (UniquenessException e)
+                {
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Uniqueness Exception: {e.Message}");
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.Uniqueness);
+                }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -144,22 +154,22 @@ namespace EasyMechBackend.ServiceLayer
                     var maschinentyp = manager.GetMaschinentypById(id);
                     manager.DeleteMaschinentyp(maschinentyp);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Maschinentyp {id}");
-                    return new ResponseObject<MaschinentypDto>(null, OKTAG, $"Delete Maschinentyp {id}");
+                    return new ResponseObject<MaschinentypDto>(null, OKTAG, $"Delete Maschinentyp {id}", 0);
                 }
                 catch (ForeignKeyRestrictionException e)
                 {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Foreign Key Restriction Exception: {e.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Foreign Key Restriction Exception: {e.Message}");
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.ForeignKey);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<MaschinentypDto>(e.Message);
+                    return new ResponseObject<MaschinentypDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -183,11 +193,13 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<MaschinentypDto>>(e.Message, ErrorCode.General);
                 }
             });
 
             return await task;
         }
+
+
     }
 }

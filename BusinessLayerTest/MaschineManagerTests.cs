@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -21,24 +23,28 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                foreach (Maschine m in maschineManager.GetMaschinen())
+                foreach (Maschine m in maschineManager.GetMaschinen(true))
                 {
                     context.Remove(m);
                 }
+
                 context.SaveChanges();
+
                 Maschine m2 = new Maschine
                 {
                     Id = 1,
-                    Seriennummer = "123xyz",
+                    Seriennummer = "123xyz!!",
                     Jahrgang = 1999,
                     IstAktiv = true
                 };
+
                 m2.Validate();
                 context.Add(m2);
                 context.SaveChanges();
             }
             return options;
         }
+
         [TestMethod]
         public void AddMaschineTest()
         {
@@ -58,7 +64,28 @@ namespace BusinessLayerTest
                 var addedMaschine = context.Maschinen.Single(maschine => maschine.Id == id);
                 Assert.AreEqual("123xyz", addedMaschine.Seriennummer);
             }
-        } 
+        }
+
+        [TestMethod]
+        public void AddDuplicateMaschine()
+        {
+            var options = ResetDBwithMaschineHelper();
+            using (var context = new EMContext(options))
+            {
+                int id = 2;
+                Maschine m = new Maschine
+                {
+                    Id = id,
+                    Seriennummer = "123xyz!!",
+                };
+                MaschineManager maschineManager = new MaschineManager(context);
+
+                Assert.ThrowsException<UniquenessException>(() =>
+                {
+                    maschineManager.AddMaschine(m);
+                });
+            }
+        }
         [TestMethod]
         public void GetMaschinenTest()
         {
@@ -66,7 +93,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                var maschinenList = maschineManager.GetMaschinen();
+                var maschinenList = maschineManager.GetMaschinen(false);
                 Assert.AreEqual(1, maschinenList.Count);
             }
         }
@@ -78,7 +105,7 @@ namespace BusinessLayerTest
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine1 = maschineManager.GetMaschineById(1);
-                Assert.AreEqual("123xyz", maschine1.Seriennummer);
+                Assert.AreEqual("123xyz!!", maschine1.Seriennummer);
             }
         }
         [TestMethod]
@@ -107,6 +134,20 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
+        public void SetInactiveTest()
+        {
+            var options = ResetDBwithMaschineHelper();
+            using (var context = new EMContext(options))
+            {
+                MaschineManager maschineManager = new MaschineManager(context);
+                var original = maschineManager.GetMaschineById(1);
+                maschineManager.SetMaschineInactive(original);
+                var updated = maschineManager.GetMaschineById(1);
+                Assert.IsFalse(updated.IstAktiv ?? true);
+            }
+        }
+
+        [TestMethod]
         public void DeleteMaschineTest()
         {
             var options = ResetDBwithMaschineHelper();
@@ -119,6 +160,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void GetSearchResultMaschineTest()
         {
@@ -128,7 +170,7 @@ namespace BusinessLayerTest
                 MaschineManager maschineManager = new MaschineManager(context);
                 Maschine m = new Maschine
                 {
-                    Id = 0,
+                    Id = 1,
                     Seriennummer = "123xyz",
                     Jahrgang = 1999,
                 };

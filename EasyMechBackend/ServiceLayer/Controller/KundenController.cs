@@ -5,18 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
+using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 
 {
+    //[Authorize]
     [Route("[controller]")]
     [ApiController]
     public class KundenController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
+        private const string OKTAG = ResponseObject<object>.OKTAG;
 
         private static readonly ILog log = LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -39,7 +42,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -63,7 +66,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message, ErrorCode.General);
                 }
             });
             return await task;
@@ -85,7 +88,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -104,16 +107,22 @@ namespace EasyMechBackend.ServiceLayer
                     KundeDto dto = manager.AddKunde(kunde.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: kunde {dto.Id} added");
                     return new ResponseObject<KundeDto>(dto);
+
+                }
+                catch (UniquenessException e)
+                {
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Uniqueness Exception: {e.Message}");
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.Uniqueness);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>("DB Update Exception: " + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -131,22 +140,27 @@ namespace EasyMechBackend.ServiceLayer
                 {
                     if (id != kunde.Id)
                     {
-                        return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data");
+                        return new ResponseObject<KundeDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new KundeManager();
                     KundeDto changedKundeDto = manager.UpdateKunde(kunde.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Kunde {id} updated");
                     return new ResponseObject<KundeDto>(changedKundeDto);
                 }
+                catch (UniquenessException e)
+                {
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Uniqueness Exception: {e.Message}");
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.Uniqueness);
+                }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -162,21 +176,52 @@ namespace EasyMechBackend.ServiceLayer
             {
                 try
                 {
+
                     var manager = new KundeManager();
                     var kunde = manager.GetKundeById(id);
                     manager.SetKundeInactive(kunde);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
-                    return new ResponseObject<KundeDto>(null, OKTAG, $"Set Kunde {id} to inactive");
+                    return new ResponseObject<KundeDto>(null, OKTAG, $"Set Kunde {id} to inactive", 0);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message);
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<KundeDto>(e.Message);
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.General);
+                }
+
+            });
+            return await task;
+        }
+
+
+        // DELETE: kunden/5/hard
+        [HttpDelete("{id}/hard")]
+        public async Task<ActionResult<ResponseObject<KundeDto>>> DeleteKundeHard(long id)
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new KundeManager();
+                    var kunde = manager.GetKundeById(id);
+                    manager.DeleteKunde(kunde);
+                    log.Warn($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Deleting Kunde {id} from database");
+                    return new ResponseObject<KundeDto>(null, OKTAG, $"Deleted Kunde {id} from database", 0);
+                }
+                catch (DbUpdateException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
+                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<KundeDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -200,7 +245,7 @@ namespace EasyMechBackend.ServiceLayer
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message);
+                    return new ResponseObject<IEnumerable<KundeDto>>(e.Message, ErrorCode.General);
                 }
             });
 

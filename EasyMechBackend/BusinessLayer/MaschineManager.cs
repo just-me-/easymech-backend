@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Util;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class MaschineManager : ManagerBase
     {
-        public MaschineManager(EMContext context)
+        public MaschineManager(EMContext context) : base(context)
         {
-            Context = context;
         }
+
 
         public MaschineManager()
         {
-            Context = new EMContext();
         }
 
-        public List<Maschine> GetMaschinen()
+        public List<Maschine> GetMaschinen(bool withInactive)
         {
             var query =
                 from m in Context.Maschinen
-                where m.IstAktiv.Value
+                where m.IstAktiv.Value || withInactive
                 orderby m.Id descending
                 select m;
             return query.ToList();
@@ -43,6 +43,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine AddMaschine(Maschine m)
         {
             m.Validate();
+            EnsureUniqueness(m);
             Context.Add(m);
             Context.SaveChanges();
             return m;
@@ -51,6 +52,7 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine UpdateMaschine(Maschine m)
         {
             m.Validate();
+            EnsureUniqueness(m);
             var group = Context.Maschinen.First(kunde => kunde.Id == m.Id);
             Context.Entry(group).CurrentValues.SetValues(m);
             Context.SaveChanges();
@@ -71,44 +73,75 @@ namespace EasyMechBackend.BusinessLayer
 
         public List<Maschine> GetSearchResult(Maschine searchEntity)
         {
-            if (searchEntity.Id != 0)
-            {
-                return new List<Maschine>
-                {
-                    GetMaschineById(searchEntity.Id)
-                };
-            }
 
-            List<Maschine> allMaschinen = GetMaschinen();
+            List<Maschine> allMaschinen = GetMaschinen(false);
             IEnumerable<Maschine> searchResult = allMaschinen;
 
             PropertyInfo[] props = typeof(Maschine).GetProperties();
 
             foreach (var prop in props)
             {
-                //id and isActive are no subject for searching -> these are the only ones with onn-string fields
-                if (prop.PropertyType != typeof(string)) continue;
-
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
+                // Handling String Fields with lower case contains
+                if (prop.PropertyType == typeof(string))
                 {
-                    searchResult = searchResult.Where(m => {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(m);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
-                    });
+                    string potentialSearchTerm = (string)prop.GetValue(searchEntity);
+                    if (potentialSearchTerm.HasSearchTerm())
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            string contentOfEntityThatIsEvaluated = (string)prop.GetValue(m);
+                            return contentOfEntityThatIsEvaluated != null &&
+                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
+                        });
+                    }
                 }
+
+                // Handling int or int? Fields with exact match
+                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
+                {
+                    int targetValue = (int?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            int contentOfEntityThatIsEvaluated = (int?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
+                //Handling long (PK, FK) with exact matching
+                //seperate treatment to int is necessary as int can't be castet to long?
+                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
+                {
+                    long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
+                    if (targetValue != 0)
+                    {
+                        searchResult = searchResult.Where(m =>
+                        {
+                            long contentOfEntityThatIsEvaluated = (long?)prop.GetValue(m) ?? 0;
+                            return contentOfEntityThatIsEvaluated == targetValue;
+                        });
+                    }
+                }
+
             }
 
-            if (searchResult.Any())
-            {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Maschine>();
-            }
+            return searchResult.ToList();
 
+        }
+
+
+        private void EnsureUniqueness(Maschine m)
+        {
+            var query = from laufvar in Context.Maschinen
+                        where laufvar.Seriennummer == m.Seriennummer && laufvar.Seriennummer != null && m.Id != laufvar.Id
+                        select laufvar;
+
+            if (query.Any())
+            {
+                throw new UniquenessException($"Die Maschinen-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
+            }
         }
     }
 }
