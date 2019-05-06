@@ -1,9 +1,9 @@
-﻿using EasyMechBackend.DataAccessLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+using System.Resources;
+using EasyMechBackend.DataAccessLayer.Entities;
+using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {
@@ -218,6 +218,118 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
+        /*
+        #region Reservation
+
+        public static Reservation ConvertToEntity(this ReservationDto dto)
+        {
+            if (dto == null) { return null; }
+
+            Reservation t = new Reservation
+            {
+                Id = dto.Id,
+                MaschinenId = dto.MaschinenId,
+                KundenId = dto.KundenId,
+                Startdatum = dto.Startdatum,
+                Enddatum = dto.Enddatum,
+                Ruecknahme = dto.Ruecknahme.ConvertToEntity(),
+                Uebergabe = dto.Uebergabe.ConvertToEntity(),
+                Standort = dto.Standort
+            };
+            return t;
+        }
+
+        public static ReservationDto ConvertToDto(this Reservation entity)
+        {
+            if (entity == null) { return null; }
+
+            ReservationDto dto = new ReservationDto
+            {
+                Id = entity.Id,
+                MaschinenId = entity.MaschinenId,
+                KundenId = entity.KundenId,
+                Startdatum = entity.Startdatum,
+                Enddatum = entity.Enddatum,
+                Ruecknahme = entity.Ruecknahme.ConvertToDto(),
+                Uebergabe = entity.Uebergabe.ConvertToDto(),
+                Standort = entity.Standort
+            };
+
+            return dto;
+        }
+
+        public static List<Reservation> ConvertToEntities(this IEnumerable<ReservationDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<ReservationDto> ConvertToDtos(this IEnumerable<Reservation> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+
+        #endregion
+        #region ResrevatrionsUebergabe
+
+        public static MaschinenUebergabe ConvertToEntity(this MaschinenUebergabeDto dto)
+        {
+            if (dto == null) { return null; }
+
+            MaschinenUebergabe t = new MaschinenUebergabe
+            {
+                Id = dto.Id,
+                Datum = dto.Datum,
+                ReservationsId = dto.ReservationsId
+            };
+            return t;
+        }
+
+        public static MaschinenUebergabeDto ConvertToDto(this MaschinenUebergabe entity)
+        {
+            if (entity == null) { return null; }
+
+
+            MaschinenUebergabeDto dto = new MaschinenUebergabeDto
+            {
+                Id = entity.Id,
+                Datum = entity.Datum,
+                ReservationsId = entity.ReservationsId
+            };
+            return dto;
+        }
+
+        #endregion
+        #region ResrevatrionsRuecknahme
+
+
+        public static MaschinenRuecknahme ConvertToEntity(this MaschinenRuecknahmeDto dto)
+        {
+            if (dto == null) { return null; }
+
+            MaschinenRuecknahme t = new MaschinenRuecknahme
+            {
+                Id = dto.Id,
+                Datum = dto.Datum,
+                ReservationsId = dto.ReservationsId
+            };
+            return t;
+        }
+
+        public static MaschinenRuecknahmeDto ConvertToDto(this MaschinenRuecknahme entity)
+        {
+            if (entity == null) { return null; }
+
+
+            MaschinenRuecknahmeDto dto = new MaschinenRuecknahmeDto
+            {
+                Id = entity.Id,
+                Datum = entity.Datum,
+                ReservationsId = entity.ReservationsId
+            };
+            return dto;
+        }
+
+        #endregion
+        */
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {

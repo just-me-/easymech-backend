@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <SonarQubeExclude>True</SonarQubeExclude>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,6 +18,14 @@
     <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BusinessLayer\ReservationManager.cs" />
+    <Compile Remove="ServiceLayer\Controller\ReservationenController.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\MaschinenRuecknahmeDto.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\MaschinenUebergabeDto.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\ReservationDto.cs" />
   </ItemGroup>
 
   <ItemGroup>

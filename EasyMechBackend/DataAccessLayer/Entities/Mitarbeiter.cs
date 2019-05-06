@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Mitarbeiter", Schema = "public")]
     [NotMapped]
@@ -21,14 +18,11 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(128)]
         public string Vorname { get; set; }
 
-        //Relationships
-        // -------------------------------------------
         public List<Reservation> Reservationen { get; set; }
 
         public List<Transaktion> Transaktionen { get; set; }
 
         public List<GeplanterService> GeplanteServices { get; set; }
-        // -------------------------------------------
 
     }
 }

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace EasyMechBackend.Util
 {
     public static class Helpers
     {
-        public static string ClipTo128Chars(this string s)
+        public static string ClipToNChars(this string s, int length)
         {
             if (s == null) {
               return null;
             }
-            if (s.Length > 128)
+            if (s.Length > length)
             {
-                s = s.Remove(128);
+                s = s.Remove(length);
             }
             return s;
 

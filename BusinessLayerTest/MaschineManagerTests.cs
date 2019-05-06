@@ -7,6 +7,7 @@ using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -22,11 +23,13 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                foreach (Maschine m in maschineManager.GetMaschinen())
+                foreach (Maschine m in maschineManager.GetMaschinen(true))
                 {
                     context.Remove(m);
                 }
+
                 context.SaveChanges();
+
                 Maschine m2 = new Maschine
                 {
                     Id = 1,
@@ -34,12 +37,14 @@ namespace BusinessLayerTest
                     Jahrgang = 1999,
                     IstAktiv = true
                 };
+
                 m2.Validate();
                 context.Add(m2);
                 context.SaveChanges();
             }
             return options;
         }
+
         [TestMethod]
         public void AddMaschineTest()
         {
@@ -62,7 +67,7 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
-        public void AddMaschineWithExistingSeriennummerTest()
+        public void AddDuplicateMaschine()
         {
             var options = ResetDBwithMaschineHelper();
             using (var context = new EMContext(options))
@@ -88,7 +93,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
-                var maschinenList = maschineManager.GetMaschinen();
+                var maschinenList = maschineManager.GetMaschinen(false);
                 Assert.AreEqual(1, maschinenList.Count);
             }
         }
@@ -129,6 +134,20 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
+        public void SetInactiveTest()
+        {
+            var options = ResetDBwithMaschineHelper();
+            using (var context = new EMContext(options))
+            {
+                MaschineManager maschineManager = new MaschineManager(context);
+                var original = maschineManager.GetMaschineById(1);
+                maschineManager.SetMaschineInactive(original);
+                var updated = maschineManager.GetMaschineById(1);
+                Assert.IsFalse(updated.IstAktiv ?? true);
+            }
+        }
+
+        [TestMethod]
         public void DeleteMaschineTest()
         {
             var options = ResetDBwithMaschineHelper();
@@ -141,6 +160,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void GetSearchResultMaschineTest()
         {
@@ -150,7 +170,7 @@ namespace BusinessLayerTest
                 MaschineManager maschineManager = new MaschineManager(context);
                 Maschine m = new Maschine
                 {
-                    Id = 0,
+                    Id = 1,
                     Seriennummer = "123xyz",
                     Jahrgang = 1999,
                 };

@@ -1,23 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
-using log4net;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
-namespace EasyMechBackend.ServiceLayer
+namespace EasyMechBackend.ServiceLayer.Controller
 
 {
     [Route("[controller]")]
     [ApiController]
     public class DevController : ControllerBase
     {
-        private static readonly string ERRORTAG = ResponseObject<Object>.ERRORTAG;
-        private static readonly string OKTAG = ResponseObject<Object>.OKTAG;
-
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -26,46 +20,56 @@ namespace EasyMechBackend.ServiceLayer
         [HttpGet("postmanTestCleanup")]
         public async Task<IActionResult> PostManCleanup()
         {
-            long testId = 85496;
+            const long testId = 85496;
 
             await Task.Run(() =>
             {
                 try
                 {
-                    log.Warn($"Test Clean Up Script was Called!");
-
+                    log.Warn("Test Clean Up Script was Called!");
 
                     var m1 = new MaschineManager();
-                    m1.DeleteMaschine(new DataAccessLayer.Maschine { Id = testId });
+                    var e1 = m1.GetMaschineById(testId);
+                    m1.DeleteMaschine(e1);
 
                     var m2 = new MaschinentypManager();
-                    m2.DeleteMaschinentyp(new DataAccessLayer.Maschinentyp { Id = testId });
+                    var e2 = m2.GetMaschinentypById(testId);
+                    m2.DeleteMaschinentyp(e2);
 
                     var m3 = new KundeManager();
-                    m3.DeleteKunde(new DataAccessLayer.Kunde { Id = testId });
-
-
-
+                    var e3 = m3.GetKundeById(testId);
+                    m3.DeleteKunde(e3);
+                    
                 }
                 catch (Exception e)
                 {
                     log.Error($"Test Clean Up Error {e.Message}");
+                    
                 }
             });
-
-
             return NoContent();
+
         }
 
+
         [HttpGet("log")]
-        public ActionResult GetLog()
+        public void GetLog()
+        {
+
+            Response.ContentType = "text/plain";
+            Response.StatusCode = 200;
+            Response.SendFileAsync("easymech.log");
+        }
+
+        [HttpGet("logAlt")]
+        public ActionResult GetLogAlt()
         {
 
             using (var fileStream = new FileStream("easymech.log", FileMode.Open, FileAccess.Read))
             {
-                byte[] buffer = new byte[1024*32];
+                byte[] buffer = new byte[1024 * 128];
 
-                fileStream.Read(buffer, 0, 1024*32);
+                fileStream.Read(buffer, 0, 1024 * 32);
 
                 Response.ContentType = "text/plain";
                 Response.StatusCode = 200;

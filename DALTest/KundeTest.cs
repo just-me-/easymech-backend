@@ -1,4 +1,5 @@
 using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 

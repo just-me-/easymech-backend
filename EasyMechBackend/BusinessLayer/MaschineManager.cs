@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer;
+using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Util;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class MaschineManager : ManagerBase
     {
-        public MaschineManager(EMContext context)
+        public MaschineManager(EMContext context) : base(context)
         {
-            Context = context;
         }
+
 
         public MaschineManager()
         {
-            Context = new EMContext();
         }
 
-        public List<Maschine> GetMaschinen()
+        public List<Maschine> GetMaschinen(bool withInactive)
         {
             var query =
                 from m in Context.Maschinen
-                where m.IstAktiv.Value
+                where m.IstAktiv.Value || withInactive
                 orderby m.Id descending
                 select m;
             return query.ToList();
@@ -74,26 +73,17 @@ namespace EasyMechBackend.BusinessLayer
 
         public List<Maschine> GetSearchResult(Maschine searchEntity)
         {
-            if (searchEntity.Id != 0)
-            {
-                return new List<Maschine>
-                {
-                    GetMaschineById(searchEntity.Id)
-                };
-            }
 
-            List<Maschine> allMaschinen = GetMaschinen();
+            List<Maschine> allMaschinen = GetMaschinen(false);
             IEnumerable<Maschine> searchResult = allMaschinen;
 
             PropertyInfo[] props = typeof(Maschine).GetProperties();
 
-            //Notiz: Das ding hier wär komplett generisch handlebar ;-)
             foreach (var prop in props)
             {
                 // Handling String Fields with lower case contains
                 if (prop.PropertyType == typeof(string))
                 {
-
                     string potentialSearchTerm = (string)prop.GetValue(searchEntity);
                     if (potentialSearchTerm.HasSearchTerm())
                     {
@@ -119,9 +109,9 @@ namespace EasyMechBackend.BusinessLayer
                         });
                     }
                 }
+
                 //Handling long (PK, FK) with exact matching
-                //checks id again which is 0 at this point but we let the church in the village here.
-                //seperate treatment necessary as int can't be castet to long?
+                //seperate treatment to int is necessary as int can't be castet to long?
                 else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
                 {
                     long targetValue = (long?)prop.GetValue(searchEntity) ?? 0;
@@ -135,27 +125,22 @@ namespace EasyMechBackend.BusinessLayer
                     }
                 }
 
-
             }
 
-            if (searchResult.Any())
-            {
-                return searchResult.ToList();
-            }
-            else
-            {
-                return new List<Maschine>();
-            }
+            return searchResult.ToList();
 
         }
+
+
         private void EnsureUniqueness(Maschine m)
         {
-            var query = from e in Context.Maschinen
-                        where e.Seriennummer == m.Seriennummer && e.Seriennummer != null && m.Id != e.Id
-                        select m;
-            if (query.Any() )
+            var query = from laufvar in Context.Maschinen
+                        where laufvar.Seriennummer == m.Seriennummer && laufvar.Seriennummer != null && m.Id != laufvar.Id
+                        select laufvar;
+
+            if (query.Any())
             {
-                throw new UniquenessException($"Die Fahrzeug-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
+                throw new UniquenessException($"Die Maschinen-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
             }
         }
     }

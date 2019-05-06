@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using EasyMechBackend.Util;
 
-namespace EasyMechBackend.DataAccessLayer
+namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Reservationen", Schema = "public")]
-    public class Reservation
+    public class Reservation : EntityWithValidate
     {
         [Key]
         public long Id { get; set; }
@@ -16,36 +14,36 @@ namespace EasyMechBackend.DataAccessLayer
         [MaxLength(256)]
         public string Standort { get; set; }
 
-        public DateTime Startdatum { get; set; }
+        public DateTime? Startdatum { get; set; }
 
-        public DateTime Enddatum { get; set; }
+        public DateTime? Enddatum { get; set; }
 
 
-        //Relationships
-        // -------------------------------------------
-
-        [ForeignKey("MaschinenId")]
+        [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
         public long MaschinenId { get; set; }
 
 
 
-        [ForeignKey("KundenId")]
+        [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
         public long? KundenId { get; set; }
 
 
-        // ------------Navigation Properties----------
-        public MaschinenUebergabe Uebergabe { get; set; }
-        // -------------------------------------------
+        public virtual MaschinenUebergabe Uebergabe { get; set; }
+        public virtual MaschinenRuecknahme Ruecknahme { get; set; }
 
 
-        //
-        //Assistant Property !! Lazy Loading not active !! Will not work. Ka warum ich es hinschreib überhaupt.
-        [NotMapped]
-        public MaschinenRuecknahme Ruecknahme { get => Uebergabe.Ruecknahme; }
 
+        protected sealed override void FillRequiredProps()
+        {
+        }
+
+        protected sealed override void ClipProps()
+        {
+            Standort = Standort.ClipToNChars(256);
+        }
     }
 
 

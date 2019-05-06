@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace EasyMechBackend.ServiceLayer.DataTransferObject
 {
     public class ResponseObject<T>
         where T: class
     {
-
-        public static readonly string OKTAG = "ok";
-        public static readonly string ERRORTAG = "error";
+        public const string OKTAG = "ok";
+        public const string ERRORTAG = "error";
 
         public T Data { get; set; }
         public string Status { get; set; }
         public string Message { get; set; }
+
+        public ErrorCode ErrorCode { get; set; }
 
 
         //Regular case: Data provided, no message
@@ -23,22 +20,25 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             Data = data;
             Status = OKTAG;
             Message = "";
+            ErrorCode = 0;
         }
 
         //Error case: no Data + Message
-        public ResponseObject(string msg)
+        public ResponseObject(string msg, ErrorCode errorCode)
         {
             Data = null;
             Status = ERRORTAG;
             Message = msg;
+            ErrorCode = errorCode;
         }
 
         //Custom Case: All Props manually set
-        public ResponseObject(T data, string status, string msg)
+        public ResponseObject(T data, string status, string msg, ErrorCode errorCode)
         {
             Data = data;
             Status = status;
             Message = msg;
+            ErrorCode = errorCode;
         }
 
 

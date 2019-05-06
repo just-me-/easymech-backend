@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.DataAccessLayer
 {
     public class EMContext : DbContext
     {
         public EMContext(DbContextOptions<EMContext> options) : base(options) { }
-        public EMContext() : base() { }
+        public EMContext() { }
 
 
         public DbSet<Kunde> Kunden { get; set; }
@@ -32,10 +29,30 @@ namespace EasyMechBackend.DataAccessLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Kunde>().ForNpgsqlUseXminAsConcurrencyToken();
+
+            //TODO:
+            //Subject to change: You deleted all machines of a certain type
+            //What happens if you delete the machine type?
+            //only hard-deletion supported (no ianactive flag)
+            //Suggestion: Cascade. If it's not cascade, you hardly can delete a machinetyp as soon as it was once assigned to a machine.
+            //you first need to hard delete all machines... all manually...
+
+            //(no) Option: SetNull: But then the Machinetype-Property must be optional which we decided not to do.
+            //The business logic ensures you will not delete an active in-use machine type.
             modelBuilder.Entity<Maschinentyp>()
                 .HasMany(t => t.Maschinen)
                 .WithOne(t => t.Maschinentyp)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //TODO:
+            //Subject to change: You deleted all machines belonging to a customer.
+            //What happens tp the machines if you hard-delete the customer?
+            //Suggestion: Also Hard-Delete the machines as this is an admin operation, not
+            //a user operation. The user will set things only to inactive.
+            modelBuilder.Entity<Kunde>()
+                .HasMany(t => t.Maschinen)
+                .WithOne(t => t.Besitzer)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
 

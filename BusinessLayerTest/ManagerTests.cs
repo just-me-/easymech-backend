@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using EasyMechBackend.Common.Exceptions;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -27,7 +29,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
-                foreach (Kunde k in kundeManager.GetKunden(false))
+                foreach (Kunde k in kundeManager.GetKunden(true))
                 {
                     context.Remove(k);
                 }
@@ -51,6 +53,7 @@ namespace BusinessLayerTest
 
             return options;
         }
+
         [TestMethod]
         public void AddKundeTest()
         {
@@ -75,6 +78,25 @@ namespace BusinessLayerTest
                 Assert.AreEqual("Firma 2", addedKunde.Firma);
             }
         }
+
+        [TestMethod]
+        public void AddKundeDuplicateTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                int id = 2;
+                Kunde k = new Kunde
+                {
+                    Id = id,
+                    Firma = "Firma"
+                };
+                KundeManager kundeManager = new KundeManager(context);
+                Assert.ThrowsException<UniquenessException>(() => kundeManager.AddKunde(k));
+            }
+        }
+
+
         [TestMethod]
         public void GetKundenTest()
         {
@@ -124,6 +146,20 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
+        public void SetInactiveTest()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                KundeManager man = new KundeManager(context);
+                var original = man.GetKundeById(1);
+                man.SetKundeInactive(original);
+                var updated = man.GetKundeById(1);
+                Assert.IsFalse(updated.IstAktiv ?? true);
+            }
+        }
+
+        [TestMethod]
         public void DeleteKundeTest()
         {
             var options = ResetDBwithKundeHelper();
@@ -145,7 +181,7 @@ namespace BusinessLayerTest
                 KundeManager kundeManager = new KundeManager(context);
                 Kunde f = new Kunde
                 {
-                    Id = 0,
+                    Id = 1,
                     Firma = "Firma"
                 };
                 var resultList = kundeManager.GetSearchResult(f);
