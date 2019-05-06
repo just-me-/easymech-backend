@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
@@ -29,7 +30,7 @@ namespace BusinessLayerTest
                 {
                     context.Remove(k);
                 }
-                foreach (Maschine m in maschineManager.GetMaschinen())
+                foreach (Maschine m in maschineManager.GetMaschinen(true))
                 {
                     context.Remove(m);
                 }
