@@ -21,6 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="BusinessLayer\ReservationManager.cs" />
+    <Compile Remove="ServiceLayer\Controller\ReservationenController.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\MaschinenRuecknahmeDto.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\MaschinenUebergabeDto.cs" />
+    <Compile Remove="ServiceLayer\DataTransferObject\DTOs\ReservationDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ServiceLayer\Controller\ValuesController_Vorlage.txt" />
   </ItemGroup>
 

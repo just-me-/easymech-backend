@@ -218,6 +218,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
+        /*
         #region Reservation
 
         public static Reservation ConvertToEntity(this ReservationDto dto)
@@ -299,6 +300,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         #endregion
         #region ResrevatrionsRuecknahme
 
+
         public static MaschinenRuecknahme ConvertToEntity(this MaschinenRuecknahmeDto dto)
         {
             if (dto == null) { return null; }
@@ -327,7 +329,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-
+        */
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {
