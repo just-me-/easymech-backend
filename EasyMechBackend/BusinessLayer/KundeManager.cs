@@ -135,8 +135,11 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureUniqueness(Kunde k)
         {
             var query = from laufvar in Context.Kunden
-                where laufvar.Firma == k.Firma && laufvar.Firma != null && laufvar.Id != k.Id
-                select laufvar;
+                where laufvar.Firma == k.Firma 
+                where laufvar.Firma != null 
+                where laufvar.Id != k.Id
+                where  (laufvar.IstAktiv ?? false)
+                select 0;
             if (query.Any())
             {
                 throw new UniquenessException($"Die Firma \"{k.Firma}\" ist bereits im System registriert.");

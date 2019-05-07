@@ -79,6 +79,13 @@ namespace BusinessLayerTest
         }
 
 
+        //TODO: Add Maschinentyp, use it as type for a machine
+        // Delete MAchinenentyp must throw ForeignKeyExcepion
+
+        //TODO: Add Maschinentyp, use it as type for a machine, set this machine to inactive
+        // Delete MAchinenentyp must work, delete the machinentyp as well as the machine
+
+
         [TestMethod]
         public void GetMaschinentypenTest()
         {

@@ -98,6 +98,28 @@ namespace BusinessLayerTest
 
 
         [TestMethod]
+        public void AddKundeIntoDeleteIntoAddAgainShouldBeOK()
+        {
+            var options = ResetDBwithKundeHelper();
+            using (var context = new EMContext(options))
+            {
+                int id = 2;
+                Kunde newKunde = new Kunde
+                {
+                    Id = id,
+                    Firma = "Firma"
+                };
+                KundeManager man = new KundeManager(context);
+                var original = man.GetKundeById(1);
+                man.SetKundeInactive(original);
+                man.AddKunde(newKunde);
+                var kundenList = man.GetKunden(true);
+                Assert.AreEqual(2, kundenList.Count);
+            }
+        }
+
+
+        [TestMethod]
         public void GetKundenTest()
         {
             var options = ResetDBwithKundeHelper();

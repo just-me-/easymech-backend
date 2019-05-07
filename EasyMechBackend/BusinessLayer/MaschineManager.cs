@@ -135,8 +135,11 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureUniqueness(Maschine m)
         {
             var query = from laufvar in Context.Maschinen
-                        where laufvar.Seriennummer == m.Seriennummer && laufvar.Seriennummer != null && m.Id != laufvar.Id
-                        select laufvar;
+                        where laufvar.Seriennummer == m.Seriennummer
+                        where laufvar.Seriennummer != null 
+                        where laufvar.Id != m.Id
+                        where (laufvar.IstAktiv ?? false)
+                        select 0;
 
             if (query.Any())
             {

@@ -65,9 +65,7 @@ namespace EasyMechBackend.BusinessLayer
                 where m.MaschinentypId == f.Id && (m.IstAktiv ?? true)
                 select m;
 
-            bool restricted = query.Any();
-
-            if (restricted)
+            if (query.Any())
             {
                 throw new ForeignKeyRestrictionException($"Maschinentyp {f.Id} ({f.Fabrikat}) wird noch benutzt.");
             }
@@ -147,7 +145,7 @@ namespace EasyMechBackend.BusinessLayer
 
         private void EnsureUniqueness(Maschinentyp t)
         {
-            bool matches = Context.Maschinentypen.Any(e => e.Fabrikat == t.Fabrikat && e != null && e.Id != t.Id);
+            bool matches = Context.Maschinentypen.Any(e => e.Fabrikat == t.Fabrikat && e.Fabrikat != null && e.Id != t.Id);
 
             if (matches)
             {
