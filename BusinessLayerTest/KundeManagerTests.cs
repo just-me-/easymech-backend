@@ -11,60 +11,20 @@ using EasyMechBackend.DataAccessLayer.Entities;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class ManagerBaseTests
-    {
-        // placeholder
-    }
-
-    [TestClass]
     public class KundeManagerTest
     {
-
-        private DbContextOptions<EMContext> ResetDBwithKundeHelper()
-        {
-            var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "KundeTestDB")
-                            .Options;
-
-            using (var context = new EMContext(options))
-            {
-                KundeManager kundeManager = new KundeManager(context);
-                foreach (Kunde k in kundeManager.GetKunden(true))
-                {
-                    context.Remove(k);
-                }
-                context.SaveChanges();
-                Kunde k1 = new Kunde
-                {
-                    Id = 1,
-                    Firma = "Firma",
-                    Vorname = "Tom",
-                    Nachname = "K",
-                    PLZ = "7000",
-                    Ort = "Chur",
-                    Email = "t@b.ch",
-                    Telefon = "+41 81 123 45 68",
-                    Notiz = "Zahlt immer pünktlich, ist ganz nett.\nDarf weider mal eine Maschine mieten"
-                };
-                k1.Validate();
-                context.Add(k1);
-                context.SaveChanges();
-            }
-
-            return options;
-        }
 
         [TestMethod]
         public void AddKundeTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Kunde k = new Kunde
                 {
                     Id = id,
-                    Firma = "Firma 2",
+                    Firma = "Firma 3",
                     Vorname = "Tom",
                     Nachname = "K",
                     PLZ = "7000",
@@ -75,21 +35,21 @@ namespace BusinessLayerTest
                 KundeManager kundeManager = new KundeManager(context);
                 kundeManager.AddKunde(k);
                 var addedKunde = context.Kunden.Single(kunde => kunde.Id == id);
-                Assert.AreEqual("Firma 2", addedKunde.Firma);
+                Assert.AreEqual("Firma 3", addedKunde.Firma);
             }
         }
 
         [TestMethod]
         public void AddKundeDuplicateTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Kunde k = new Kunde
                 {
                     Id = id,
-                    Firma = "Firma"
+                    Firma = "duko Stapler"
                 };
                 KundeManager kundeManager = new KundeManager(context);
                 Assert.ThrowsException<UniquenessException>(() => kundeManager.AddKunde(k));
@@ -100,30 +60,30 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetKundenTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
                 var kundenList = kundeManager.GetKunden(false);
-                Assert.AreEqual(1, kundenList.Count);
+                Assert.AreEqual(context.Kunden.Count(), kundenList.Count);
             }
         }
 
         [TestMethod]
         public void GetKundeByIdTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
                 var kunde = kundeManager.GetKundeById(1);
-                Assert.AreEqual("Firma", kunde.Firma);
+                Assert.AreEqual("duko Stapler", kunde.Firma);
             }
         }
         [TestMethod]
         public void GetKundeByNonexistantIdTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -133,7 +93,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateKundeTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -148,7 +108,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void SetInactiveTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager man = new KundeManager(context);
@@ -162,27 +122,27 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteKundeTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
                 var originalTyp = kundeManager.GetKundeById(1);
                 kundeManager.DeleteKunde(originalTyp);
-                Assert.IsTrue(!context.Kunden.Any());
+                Assert.AreEqual(1, context.Kunden.Count());
             }
         }
 
         [TestMethod]
         public void GetSearchResultKundeTest()
         {
-            var options = ResetDBwithKundeHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
                 Kunde f = new Kunde
                 {
                     Id = 1,
-                    Firma = "Firma"
+                    Firma = "duko Stapler"
                 };
                 var resultList = kundeManager.GetSearchResult(f);
                 Assert.AreEqual(1, resultList.First().Id);

@@ -60,7 +60,7 @@ namespace EasyMechBackend.BusinessLayer
         public Transaktion AddTransaktion(Transaktion t)
         {
             Context.Add(t);
-            Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == t.Id);
+            Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == t.MaschinenId);
             Kunde dukoStapler = Context.Kunden.SingleOrDefault(kunde => kunde.Id == 1);
             if (t.Typ == Transaktion.TransaktionsTyp.Einkauf)
             {
