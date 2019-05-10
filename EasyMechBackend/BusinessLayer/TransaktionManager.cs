@@ -60,6 +60,18 @@ namespace EasyMechBackend.BusinessLayer
         public Transaktion AddTransaktion(Transaktion t)
         {
             Context.Add(t);
+            Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == t.MaschinenId);
+            Kunde dukoStapler = Context.Kunden.SingleOrDefault(kunde => kunde.Id == 1);
+            if (t.Typ == Transaktion.TransaktionsTyp.Einkauf)
+            {
+                m.Besitzer = dukoStapler;
+            } else if (t.Typ == Transaktion.TransaktionsTyp.Verkauf)
+            {
+                m.Besitzer = t.Kunde;
+            } else
+            {
+                Context.Remove(t);
+            }
             Context.SaveChanges();
             return t;
         }
@@ -70,12 +82,6 @@ namespace EasyMechBackend.BusinessLayer
             Context.Entry(group).CurrentValues.SetValues(k);
             Context.SaveChanges();
             return k;
-        }
-
-        public void DeleteTransaktion(Transaktion k)
-        {
-            Context.Remove(k);
-            Context.SaveChanges();
         }
 
         public List<Transaktion> GetSearchResult(Transaktion searchEntity)

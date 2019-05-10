@@ -38,7 +38,6 @@ namespace BusinessLayerTest
                 context.Add(f);
                 context.SaveChanges();
             }
-
             return options;
         }
         [TestMethod]

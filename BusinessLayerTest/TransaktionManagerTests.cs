@@ -11,121 +11,36 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerTests
     {
-        private DbContextOptions<EMContext> ResetDBwithTransaktionHelper()
-        {
-            var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "TransaktionTestDB")
-                            .Options;
-
-            using (var context = new EMContext(options))
-            {
-                TransaktionManager transaktionManager = new TransaktionManager(context);
-                KundeManager kundeManager = new KundeManager(context);
-                MaschineManager maschineManager = new MaschineManager(context);
-                foreach (Transaktion t in transaktionManager.GetTransaktionen())
-                {
-                    context.Remove(t);
-                }
-                foreach (Kunde k in kundeManager.GetKunden(true))
-                {
-                    context.Remove(k);
-                }
-                foreach (Maschine m in maschineManager.GetMaschinen(true))
-                {
-                    context.Remove(m);
-                }
-                context.SaveChanges();
-                Kunde k1 = new Kunde
-                {
-                    Id = 1,
-                    Firma = "Firma",
-                    Vorname = "Ben",
-                    Nachname = "S",
-                    PLZ = "9010",
-                    Ort = "St.Gallen",
-                    Email = "test@b.ch",
-                    Telefon = "+41 11 133 45 48",
-                    Notiz = "test Notiz"
-                };
-                k1.Validate();
-                Kunde k2 = new Kunde
-                {
-                    Id = 2,
-                    Firma = "Firma2",
-                    Vorname = "Ben2",
-                    Nachname = "S2",
-                    PLZ = "9010",
-                    Ort = "St.Gallen",
-                    Email = "test2@b.ch",
-                    Telefon = "+41 11 133 45 48",
-                    Notiz = "test Notiz2"
-                };
-                k2.Validate();
-
-                Maschine m2 = new Maschine
-                {
-                    Id = 1,
-                    Seriennummer = "123xyz",
-                    Jahrgang = 1999,
-                    IstAktiv = true,
-                    Besitzer = k1
-                };
-                m2.Validate();
-
-                Transaktion startTransaktionEinkauf = new Transaktion
-                {
-                    Id = 1,
-                    Preis = 50000,
-                    Typ = Transaktion.TransaktionsTyp.Einkauf,
-                    Datum = DateTime.Now,
-                    MaschinenId = 1,
-                    KundenId = 1
-                };
-
-                Transaktion startTransaktionVerkauf = new Transaktion
-                {
-                    Id = 2,
-                    Preis = 45000,
-                    Typ = Transaktion.TransaktionsTyp.Verkauf,
-                    Datum = DateTime.Now,
-                    MaschinenId = 2,
-                    KundenId = 1
-                };
-                context.Add(k1);
-                context.Add(k2);
-                context.Add(m2);
-                context.Add(startTransaktionEinkauf);
-                context.Add(startTransaktionVerkauf);
-                context.SaveChanges();
-            }
-            return options;
-        }
+        
         [TestMethod]
         public void AddTransaktionEinkaufTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 int id = 3;
-                Transaktion m = new Transaktion
+                Transaktion t = new Transaktion
                 {
                     Id = id,
                     Preis = 60000,
                     Typ = Transaktion.TransaktionsTyp.Einkauf,
                     Datum = DateTime.Now,
-                    MaschinenId = 1,
-                    KundenId = 1
+                    MaschinenId = 2,
+                    Kunde = context.Kunden.Single(k => k.Id == 2)
                 };
                 TransaktionManager transaktionManager = new TransaktionManager(context);
-                transaktionManager.AddTransaktion(m);
+                transaktionManager.AddTransaktion(t);
                 var addedTransaktion = context.Transaktionen.Single(transaktion => transaktion.Id == id);
                 Assert.AreEqual(3, addedTransaktion.Id);
+                var maschine = context.Maschinen.Single(m => m.Id == addedTransaktion.MaschinenId);
+                var newBesitzer = context.Kunden.Single(kunde => kunde.Id == maschine.BesitzerId);
+                Assert.AreEqual(1, newBesitzer.Id);
             }
         }
         [TestMethod]
         public void GetTransaktionenTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -136,7 +51,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetTransaktionByIdTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -147,7 +62,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetTransaktionByNonexistantIdTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -157,7 +72,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateTransaktionPreisTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -172,7 +87,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateTransaktionVerkaeuferTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -184,23 +99,11 @@ namespace BusinessLayerTest
             }
         }
 
-        [TestMethod]
-        public void DeleteTransaktionTest()
-        {
-            var options = ResetDBwithTransaktionHelper();
-            using (var context = new EMContext(options))
-            {
-                TransaktionManager transaktionManager = new TransaktionManager(context);
-                var transaktion = transaktionManager.GetTransaktionById(1);
-                transaktionManager.DeleteTransaktion(transaktion);
-                Assert.AreEqual(1, context.Transaktionen.Count());
-            }
-        }
 
         [TestMethod]
         public void GetSearchResultTransaktionTest()
         {
-            var options = ResetDBwithTransaktionHelper();
+            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
