@@ -6,9 +6,11 @@ using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.DataAccessLayer.Entities;
 
+
 namespace BusinessLayerTest
 {
     [TestClass]
+
     public class TransaktionManagerTests
     {
         
@@ -97,6 +99,7 @@ namespace BusinessLayerTest
                 var updated = transaktionManager.GetTransaktionById(1);
                 Assert.AreEqual(2, updated.KundenId);
             }
+
         }
 
 
