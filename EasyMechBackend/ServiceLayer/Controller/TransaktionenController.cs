@@ -128,35 +128,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
             return await task;
         }
 
-        // DELETE: Transaktionen/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseObject<TransaktionDto>>> DeleteTransaktion(long id)
-        {
-            var task = Task.Run(() =>
-            {
-                try
-                {
-                    var manager = new TransaktionManager();
-                    var transaktion = manager.GetTransaktionById(id);
-                    manager.DeleteTransaktion(transaktion);
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Transaktion {id} to inactive");
-                    return new ResponseObject<TransaktionDto>(null, OKTAG, $"Set Transaktion {id} to inactive", 0);
-                }
-                catch (DbUpdateException e)
-                {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
-                }
-                catch (Exception e)
-                {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message, ErrorCode.General);
-                }
-
-            });
-            return await task;
-        }
-
         // POST: transaktionen/suchen
         [HttpPost("suchen")]
         public async Task<ActionResult<ResponseObject<IEnumerable<TransaktionDto>>>> GetSearchResult(TransaktionDto k)

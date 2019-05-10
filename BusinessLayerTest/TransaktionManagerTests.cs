@@ -184,18 +184,6 @@ namespace BusinessLayerTest
             }
         }
 
-        [TestMethod]
-        public void DeleteTransaktionTest()
-        {
-            var options = ResetDBwithTransaktionHelper();
-            using (var context = new EMContext(options))
-            {
-                TransaktionManager transaktionManager = new TransaktionManager(context);
-                var transaktion = transaktionManager.GetTransaktionById(1);
-                transaktionManager.DeleteTransaktion(transaktion);
-                Assert.AreEqual(1, context.Transaktionen.Count());
-            }
-        }
 
         [TestMethod]
         public void GetSearchResultTransaktionTest()
