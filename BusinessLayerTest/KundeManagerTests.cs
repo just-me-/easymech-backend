@@ -65,7 +65,7 @@ namespace BusinessLayerTest
             {
                 KundeManager kundeManager = new KundeManager(context);
                 var kundenList = kundeManager.GetKunden(false);
-                Assert.AreEqual(context.Kunden.Count(), kundenList.Count);
+                Assert.AreEqual(2, kundenList.Count);
             }
         }
 

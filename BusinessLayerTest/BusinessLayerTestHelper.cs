@@ -116,6 +116,7 @@ namespace BusinessLayerTest
                 context.Add(k1);
                 context.Add(k2);
                 context.Add(t1);
+                context.Add(m1);
                 context.Add(m2);
                 context.Add(startTransaktionEinkauf);
                 context.Add(startTransaktionVerkauf);

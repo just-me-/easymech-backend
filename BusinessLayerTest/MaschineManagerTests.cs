@@ -12,71 +12,38 @@ using EasyMechBackend.DataAccessLayer.Entities;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class MaschineManagerTests
-    {
-        private DbContextOptions<EMContext> ResetDBwithMaschineHelper()
-        {
-            var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "MaschineTestDB")
-                            .Options;
-
-            using (var context = new EMContext(options))
-            {
-                MaschineManager maschineManager = new MaschineManager(context);
-                foreach (Maschine m in maschineManager.GetMaschinen(true))
-                {
-                    context.Remove(m);
-                }
-
-                context.SaveChanges();
-
-                Maschine m2 = new Maschine
-                {
-                    Id = 1,
-                    Seriennummer = "123xyz!!",
-                    Jahrgang = 1999,
-                    IstAktiv = true
-                };
-
-                m2.Validate();
-                context.Add(m2);
-                context.SaveChanges();
-            }
-            return options;
-        }
-
+    public class MaschineManagerTests : ManagerBaseTests
+    {        
         [TestMethod]
         public void AddMaschineTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
-                int id = 2;
+                int id = 3;
                 Maschine m = new Maschine
                 {
                     Id = id,
-                    Seriennummer = "123xyz",
+                    Seriennummer = "777777",
                     Jahrgang = 1999,
                     IstAktiv = true
                 };
                 MaschineManager maschineManager = new MaschineManager(context);
                 maschineManager.AddMaschine(m);
                 var addedMaschine = context.Maschinen.Single(maschine => maschine.Id == id);
-                Assert.AreEqual("123xyz", addedMaschine.Seriennummer);
+                Assert.AreEqual("777777", addedMaschine.Seriennummer);
             }
         }
 
         [TestMethod]
         public void AddDuplicateMaschine()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
-                int id = 2;
+                int id = 3;
                 Maschine m = new Maschine
                 {
                     Id = id,
-                    Seriennummer = "123xyz!!",
+                    Seriennummer = "123xyz",
                 };
                 MaschineManager maschineManager = new MaschineManager(context);
 
@@ -89,30 +56,27 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschinenTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschinenList = maschineManager.GetMaschinen(false);
-                Assert.AreEqual(1, maschinenList.Count);
+                Assert.AreEqual(2, maschinenList.Count);
             }
         }
         [TestMethod]
         public void GetMaschineByIdTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine1 = maschineManager.GetMaschineById(1);
-                Assert.AreEqual("123xyz!!", maschine1.Seriennummer);
+                Assert.AreEqual("123xyz", maschine1.Seriennummer);
             }
         }
         [TestMethod]
         public void GetMaschineByNonexistantIdTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 Assert.ThrowsException<InvalidOperationException>(() => maschineManager.GetMaschineById(666));
@@ -121,8 +85,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateMaschineTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var original = maschineManager.GetMaschineById(1);
@@ -136,8 +99,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void SetInactiveTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var original = maschineManager.GetMaschineById(1);
@@ -150,13 +112,12 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteMaschineTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine = maschineManager.GetMaschineById(1);
                 maschineManager.DeleteMaschine(maschine);
-                Assert.IsTrue(!context.Maschinen.Any());
+                Assert.AreEqual(1, context.Maschinen.Count());
             }
         }
 
@@ -164,8 +125,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetSearchResultMaschineTest()
         {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
+            using (var context = new EMContext(Options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 Maschine m = new Maschine
