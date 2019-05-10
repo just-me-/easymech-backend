@@ -54,27 +54,27 @@ namespace BusinessLayerTest
             }
         }
 
-        [TestMethod]
-        public void AddMaschineIntoDeleteIntoAddAgain()
-        {
-            var options = ResetDBwithMaschineHelper();
-            using (var context = new EMContext(options))
-            {
-                int id = 2;
-                Maschine newMaschine = new Maschine
-                {
-                    Id = id,
-                    Seriennummer = "123xyz!!"
-                };
+        //[TestMethod]
+        //public void AddMaschineIntoDeleteIntoAddAgain()
+        //{
+        //    var options = ResetDBwithMaschineHelper();
+        //    using (var context = new EMContext(options))
+        //    {
+        //        int id = 2;
+        //        Maschine newMaschine = new Maschine
+        //        {
+        //            Id = id,
+        //            Seriennummer = "123xyz!!"
+        //        };
 
-                MaschineManager man = new MaschineManager(context);
-                var original = man.GetMaschineById(1);
-                man.SetMaschineInactive(original);
-                man.AddMaschine(newMaschine);
-                var listen = man.GetMaschinen(true);
-                Assert.AreEqual(2, listen.Count);
-            }
-        }
+        //        MaschineManager man = new MaschineManager(context);
+        //        var original = man.GetMaschineById(1);
+        //        man.SetMaschineInactive(original);
+        //        man.AddMaschine(newMaschine);
+        //        var listen = man.GetMaschinen(true);
+        //        Assert.AreEqual(2, listen.Count);
+        //    }
+        //}
 
 
         [TestMethod]
