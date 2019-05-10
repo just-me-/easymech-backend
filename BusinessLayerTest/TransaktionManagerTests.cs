@@ -9,13 +9,12 @@ using EasyMechBackend.DataAccessLayer.Entities;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class TransaktionManagerTests
+    public class TransaktionManagerTests : ManagerBaseTests
     {
         
         [TestMethod]
         public void AddTransaktionEinkaufTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 int id = 3;
@@ -40,7 +39,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetTransaktionenTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -51,7 +49,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetTransaktionByIdTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -62,7 +59,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetTransaktionByNonexistantIdTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -72,7 +68,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateTransaktionPreisTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);
@@ -103,7 +98,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetSearchResultTransaktionTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 TransaktionManager transaktionManager = new TransaktionManager(context);

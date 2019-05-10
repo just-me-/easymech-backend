@@ -10,12 +10,12 @@ namespace BusinessLayerTest
     
     public class ManagerBaseTests
     {
-        public DbContextOptions<EMContext> Options { get; set; }
+        public DbContextOptions<EMContext> options;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            Options = BusinessLayerTestHelper.InitTestDb();
+            options = BusinessLayerTestHelper.InitTestDb();
         }
     }
 }

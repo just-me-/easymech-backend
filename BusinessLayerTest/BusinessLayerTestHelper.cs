@@ -11,7 +11,7 @@ namespace BusinessLayerTest
         public static DbContextOptions<EMContext> InitTestDb()
         {
             var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "TransaktionTestDB")
+                            .UseInMemoryDatabase(databaseName: "TestDB")
                             .Options;
 
             using (var context = new EMContext(options))

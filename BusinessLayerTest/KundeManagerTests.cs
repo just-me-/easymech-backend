@@ -11,13 +11,12 @@ using EasyMechBackend.DataAccessLayer.Entities;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class KundeManagerTest
+    public class KundeManagerTest : ManagerBaseTests
     {
 
         [TestMethod]
         public void AddKundeTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 int id = 3;
@@ -42,7 +41,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void AddKundeDuplicateTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 int id = 3;
@@ -60,7 +58,6 @@ namespace BusinessLayerTest
         //[TestMethod]
         //public void AddKundeIntoDeleteIntoAddAgainShouldBeOK()
         //{
-        //    var options = ResetDBwithKundeHelper();
         //    using (var context = new EMContext(options))
         //    {
         //        int id = 2;
@@ -94,7 +91,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetKundeByIdTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -105,7 +101,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetKundeByNonexistantIdTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -115,7 +110,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateKundeTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -130,7 +124,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void SetInactiveTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager man = new KundeManager(context);
@@ -144,7 +137,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteKundeTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);
@@ -157,7 +149,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetSearchResultKundeTest()
         {
-            var options = BusinessLayerTestHelper.InitTestDb();
             using (var context = new EMContext(options))
             {
                 KundeManager kundeManager = new KundeManager(context);

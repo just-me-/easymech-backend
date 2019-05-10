@@ -17,7 +17,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void AddMaschineTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 int id = 3;
                 Maschine m = new Maschine
@@ -37,7 +37,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void AddDuplicateMaschine()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 int id = 3;
                 Maschine m = new Maschine
@@ -80,7 +80,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschinenTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschinenList = maschineManager.GetMaschinen(false);
@@ -90,7 +90,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschineByIdTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine1 = maschineManager.GetMaschineById(1);
@@ -100,7 +100,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschineByNonexistantIdTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 Assert.ThrowsException<InvalidOperationException>(() => maschineManager.GetMaschineById(666));
@@ -109,7 +109,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateMaschineTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var original = maschineManager.GetMaschineById(1);
@@ -123,7 +123,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void SetInactiveTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var original = maschineManager.GetMaschineById(1);
@@ -136,7 +136,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteMaschineTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 var maschine = maschineManager.GetMaschineById(1);
@@ -149,7 +149,7 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetSearchResultMaschineTest()
         {
-            using (var context = new EMContext(Options))
+            using (var context = new EMContext(options))
             {
                 MaschineManager maschineManager = new MaschineManager(context);
                 Maschine m = new Maschine

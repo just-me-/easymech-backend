@@ -14,36 +14,17 @@ namespace BusinessLayerTest
     [TestClass]
     public class MaschinentypManagerTests
     {
-        private DbContextOptions<EMContext> ResetDBwithMaschinentypHelper()
-        {
-            var options = new DbContextOptionsBuilder<EMContext>()
-                            .UseInMemoryDatabase(databaseName: "MaschinentypTestDB")
-                            .Options;
+        public DbContextOptions<EMContext> options;
 
-            using (var context = new EMContext(options))
-            {
-                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
-                foreach (Maschinentyp t in maschinentypManager.GetMaschinentypen())
-                {
-                    context.Remove(t);
-                }
-                context.SaveChanges();
-                Maschinentyp f = new Maschinentyp
-                {
-                    Id = 1,
-                    Fabrikat = "Tester grande",
-                    Nutzlast = 2000
-                };
-                f.Validate();
-                context.Add(f);
-                context.SaveChanges();
-            }
-            return options;
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            options = BusinessLayerTestHelper.InitTestDb();
         }
+
         [TestMethod]
         public void AddMaschinentypTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 int id = 2;
@@ -64,7 +45,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void AddDuplicateTypTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 Maschinentyp t = new Maschinentyp
@@ -88,7 +68,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschinentypenTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
@@ -99,7 +78,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschinentypByIdTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
@@ -110,7 +88,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetMaschinentypByNonexistantIdTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
@@ -120,7 +97,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void UpdateMaschinentypTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
@@ -135,7 +111,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteMaschinentypTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
@@ -148,7 +123,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void DeleteMaschinentypWithExistingMachinesTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschineManager m_man = new MaschineManager(context);
@@ -174,7 +148,6 @@ namespace BusinessLayerTest
         [TestMethod]
         public void GetSearchResultMaschinentypTest()
         {
-            var options = ResetDBwithMaschinentypHelper();
             using (var context = new EMContext(options))
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
