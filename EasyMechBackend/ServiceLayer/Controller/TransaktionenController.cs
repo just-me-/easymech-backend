@@ -82,7 +82,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<TransaktionDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
@@ -115,7 +115,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<TransaktionDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
@@ -145,7 +145,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<TransaktionDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<TransaktionDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {

@@ -90,7 +90,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschineDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<MaschineDto>( e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
@@ -128,7 +128,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschineDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<MaschineDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
@@ -158,7 +158,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschineDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<MaschineDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
@@ -187,7 +187,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<MaschineDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<MaschineDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {

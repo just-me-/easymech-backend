@@ -218,7 +218,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        /*
+        
         #region Reservation
 
         public static Reservation ConvertToEntity(this ReservationDto dto)
@@ -276,9 +276,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             MaschinenUebergabe t = new MaschinenUebergabe
             {
-                Id = dto.Id,
                 Datum = dto.Datum,
-                ReservationsId = dto.ReservationsId
+                Notiz = dto.Notiz
             };
             return t;
         }
@@ -290,9 +289,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             MaschinenUebergabeDto dto = new MaschinenUebergabeDto
             {
-                Id = entity.Id,
                 Datum = entity.Datum,
-                ReservationsId = entity.ReservationsId
+                Notiz = entity.Notiz
             };
             return dto;
         }
@@ -307,9 +305,8 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             MaschinenRuecknahme t = new MaschinenRuecknahme
             {
-                Id = dto.Id,
                 Datum = dto.Datum,
-                ReservationsId = dto.ReservationsId
+                Notiz = dto.Notiz
             };
             return t;
         }
@@ -321,15 +318,14 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
 
             MaschinenRuecknahmeDto dto = new MaschinenRuecknahmeDto
             {
-                Id = entity.Id,
                 Datum = entity.Datum,
-                ReservationsId = entity.ReservationsId
+                Notiz = entity.Notiz
             };
             return dto;
         }
 
         #endregion
-        */
+        
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {

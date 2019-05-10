@@ -27,6 +27,7 @@ namespace EasyMechBackend.BusinessLayer
             var query =
             from k in Context.Kunden
             where k.IstAktiv.Value || withInactive
+            where k.Id != 1
             orderby k.Id descending
             select k;
             return query.ToList();

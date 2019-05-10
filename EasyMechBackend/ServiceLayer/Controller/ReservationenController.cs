@@ -168,7 +168,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
 
 
-        // POST: kunden/suchen
+        // POST: reservationen/suchen
         [HttpPost("suchen")]
         public async Task<ActionResult<ResponseObject<IEnumerable<ReservationDto>>>> GetSearchResult(ReservationDto dto)
         {
@@ -192,6 +192,9 @@ namespace EasyMechBackend.ServiceLayer.Controller
             return await task;
         }
 
+
+        /*
+        #region übergabe und rücknahme separate api - falls wirds doch brauchen
 
         ////////////////////////////////////
         ////////////Uebergaben//////////////
@@ -385,5 +388,9 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
             return await task;
         }
+
+
+#endregion
+*/
     }
 }

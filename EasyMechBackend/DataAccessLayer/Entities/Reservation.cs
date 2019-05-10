@@ -38,6 +38,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         protected sealed override void FillRequiredProps()
         {
+            //no action
         }
 
         protected sealed override void ClipProps()

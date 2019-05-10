@@ -12,6 +12,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public long Id { get; set; }
 
         [MaxLength(128)]
+        [Required]
         public string Fabrikat { get; set; }
 
         [MaxLength(128)]
@@ -44,7 +45,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         protected sealed override void FillRequiredProps()
         {
-            //no action
+            Fabrikat = "";
         }
     }
 }
