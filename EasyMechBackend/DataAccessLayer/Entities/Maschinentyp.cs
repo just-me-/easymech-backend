@@ -45,7 +45,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         protected sealed override void FillRequiredProps()
         {
-            Fabrikat = "";
+            if (Fabrikat == null) Fabrikat = "";
         }
     }
 }
