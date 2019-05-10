@@ -12,7 +12,7 @@ using EasyMechBackend.DataAccessLayer.Entities;
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class MaschinentypManagerTests
+    public class MaschinentypManagerTests : ManagerBaseTests
     {
         public DbContextOptions<EMContext> options;
 
@@ -108,38 +108,28 @@ namespace BusinessLayerTest
             }
         }
 
-        [TestMethod]
-        public void DeleteMaschinentypTest()
-        {
-            using (var context = new EMContext(options))
-            {
-                MaschinentypManager maschinentypManager = new MaschinentypManager(context);
-                var originalTyp = maschinentypManager.GetMaschinentypById(1);
-                maschinentypManager.DeleteMaschinentyp(originalTyp);
-                Assert.IsTrue(!context.Maschinentypen.Any());
-            }
-        }
+        //[TestMethod]
+        //public void DeleteMaschinentypTest()
+        //{
+        //    using (var context = new EMContext(options))
+        //    {
+                
+        //        MaschinentypManager maschinentypManager = new MaschinentypManager(context);
+        //        var originalTyp = maschinentypManager.GetMaschinentypById(1);
+        //        Maschine maschine = context.Maschinen.Single(m => m.Id == 1);
+                
+        //        Assert.ThrowsException<ForeignKeyRestrictionException>(() => maschinentypManager.DeleteMaschinentyp(originalTyp));
+        //    }
+        //}
 
         [TestMethod]
         public void DeleteMaschinentypWithExistingMachinesTest()
         {
             using (var context = new EMContext(options))
             {
-                MaschineManager m_man = new MaschineManager(context);
                 MaschinentypManager t_man = new MaschinentypManager(context);
-
-                Maschine m1 = new Maschine
-                {
-                    Id = 1,
-                    MaschinentypId = 1
-                };
-                m_man.AddMaschine(m1);
-                
                 var t1 = t_man.GetMaschinentypById(1);
                 Assert.ThrowsException<ForeignKeyRestrictionException>(() => t_man.DeleteMaschinentyp(t1));
-
-                m_man.DeleteMaschine(m1);
-
             }
         }
 
