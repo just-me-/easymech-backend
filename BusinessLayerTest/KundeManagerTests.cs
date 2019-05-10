@@ -84,6 +84,18 @@ namespace BusinessLayerTest
             {
                 KundeManager kundeManager = new KundeManager(context);
                 var kundenList = kundeManager.GetKunden(false);
+                Assert.AreEqual(1, kundenList.Count);
+            }
+        }
+
+        [TestMethod]
+        public void GetKundenWithDukoTest()
+        {
+            var options = BusinessLayerTestHelper.InitTestDb();
+            using (var context = new EMContext(options))
+            {
+                KundeManager kundeManager = new KundeManager(context);
+                var kundenList = kundeManager.GetKunden(true);
                 Assert.AreEqual(2, kundenList.Count);
             }
         }
@@ -154,11 +166,10 @@ namespace BusinessLayerTest
                 KundeManager kundeManager = new KundeManager(context);
                 Kunde f = new Kunde
                 {
-                    Id = 1,
-                    Firma = "duko Stapler"
+                    Firma = "ERSTER"
                 };
                 var resultList = kundeManager.GetSearchResult(f);
-                Assert.AreEqual(1, resultList.First().Id);
+                Assert.AreEqual(2, resultList.First().Id);
             }
         }
     }
