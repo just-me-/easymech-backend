@@ -6,7 +6,7 @@ using EasyMechBackend.Util;
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Maschine", Schema = "public")]
-    public class Maschine : EntityWithValidate
+    public class Maschine : IValidatable
     {
         [Key]
         public long Id { get; set; }
@@ -44,12 +44,18 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public ICollection<GeplanterService> Services { get; set; }
 
 
-        protected sealed override void FillRequiredProps()
+        public void Validate()
+        {
+            FillRequiredProps();
+            ClipProps();
+        }
+
+        private void FillRequiredProps()
         {
             if (IstAktiv == null) IstAktiv = true;
         }
 
-        protected sealed override void ClipProps()
+        private void ClipProps()
         {
             Seriennummer = Seriennummer.ClipToNChars(128);
             Mastnummer = Mastnummer.ClipToNChars(128);

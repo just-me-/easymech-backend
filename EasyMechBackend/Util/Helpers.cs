@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace EasyMechBackend.Util
 {
     public static class Helpers
@@ -27,6 +29,11 @@ namespace EasyMechBackend.Util
             string a1 = s1.ToLower();
             string a2 = s2.ToLower();
             return a1.Contains(a2);
+        }
+
+        public static bool Overlap(DateTime aStart, DateTime aEnd, DateTime bStart, DateTime bEnd)
+        {
+            return !(aEnd < bStart || aStart > bEnd);
         }
     }
 }

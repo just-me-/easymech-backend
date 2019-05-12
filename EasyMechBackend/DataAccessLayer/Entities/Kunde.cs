@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Kunden", Schema = "public")]
-    public class Kunde : EntityWithValidate
+    public class Kunde : IValidatable
     {
         [Key]
         public long Id { get; set; }
@@ -48,13 +48,19 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
 
 
-        protected sealed override void FillRequiredProps()
+        public void Validate()
+        {
+            FillRequiredProps();
+            ClipProps();
+        }
+
+        private void FillRequiredProps()
         {
             if (Firma == null) Firma = "";
             if (IstAktiv == null) IstAktiv = true;
         }
 
-        protected sealed override void ClipProps()
+        private void ClipProps()
         {
 
             Firma = Firma.ClipToNChars(128);

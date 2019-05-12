@@ -16,10 +16,16 @@ namespace BusinessLayerTest
 
             using (var context = new EMContext(options))
             {
+                ReservationManager resManager = new ReservationManager(context);
                 TransaktionManager transaktionManager = new TransaktionManager(context);
                 KundeManager kundeManager = new KundeManager(context);
                 MaschineManager maschineManager = new MaschineManager(context);
                 MaschinentypManager typManager = new MaschinentypManager(context);
+
+                foreach (Reservation r in resManager.GetReservationen())
+                {
+                    context.Remove(r);
+                }
                 foreach (Transaktion t in transaktionManager.GetTransaktionen())
                 {
                     context.Remove(t);
@@ -36,6 +42,7 @@ namespace BusinessLayerTest
                 {
                     context.Remove(typ);
                 }
+
                 context.SaveChanges();
                 Kunde k1 = new Kunde
                 {
@@ -113,6 +120,19 @@ namespace BusinessLayerTest
                     MaschinenId = 2,
                     KundenId = 1
                 };
+
+                Reservation r1 = new Reservation
+                {
+                    Id = 1,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2019, 05, 12),
+                    Enddatum =   new DateTime(2020, 05, 12),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+
+
                 context.Add(k1);
                 context.Add(k2);
                 context.Add(t1);
@@ -120,6 +140,7 @@ namespace BusinessLayerTest
                 context.Add(m2);
                 context.Add(startTransaktionEinkauf);
                 context.Add(startTransaktionVerkauf);
+                context.Add(r1);
                 context.SaveChanges();
             }
             return options;

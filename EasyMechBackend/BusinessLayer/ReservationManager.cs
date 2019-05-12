@@ -44,8 +44,10 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation AddReservation(Reservation r)
         {
-            //Todo: Available, in besitz etc
-            r.Validate();
+
+            CheckAndValidate(r);
+
+
             Context.Add(r);
             Context.SaveChanges();
             return r;
@@ -61,6 +63,9 @@ namespace EasyMechBackend.BusinessLayer
             //otherwise we would have to care if we actually add or update the übergabe.
             //and, as a bonus, the frontend is totally absolutely independent of the Fields "Id" and "ReservationsId" of a Übergabe/Rücknahme.
             //So much independent that the DTO does actually not even contain these fields.
+
+
+            CheckAndValidate(r);
 
             Reservation old = Context.Reservationen
                 .Include(res => res.Uebergabe)
@@ -80,7 +85,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
-            r.Validate();
+            
             Context.Update(r);
             Context.SaveChanges();
             return r;
@@ -238,6 +243,92 @@ namespace EasyMechBackend.BusinessLayer
         }
 
     */
+
+
+
+        private void CheckAndValidate(Reservation r)
+        {
+            CopyInnerDates(r);                  //if pickup or return exists, take those inner dates as reservation dates.
+            EnsureOwnProperty(r);               //checks if vehicle has owner 1
+            EnsureReturnHasPrecedingPickup(r);  //no return if there was no pickup before
+            EnsureStartBeforeEnd(r);            //checks if start < enddate
+            EnsureNoOverlappingReservations(r); //checks ifr already reserved
+            r.Validate();                       //clips properties
+        }
+
+        private void EnsureOwnProperty(Reservation r)
+        {
+            Maschine ma = Context.Maschinen.SingleOrDefault(m => m.Id == r.MaschinenId);
+
+            if (ma.BesitzerId != 1)
+            {
+                throw new ReservationException($"Maschine {r.MaschinenId} befindet sich nicht in Eigenbesitz. (Besitzer Id: {ma.BesitzerId})");
+            }
+        }
+
+        private void CopyInnerDates(Reservation r)
+        {
+            if (r.Uebergabe != null)
+            {
+                r.Startdatum = r.Uebergabe.Datum;
+            }
+            if (r.Ruecknahme != null)
+            {
+                r.Enddatum = r.Ruecknahme.Datum;
+            }
+        }
+
+        private void EnsureReturnHasPrecedingPickup(Reservation r)
+        {
+            if (r.Uebergabe == null && r.Ruecknahme != null)
+            {
+                throw new ReservationException("Sie können keine Rückgabe erfassen, wenn es keine Übergabe gibt.");
+            }
+        }
+
+        private void EnsureStartBeforeEnd(Reservation r)
+        {
+            var start = r.Startdatum;
+            var end = r.Enddatum;
+            if (start > end)
+            {
+                throw new ReservationException("Das Reservations-Startdatum liegt vor dem Enddatum, bzw die Rückgabe ist vor der Abholung.");
+            }
+        }
+
+        private void EnsureNoOverlappingReservations(Reservation r)
+        {
+
+            DateTime wantedStart = r.Startdatum ?? DateTime.Now;
+            DateTime wantedEnd = r.Enddatum ?? new DateTime(2099,12,31);   //if there is no reservation end just reserve it "forever"
+            var myAuto = r.MaschinenId;
+            var myReservation = r.Id;
+
+            List<Reservation> reservationes = GetReservationen();
+
+            var reservedDates =
+                from lv in reservationes
+                where lv.MaschinenId == myAuto && lv.Id != myReservation
+                select new
+                {
+                    lv.KundenId,
+                    Von = lv.Startdatum ?? DateTime.Now,
+                    Bis = lv.Enddatum ?? new DateTime(2099, 12, 31)
+                };
+
+            foreach (var lv in reservedDates)
+            {
+                //ich reserviere, nachdem es jeman anders reserviert hat &&
+                //der andere hat es noch nicht wieder zurückgegeben
+                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
+                {
+                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
+                }
+
+            }
+
+
+        }
 
     }
 }

@@ -6,7 +6,7 @@ using EasyMechBackend.Util;
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Maschinentyp", Schema = "public")]
-    public class Maschinentyp : EntityWithValidate
+    public class Maschinentyp : IValidatable
     {
         [Key]
         public long Id { get; set; }
@@ -36,14 +36,19 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         public ICollection<Maschine> Maschinen { get; set; }
 
+        public void Validate()
+        {
+            FillRequiredProps();
+            ClipProps();
+        }
 
-        protected sealed override void ClipProps()
+        private void ClipProps()
         {
             Fabrikat = Fabrikat.ClipToNChars(128);
             Motortyp = Motortyp.ClipToNChars(128);
         }
 
-        protected sealed override void FillRequiredProps()
+        private void FillRequiredProps()
         {
             if (Fabrikat == null) Fabrikat = "";
         }
