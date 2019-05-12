@@ -60,7 +60,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new ReservationManager();
                     var dto = manager.GetReseervationById(id).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<ReservationDto>(dto);
                 }
                 catch (Exception e)
@@ -83,13 +83,13 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new ReservationManager();
                     ReservationDto addedDto = manager.AddReservation(toAddDto.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Resrevation {addedDto.Id} added");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Reserevation {addedDto.Id} added with Übergabe {addedDto.Uebergabe} and Rücknahme {addedDto.Ruecknahme}");
                     return new ResponseObject<ReservationDto>(addedDto);
 
                 }
                 catch (DbUpdateException e)
                 {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.Message} - {e.InnerException.Message}");
                     return new ResponseObject<ReservationDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
@@ -123,7 +123,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
                 catch (DbUpdateException e)
                 {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.Message} - {e.InnerException.Message}");
                     return new ResponseObject<ReservationDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)

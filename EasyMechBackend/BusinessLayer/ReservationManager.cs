@@ -54,20 +54,48 @@ namespace EasyMechBackend.BusinessLayer
         public Reservation UpdateReservation(Reservation r)
         {
             //Todo: Available, in besitz etc
-            r.Validate();
-            var entity = Context.Reservationen.Single(res => res.Id == r.Id);
-            Context.Entry(entity).CurrentValues.SetValues(r);
+            //Comment on WHY [=comment allowed] the following code is as it is:
+            //I delete the old übergabe und rücknahme, and than i just add new ones (or leave them as null if wanted so).
+            //This way it does not matter, if the rücknahme/übergabe-operation is add, delete, or update.
+            //We also dont have to care about a ReservationsId-FK-must-be-unique-in-Uebergabe-Restriction, as the old entity is deleted and the FK will be available again.
+            //otherwise we would have to care if we actually add or update the übergabe.
+            //and, as a bonus, the frontend is totally absolutely independent of the Fields "Id" and "ReservationsId" of a Übergabe/Rücknahme.
+            //So much independent that the DTO does actually not even contain these fields.
+
+            Reservation old = Context.Reservationen
+                .Include(res => res.Uebergabe)
+                .Include(res => res.Ruecknahme)
+                .Single(res => res.Id == r.Id);
+
+            if (old.Uebergabe != null)
+            {
+                Context.Remove(old.Uebergabe);
+            }
+
+            if (old.Ruecknahme != null)
+            {
+                Context.Remove(old.Ruecknahme);
+            }
+
             Context.SaveChanges();
-            return entity;
+            Context.Entry(old).State = EntityState.Detached;
+
+            r.Validate();
+            Context.Update(r);
+            Context.SaveChanges();
+            return r;
         }
 
 
         public void DeleteReservation(Reservation r)
         {
-            Context.Remove(r);
+            Context.Remove(r);       //cascade deletes the übergabe rücknahme
             Context.SaveChanges();
         }
 
+
+        //probably not needed:
+        //Todo: remove this if not needed
         public List<Reservation> GetSearchResult(Reservation searchEntity)
         {
 
@@ -141,7 +169,11 @@ namespace EasyMechBackend.BusinessLayer
 
         }
 
-
+        //Get Rücknahme etc: Probably not needed. Here if we decided tgo use it anyway in some way:
+        /*
+         *TODO : Remove this if not needed
+         *
+         
         //Uebergabe und Ruecknahme
         public MaschinenUebergabe GetMaschinenUebergabe(long reservationsId)
         {
@@ -204,6 +236,8 @@ namespace EasyMechBackend.BusinessLayer
             //Todo: Frage: Gut hier die Rservation zu returnen???
             return GetReseervationById(u.ReservationsId);
         }
+
+    */
 
     }
 }

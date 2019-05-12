@@ -82,7 +82,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new KundeManager();
                     KundeDto kundeDto = manager.GetKundeById(id).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<KundeDto>(kundeDto);
                 }
                 catch (Exception e)
@@ -155,7 +155,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<KundeDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<KundeDto>(e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {

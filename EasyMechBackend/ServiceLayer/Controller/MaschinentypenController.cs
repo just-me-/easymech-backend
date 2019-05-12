@@ -56,7 +56,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new MaschinentypManager();
                     MaschinentypDto maschinentypDto = manager.GetMaschinentypById(id).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<MaschinentypDto>(maschinentypDto);
                 }
                 catch (Exception e)
