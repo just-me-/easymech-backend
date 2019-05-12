@@ -9,6 +9,7 @@ namespace EasyMechBackend.ServiceLayer
 
         Uniqueness = 200,
         ForeignKey = 201,
-        IDMismatch = 202
+        IDMismatch = 202,
+        ReservationException = 203
     }
 }

@@ -87,10 +87,10 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     return new ResponseObject<ReservationDto>(addedDto);
 
                 }
-                catch (DbUpdateException e)
+                catch (ReservationException e)
                 {
-                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.Message} - {e.InnerException.Message}");
-                    return new ResponseObject<ReservationDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Reservation Exception: {e.Message}");
+                    return new ResponseObject<ReservationDto>(e.Message, ErrorCode.ReservationException);
                 }
                 catch (Exception e)
                 {
@@ -119,6 +119,11 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     var editedDto = manager.UpdateReservation(toEditDto.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Reservation {id} updated");
                     return new ResponseObject<ReservationDto>(editedDto);
+                }
+                catch (ReservationException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Reservation Exception: {e.Message}");
+                    return new ResponseObject<ReservationDto>(e.Message, ErrorCode.ReservationException);
                 }
 
                 catch (DbUpdateException e)

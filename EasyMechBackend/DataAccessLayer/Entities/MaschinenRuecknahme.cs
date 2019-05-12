@@ -8,9 +8,10 @@ namespace EasyMechBackend.DataAccessLayer.Entities
     public class MaschinenRuecknahme
     {
         [Key]
-        public long Id { get; set; }        
-        
-        public DateTime? Datum { get; set; }
+        public long Id { get; set; }
+
+        [Required]
+        public DateTime Datum { get; set; }
 
         public string Notiz { get; set; }
 

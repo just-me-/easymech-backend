@@ -10,7 +10,8 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [Key]
         public long Id { get; set; }        
         
-        public DateTime? Datum { get; set; }
+        [Required]
+        public DateTime Datum { get; set; }
 
         public string Notiz { get; set; }
 
