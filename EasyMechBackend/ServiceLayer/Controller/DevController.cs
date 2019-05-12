@@ -3,7 +3,12 @@ using System.Threading.Tasks;
 using EasyMechBackend.BusinessLayer;
 using System;
 using System.IO;
+using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.FileProviders.Physical;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -57,8 +62,8 @@ namespace EasyMechBackend.ServiceLayer.Controller
         {
 
             Response.ContentType = "text/plain";
-            Response.StatusCode = 200;
-            Response.SendFileAsync("easymech.log");
+            IFileInfo file = new PhysicalFileInfo(new FileInfo("easymech.log"));
+            Response.SendFileAsync(file);
         }
 
         [HttpGet("logAlt")]
@@ -75,6 +80,8 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 Response.StatusCode = 200;
 
                 return File(buffer, "text/plain", "log.txt");
+
+
 
             }
         }

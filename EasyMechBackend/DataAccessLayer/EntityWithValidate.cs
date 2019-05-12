@@ -6,6 +6,7 @@ namespace EasyMechBackend.DataAccessLayer
     public abstract class EntityWithValidate
     {
 
+        //Todo Interface IValidatable und Validate() implemenbtierung offen lassen. ist ja lächerlich so. [vgl reservationen, einfach das eine clip in validate rein und gut is]
         public virtual void Validate()
         {
             ClipProps();

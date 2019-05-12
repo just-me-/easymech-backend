@@ -53,7 +53,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new TransaktionManager();
                     TransaktionDto transaktionDto = manager.GetTransaktionById(id).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<TransaktionDto>(transaktionDto);
                 }
                 catch (Exception e)

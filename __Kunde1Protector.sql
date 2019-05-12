@@ -4,8 +4,11 @@
 --Procedure änderbar ohne Trigger neu aufzusetzen.
 create or replace function cust1Protector() returns trigger as $$
 begin
-	if (OLD."Id" = 1::bigint)
-	then raise exception 'Kunde 1 kann nicht editiert oder gelöscht werden';
+	if (OLD."Id" = 1 and 
+		(TG_OP = 'DELETE' or
+         NEW."Firma" != OLD."Firma" or 
+		 not NEW."IstAktiv"))
+	then raise exception 'Kunde 1 kann nicht umbenennt oder gelöscht werden';
 	end if;
 	return  NEW;
 end;
