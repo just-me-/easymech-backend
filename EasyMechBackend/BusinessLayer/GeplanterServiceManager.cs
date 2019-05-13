@@ -4,9 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -34,46 +32,44 @@ namespace EasyMechBackend.BusinessLayer
 
         public GeplanterService GetGeplanterServiceById(long id)
         {
-            Reservation r = Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme).SingleOrDefault(res => res.Id == id);
+            GeplanterService r = Context.GeplanteServices.SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
-                throw new InvalidOperationException($"Reservation with id {id} is not in database");
+                throw new InvalidOperationException($"GeplanterService with id {id} is not in database");
             }
             return r;
         }
 
-        public Reservation AddReservation(Reservation r)
+        public GeplanterService AddGeplanterService(GeplanterService s)
         {
-            //Todo: Available, in besitz etc
-            r.Validate();
-            Context.Add(r);
+            s.Validate();
+            Context.Add(s);
             Context.SaveChanges();
-            return r;
+            return s;
         }
 
-        public Reservation UpdateReservation(Reservation r)
+        public GeplanterService UpdateGeplanterService(GeplanterService s)
         {
-            //Todo: Available, in besitz etc
-            r.Validate();
-            var entity = Context.Reservationen.Single(res => res.Id == r.Id);
-            Context.Entry(entity).CurrentValues.SetValues(r);
+            s.Validate();
+            var entity = Context.GeplanteServices.Single(res => res.Id == s.Id);
+            Context.Entry(entity).CurrentValues.SetValues(s);
             Context.SaveChanges();
             return entity;
         }
 
 
-        public void DeleteReservation(Reservation r)
+        public void DeleteGeplanterService(GeplanterService s)
         {
-            Context.Remove(r);
+            Context.Remove(s);
             Context.SaveChanges();
         }
 
-        public List<Reservation> GetSearchResult(Reservation searchEntity)
+        public List<GeplanterService> GetSearchResult(GeplanterService searchEntity)
         {
 
-            List<Reservation> allEntities = GetReservationen();
-            IEnumerable<Reservation> searchResult = allEntities;
-            PropertyInfo[] props = typeof(Reservation).GetProperties();
+            List<GeplanterService> allEntities = GetGeplanteServices();
+            IEnumerable<GeplanterService> searchResult = allEntities;
+            PropertyInfo[] props = typeof(GeplanterService).GetProperties();
 
             foreach (var prop in props)
             {
@@ -138,72 +134,6 @@ namespace EasyMechBackend.BusinessLayer
             }
 
             return searchResult.ToList();
-
-        }
-
-
-        //Uebergabe und Ruecknahme
-        public MaschinenUebergabe GetMaschinenUebergabe(long reservationsId)
-        {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Uebergabe)
-                .SingleOrDefault(res => res.Id == reservationsId);
-
-            if (r == null)
-            {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
-            }
-            return r.Uebergabe;
-        }
-
-        public MaschinenRuecknahme GetMaschinenRuecknahme(long reservationsId)
-        {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Ruecknahme)
-                .SingleOrDefault(res => res.Id == reservationsId);
-
-            if (r == null)
-            {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
-            }
-            return r.Ruecknahme;
-        }
-
-
-        public Reservation AddUebergabe(MaschinenUebergabe u)
-        { 
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen??? [bitte ja]
-            return GetReseervationById(u.ReservationsId);
-        }
-
-        public Reservation AddRuecknahme(MaschinenRuecknahme u)
-        {
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(u.ReservationsId);
-        }
-
-        public Reservation UpdateUebergabe(MaschinenUebergabe u)
-        {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(entity.ReservationsId);
-        }
-
-        public Reservation UpdateRuecknahme(MaschinenRuecknahme u)
-        {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(u.ReservationsId);
-        }
-
+        } 
     }
 }
