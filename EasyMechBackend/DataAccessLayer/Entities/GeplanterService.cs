@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("GeplanterService", Schema = "public")]
-    public class GeplanterService
+    public class GeplanterService : EntityWithValidate
     {
         [Key]
         public long Id { get; set; }
@@ -31,6 +32,15 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
 
+        protected override void ClipProps()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void FillRequiredProps()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

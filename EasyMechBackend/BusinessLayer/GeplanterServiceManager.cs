@@ -10,29 +10,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyMechBackend.BusinessLayer
 {
-    public class ReservationManager : ManagerBase
+    public class GeplanterServiceManager : ManagerBase
     {
 
-        public ReservationManager(EMContext context) : base(context)
+        public GeplanterServiceManager(EMContext context) : base(context)
         {
         }
 
 
-        public ReservationManager()
+        public GeplanterServiceManager()
         {
         }
 
 
-        public List<Reservation> GetReservationen()
+        public List<GeplanterService> GetGeplanteServices()
         {
             var query =
-            from r in Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme)
-            orderby r.Startdatum descending
+            from r in Context.GeplanteServices
+            orderby r.Beginn descending
             select r;
             return query.ToList();
         }
 
-        public Reservation GetReservationById(long id)
+        public GeplanterService GetGeplanterServiceById(long id)
         {
             Reservation r = Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme).SingleOrDefault(res => res.Id == id);
             if (r == null)
@@ -175,7 +175,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.Add(u);
             Context.SaveChanges();
             //Todo: Frage: Gut hier die Rservation zu returnen??? [bitte ja]
-            return GetReservationById(u.ReservationsId);
+            return GetReseervationById(u.ReservationsId);
         }
 
         public Reservation AddRuecknahme(MaschinenRuecknahme u)
@@ -183,7 +183,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.Add(u);
             Context.SaveChanges();
             //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(u.ReservationsId);
+            return GetReseervationById(u.ReservationsId);
         }
 
         public Reservation UpdateUebergabe(MaschinenUebergabe u)
@@ -193,7 +193,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
 
             //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(entity.ReservationsId);
+            return GetReseervationById(entity.ReservationsId);
         }
 
         public Reservation UpdateRuecknahme(MaschinenRuecknahme u)
@@ -202,7 +202,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.Entry(entity).CurrentValues.SetValues(u);
             Context.SaveChanges();
             //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(u.ReservationsId);
+            return GetReseervationById(u.ReservationsId);
         }
 
     }
