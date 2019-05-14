@@ -65,8 +65,6 @@ namespace BusinessLayerTest
                 var original = man.GetKundeById(2);
                 man.SetKundeInactive(original);
 
-                original.IstAktiv = true; //a real request will alwys send this field as true; here we have to fake it.
-
                 man.AddKunde(original);
                 var after = man.GetKundeById(2);
                 Assert.IsTrue(after.IstAktiv ?? false);

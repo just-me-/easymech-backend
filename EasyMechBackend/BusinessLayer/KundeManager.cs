@@ -49,6 +49,7 @@ namespace EasyMechBackend.BusinessLayer
             {
                 long id = Context.Kunden.First(c => c.Firma == k.Firma).Id;
                 k.Id = id;
+                k.IstAktiv = true;
                 return UpdateKunde(k);
             }
             EnsureUniqueness(k);
