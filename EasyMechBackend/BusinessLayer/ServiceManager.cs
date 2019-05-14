@@ -15,35 +15,31 @@ namespace EasyMechBackend.BusinessLayer
         {
         }
 
-
         public ServiceManager()
         {
         }
-
-
-        public List<Service> GetGeplanteServices()
+        public List<Service> GetAllServices()
         {
             var query =
             from r in Context.Services
-            where r.ServiceDurchfuehrung == null
             orderby r.Beginn descending
             select r;
             return query.ToList();
         }
 
-        public List<Service> GetDurchgefuehrteServices()
+        public List<Service> GetServices(Service.ServiceStatus status)
         {
             var query =
-            from r in Context.GeplanteServices
-            where r.ServiceDurchfuehrung != null
+            from r in Context.Services
+            where r.Status == status
             orderby r.Beginn descending
             select r;
             return query.ToList();
         }
-
-        public Service GetGeplanterServiceById(long id)
+        
+        public Service GetServiceById(long id)
         {
-            Service r = Context.GeplanteServices.SingleOrDefault(res => res.Id == id);
+            Service r = Context.Services.SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
                 throw new InvalidOperationException($"GeplanterService with id {id} is not in database");
@@ -51,7 +47,7 @@ namespace EasyMechBackend.BusinessLayer
             return r;
         }
 
-        public Service AddGeplanterService(Service s)
+        public Service AddService(Service s)
         {
             s.Validate();
             Context.Add(s);
@@ -59,18 +55,26 @@ namespace EasyMechBackend.BusinessLayer
             return s;
         }
 
-        public Service UpdateGeplanterService(Service s)
+        public Service UpdateService(Service s)
         {
+            //Todo: update arbeitsschritte und material
             s.Validate();
-            var entity = Context.GeplanteServices.Single(res => res.Id == s.Id);
+            var entity = Context.Services.Single(res => res.Id == s.Id);
             Context.Entry(entity).CurrentValues.SetValues(s);
             Context.SaveChanges();
             return entity;
         }
 
 
-        public void DeleteGeplanterService(Service s)
+        public void DeleteService(Service s)
         {
+            foreach(Materialposten m in s.Materialposten) {
+                Context.Remove(m);
+            }
+            foreach(Arbeitsschritt a in s.Arbeitsschritte)
+            {
+                Context.Remove(a);
+            }
             Context.Remove(s);
             Context.SaveChanges();
         }
@@ -78,7 +82,7 @@ namespace EasyMechBackend.BusinessLayer
         public List<Service> GetSearchResult(Service searchEntity)
         {
 
-            List<Service> allEntities = GetGeplanteServices();
+            List<Service> allEntities = GetAllServices();
             IEnumerable<Service> searchResult = allEntities;
             PropertyInfo[] props = typeof(Service).GetProperties();
 
