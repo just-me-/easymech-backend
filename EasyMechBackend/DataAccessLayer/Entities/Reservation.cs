@@ -15,26 +15,19 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public string Standort { get; set; }
 
         public DateTime? Startdatum { get; set; }
-
         public DateTime? Enddatum { get; set; }
-
 
         [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
         public long MaschinenId { get; set; }
 
-
-
         [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
         public long? KundenId { get; set; }
 
-
         public virtual MaschinenUebergabe Uebergabe { get; set; }
         public virtual MaschinenRuecknahme Ruecknahme { get; set; }
-
-
 
         protected sealed override void FillRequiredProps()
         {
@@ -46,6 +39,4 @@ namespace EasyMechBackend.DataAccessLayer.Entities
             Standort = Standort.ClipToNChars(256);
         }
     }
-
-
 }

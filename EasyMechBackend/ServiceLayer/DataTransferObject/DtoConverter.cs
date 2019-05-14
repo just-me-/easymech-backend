@@ -218,7 +218,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        
+
         #region Reservation
 
         public static Reservation ConvertToEntity(this ReservationDto dto)
@@ -268,7 +268,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        #region ResrevatrionsUebergabe
+        #region ReservationsUebergabe
 
         public static MaschinenUebergabe ConvertToEntity(this MaschinenUebergabeDto dto)
         {
@@ -296,7 +296,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        #region ResrevatrionsRuecknahme
+        #region ReservationsRuecknahme
 
 
         public static MaschinenRuecknahme ConvertToEntity(this MaschinenRuecknahmeDto dto)
@@ -325,7 +325,85 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         }
 
         #endregion
-        
+
+        #region Service
+        public static GeplanterService ConvertToEntity(this GeplanterServiceDto dto)
+        {
+            if (dto == null) { return null; }
+
+            GeplanterService t = new GeplanterService
+            {
+                Id = dto.Id,
+                MaschinenId = dto.MaschinenId,
+                KundenId = dto.KundenId,
+                Bezeichnung = dto.Bezeichnung,
+                Beginn = dto.Beginn,
+                Ende = dto.Ende,
+                ServiceDurchfuehrung = dto.ServiceDurchfuehrung
+            };
+            return t;
+        }
+
+        public static GeplanterServiceDto ConvertToDto(this GeplanterService entity)
+        {
+            if (entity == null) { return null; }
+
+            GeplanterServiceDto dto = new GeplanterServiceDto
+            {
+                Id = entity.Id,
+                MaschinenId = entity.MaschinenId,
+                KundenId = entity.KundenId,
+                Bezeichnung = entity.Bezeichnung,
+                Beginn = entity.Beginn,
+                Ende = entity.Ende,
+                ServiceDurchfuehrung = entity.ServiceDurchfuehrung
+            };
+            return dto;
+        }
+
+        public static List<GeplanterService> ConvertToEntities(this IEnumerable<GeplanterServiceDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<GeplanterServiceDto> ConvertToDtos(this IEnumerable<GeplanterService> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+        #endregion
+        #region ServiceDurchfuehrung
+        public static ServiceDurchfuehrung ConvertToEntity(this ServiceDurchfuehrungDto dto)
+        {
+            if (dto == null) { return null; }
+
+            ServiceDurchfuehrung t = new ServiceDurchfuehrung
+            {
+                Id = dto.Id,
+                GeplanterServiceId = dto.GeplanterServiceId
+            };
+            return t;
+        }
+
+        public static ServiceDurchfuehrungDto ConvertToDto(this ServiceDurchfuehrung entity)
+        {
+            if (entity == null) { return null; }
+
+            ServiceDurchfuehrungDto dto = new ServiceDurchfuehrungDto
+            {
+                Id = entity.Id,
+                GeplanterServiceId = entity.GeplanterServiceId
+            };
+            return dto;
+        }
+
+        public static List<ServiceDurchfuehrung> ConvertToEntities(this IEnumerable<ServiceDurchfuehrungDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<ServiceDurchfuehrungDto> ConvertToDtos(this IEnumerable<ServiceDurchfuehrung> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+        #endregion
 
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {

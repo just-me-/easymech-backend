@@ -15,21 +15,17 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public string Bezeichnung { get; set; }
 
         public DateTime Beginn { get; set; }
-
         public DateTime Ende { get; set; }
-        
 
         [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
         public long MaschinenId { get; set; }
 
-
         [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
         public long KundenId { get; set; }
 
-        
         public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
 
         protected override void ClipProps()

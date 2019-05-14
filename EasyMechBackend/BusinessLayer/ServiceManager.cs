@@ -8,15 +8,15 @@ using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace EasyMechBackend.BusinessLayer
 {
-    public class GeplanterServiceManager : ManagerBase
+    public class ServiceManager : ManagerBase
     {
 
-        public GeplanterServiceManager(EMContext context) : base(context)
+        public ServiceManager(EMContext context) : base(context)
         {
         }
 
 
-        public GeplanterServiceManager()
+        public ServiceManager()
         {
         }
 
@@ -25,6 +25,17 @@ namespace EasyMechBackend.BusinessLayer
         {
             var query =
             from r in Context.GeplanteServices
+            where r.ServiceDurchfuehrung == null
+            orderby r.Beginn descending
+            select r;
+            return query.ToList();
+        }
+
+        public List<GeplanterService> GetDurchgefuehrteServices()
+        {
+            var query =
+            from r in Context.GeplanteServices
+            where r.ServiceDurchfuehrung != null
             orderby r.Beginn descending
             select r;
             return query.ToList();
