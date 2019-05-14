@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMechBackend.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("GeplanterService", Schema = "public")]
-    public class Service : EntityWithValidate
+    public class Service : IValidatable
     {
         public enum ServiceStatus { Geplant, InArbeit, Abgeschlossen }
 
@@ -33,14 +34,9 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public List<Materialposten> Materialposten { get; set; }
         public List<Arbeitsschritt> Arbeitsschritte { get; set; }
 
-        protected override void ClipProps()
+        public void Validate()
         {
-            throw new NotImplementedException();
-        }
-
-        protected override void FillRequiredProps()
-        {
-            throw new NotImplementedException();
+            Bezeichnung = Bezeichnung.ClipToNChars(128);
         }
     }
 }

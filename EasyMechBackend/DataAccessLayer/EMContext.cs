@@ -21,8 +21,7 @@ namespace EasyMechBackend.DataAccessLayer
         public DbSet<MaschinenUebergabe> MaschinenUebergaben { get; set; }
         public DbSet<MaschinenRuecknahme> MaschinenRuecknahmen { get; set; }
 
-        public DbSet<Service> GeplanteServices { get; set; }
-        public DbSet<ServiceDurchfuehrung> ServiceDurchfuehrungen { get; set; }
+        public DbSet<Service> Services { get; set; }
         public DbSet<Materialposten> Materialposten { get; set; }
         public DbSet<Arbeitsschritt> Arbeitsschritte { get; set; }
 
