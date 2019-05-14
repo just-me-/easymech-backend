@@ -45,6 +45,12 @@ namespace EasyMechBackend.BusinessLayer
         public Kunde AddKunde(Kunde k)
         {
             k.Validate();
+            if (IsRestoreOperation(k))
+            {
+                long id = Context.Kunden.First(c => c.Firma == k.Firma).Id;
+                k.Id = id;
+                return UpdateKunde(k);
+            }
             EnsureUniqueness(k);
             Context.Add(k);
             Context.SaveChanges();
@@ -135,15 +141,23 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureUniqueness(Kunde k)
         {
             var query = from laufvar in Context.Kunden
-                where laufvar.Firma == k.Firma 
-                where laufvar.Firma != null 
+                where laufvar.Firma == k.Firma
                 where laufvar.Id != k.Id
-                where  (laufvar.IstAktiv ?? false)
+                //where  (laufvar.IstAktiv ?? false)
                 select 0;
             if (query.Any())
             {
                 throw new UniquenessException($"Die Firma \"{k.Firma}\" ist bereits im System registriert.");
             }
+        }
+
+        private bool IsRestoreOperation(Kunde k)
+        {
+            var query = from laufvar in Context.Kunden
+                where laufvar.Firma == k.Firma
+                where !(laufvar.IstAktiv ?? true)
+                select k;
+            return query.Any();
         }
     }
 }

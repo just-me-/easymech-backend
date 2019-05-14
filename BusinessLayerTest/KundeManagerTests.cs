@@ -55,25 +55,24 @@ namespace BusinessLayerTest
         }
 
 
-        //[TestMethod]
-        //public void AddKundeIntoDeleteIntoAddAgainShouldBeOK()
-        //{
-        //    using (var context = new EMContext(options))
-        //    {
-        //        int id = 2;
-        //        Kunde newKunde = new Kunde
-        //        {
-        //            Id = id,
-        //            Firma = "Firma"
-        //        };
-        //        KundeManager man = new KundeManager(context);
-        //        var original = man.GetKundeById(1);
-        //        man.SetKundeInactive(original);
-        //        man.AddKunde(newKunde);
-        //        var kundenList = man.GetKunden(true);
-        //        Assert.AreEqual(2, kundenList.Count);
-        //    }
-        //}
+        [TestMethod]
+        public void AddKundeIntoDeleteIntoAddAgainShouldReactivate()
+        {
+            using (var context = new EMContext(options))
+            {
+
+                KundeManager man = new KundeManager(context);
+                var original = man.GetKundeById(2);
+                man.SetKundeInactive(original);
+
+                original.IstAktiv = true; //a real request will alwys send this field as true; here we have to fake it.
+
+                man.AddKunde(original);
+                var after = man.GetKundeById(2);
+                Assert.IsTrue(after.IstAktiv ?? false);
+                Assert.AreEqual(2, after.Id);
+            }
+        }
 
 
         [TestMethod]
