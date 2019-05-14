@@ -106,7 +106,7 @@ namespace BusinessLayerTest
                     Id = 1,
                     Preis = 50000,
                     Typ = Transaktion.TransaktionsTyp.Einkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 15),
                     MaschinenId = 1,
                     KundenId = 1
                 };
@@ -116,7 +116,7 @@ namespace BusinessLayerTest
                     Id = 2,
                     Preis = 45000,
                     Typ = Transaktion.TransaktionsTyp.Verkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 16),
                     MaschinenId = 2,
                     KundenId = 1
                 };
@@ -125,10 +125,21 @@ namespace BusinessLayerTest
                 {
                     Id = 1,
                     Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum =   new DateTime(2020, 05, 12),
+                    Startdatum = new DateTime(2019, 05, 10),
+                    Enddatum =   new DateTime(2019, 05, 12),
                     MaschinenId = 1,
                     KundenId = 2
+                };
+
+                Reservation r2 = new Reservation
+                {
+                    Id = 2,
+                    Standort = "In Tümpel gefahren",
+                    Startdatum = new DateTime(2019, 05, 14),
+                    Enddatum = new DateTime(2019, 05, 16),
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Uebergabe = new MaschinenUebergabe()
                 };
 
 
@@ -141,6 +152,7 @@ namespace BusinessLayerTest
                 context.Add(startTransaktionEinkauf);
                 context.Add(startTransaktionVerkauf);
                 context.Add(r1);
+                context.Add(r2);
                 context.SaveChanges();
             }
             return options;

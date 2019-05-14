@@ -4,46 +4,28 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
 {
     [TestClass]
-    public class ReservationsManagerTests : ManagerBaseTests
+    public class ReservationsManagerDefaultCasesTests : ManagerBaseTests
     {
-        /*
-        
-                 from init:
-                {
-                    Id = 1,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum =   new DateTime(2020, 05, 12),
-                    MaschinenId = 1, (gehört Kunde 1)
-                    KundenId = 2
-                };
-
-    */
-
-
-
-        //Default Cases
-
-
         [TestMethod]
-        public void GetTransaktionenTest()
+        public void GetReservationenTest()
         {
             using (var context = new EMContext(options))
             {
                 ReservationManager man = new ReservationManager(context);
                 var list = man.GetReservationen();
-                Assert.AreEqual(1, list.Count);
+                Assert.AreEqual(2, list.Count);
             }
         }
 
         [TestMethod]
-        public void GetSingleTransaktionTest()
+        public void GetSingleReservationTest()
         {
             using (var context = new EMContext(options))
             {
@@ -63,7 +45,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -76,7 +58,7 @@ namespace BusinessLayerTest
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
                 var addedEntity = context.Reservationen.Single(res => res.Id == id);
-                Assert.AreEqual(2, addedEntity.Id);
+                Assert.AreEqual(id, addedEntity.Id);
                 Assert.IsNull(addedEntity.Uebergabe);
                 Assert.IsNull(addedEntity.Ruecknahme);
             }
@@ -88,7 +70,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -106,7 +88,7 @@ namespace BusinessLayerTest
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
                 var addedEntity = context.Reservationen.Single(res => res.Id == id);
-                Assert.AreEqual(2, addedEntity.Id);
+                Assert.AreEqual(id, addedEntity.Id);
                 Assert.IsNotNull(addedEntity.Uebergabe);
                 Assert.IsNull(addedEntity.Ruecknahme);
             }
@@ -117,7 +99,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -139,7 +121,7 @@ namespace BusinessLayerTest
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
                 var addedEntity = context.Reservationen.Single(res => res.Id == id);
-                Assert.AreEqual(2, addedEntity.Id);
+                Assert.AreEqual(id, addedEntity.Id);
                 Assert.IsNotNull(addedEntity.Uebergabe);
                 Assert.IsNotNull(addedEntity.Ruecknahme);
             }
@@ -154,6 +136,9 @@ namespace BusinessLayerTest
                 var man = new ReservationManager(context);
                 var original = man.GetReseervationById(1);
                 original.Standort = "Rappi";
+
+                //Snippet not working in In Memory DB as Nav Props dont load properly. Tested in Postman.
+
                 //original.Uebergabe = new MaschinenUebergabe
                 //{
                 //    Id = 12,
@@ -178,24 +163,32 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 var man = new ReservationManager(context);
-                var original = man.GetReseervationById(1);
-                man.DeleteReservation(original);
+
+                var doomed = man.GetReseervationById(1);
+                man.DeleteReservation(doomed);
+
+                doomed = man.GetReseervationById(2);
+                man.DeleteReservation(doomed);
+
                 var list = man.GetReservationen();
                 Assert.IsFalse(list.Any());
 
             }
         }
+    }
 
 
 
-        ///Special Cases
+    [TestClass]
+    public class ReservationsManagerSpecialCasesTests : ManagerBaseTests
+    {
 
         [TestMethod]
         public void AddReservation_NoU_WithR_MustThrow()
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -221,7 +214,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -242,13 +235,13 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
                     Standort = "Chur",
-                    Startdatum = new DateTime(2019, 08, 12),
-                    Enddatum = new DateTime(2020, 05, 12),
+                    Startdatum = new DateTime(2000, 08, 12),
+                    Enddatum = new DateTime(2019, 05, 13),
                     MaschinenId = 1,
                     KundenId = 2
                 };
@@ -287,7 +280,7 @@ namespace BusinessLayerTest
 
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
-                Assert.AreEqual(2, man.GetReservationen().Count);
+                Assert.AreEqual(3, man.GetReservationen().Count);
             }
         }
 
@@ -297,7 +290,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Reservation e = new Reservation
                 {
                     Id = id,
@@ -343,7 +336,7 @@ namespace BusinessLayerTest
 
                 Reservation e = new Reservation
                 {
-                    Id = 2,
+                    Id = 3,
                     Startdatum = new DateTime(2030, 05, 12),
                     Enddatum = new DateTime(2040, 05, 12),
                     MaschinenId = id,
@@ -365,7 +358,7 @@ namespace BusinessLayerTest
                 var b = new DateTime(2030, 1, 2);
                 Reservation e = new Reservation
                 {
-                    Id = 2,
+                    Id = 3,
                     Standort = "Chur",
                     Startdatum = new DateTime(2019, 05, 12),
                     Enddatum = new DateTime(2018, 05, 12),
@@ -383,9 +376,176 @@ namespace BusinessLayerTest
 
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
-                var added = man.GetReseervationById(2);
+                var added = man.GetReseervationById(3);
                 Assert.AreEqual(a, added.Uebergabe.Datum);
                 Assert.AreEqual(b, added.Ruecknahme.Datum);
+            }
+        }
+    }
+
+    [TestClass]
+    public class TransaktionManagerSearchTests : ManagerBaseTests
+    {
+        /*
+                    ::::::::::::TESTDATA FOR REFERENCE:::::
+
+
+                Reservation r1 = new Reservation
+                {
+                    Id = 1,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2019, 05, 10),
+                    Enddatum =   new DateTime(2020, 05, 12),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                Reservation r2 = new Reservation
+                {
+                    Id = 2,
+                    Standort = "In Tümpel gefahren",
+                    Startdatum = new DateTime(2019, 05, 12),
+                    Enddatum = new DateTime(2020, 05, 14),
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Uebergabe = new MaschinenUebergabe()
+                };
+         */
+
+        [TestMethod]
+        public void TestMaschinenSearch()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinenId = 1
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestCustSearch()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    KundenId = 2
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(1, result.Single().Id);
+            }
+        }
+
+        [TestMethod]
+        public void TestMachinetypeSearchWithMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinentypId = 1
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestMachinetypeSearchWithoutMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinentypId = 2
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.IsFalse(result.Any());
+            }
+        }
+
+
+        [TestMethod]
+        public void TestFromDateWithPartialMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    Von = new DateTime(2019, 05, 11)
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Single().Id);
+            }
+        }
+
+
+        [TestMethod]
+        public void TestToDateWithPartialMatchches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    Bis = new DateTime(2019, 05, 15)
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(1, result.Single().Id);
+            }
+        }
+
+        [TestMethod]
+        public void EnsureStateFieldOnARunningThing()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    Status = ServiceState.Running
+                };
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+
+                Assert.AreEqual(2, result1.Single().Id);
+            }
+        }
+
+
+        [TestMethod]
+        public void TestItAllTogether()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    MaschinentypId = 1,
+                    Von = new DateTime(2019,05,12),
+                    Bis = new DateTime(2050, 05, 15),
+                    Status = ServiceState.All
+                };
+
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+
+                Assert.AreEqual(2, result1.Single().Id);
             }
         }
     }

@@ -1,7 +1,8 @@
 ﻿using System;
 using EasyMechBackend.DataAccessLayer.Entities;
+using EasyMechBackend.ServiceLayer.DataTransferObject;
 
-namespace EasyMechBackend.ServiceLayer.DataTransferObject.DTOs
+namespace EasyMechBackend.Common.DataTransferObject.DTOs
 {
     public class TransaktionDto : DtoBase
     {

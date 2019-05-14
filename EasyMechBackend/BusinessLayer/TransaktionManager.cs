@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
+using Remotion.Linq.Clauses;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -84,42 +87,20 @@ namespace EasyMechBackend.BusinessLayer
             return k;
         }
 
-        public List<Transaktion> GetSearchResult(Transaktion searchEntity)
+        public List<Transaktion> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
-            if (searchEntity.Id != 0)
-            {
-                return new List<Transaktion>
-                {
-                    GetTransaktionById(searchEntity.Id)
-                };
-
-            }
-
-            List<Transaktion> allTransaktionen = GetTransaktionen();
-            IEnumerable<Transaktion> searchResult = allTransaktionen;
-            PropertyInfo[] props = typeof(Transaktion).GetProperties();
-
-            foreach (var prop in props)
-            {
-
-                //id and istAktiv are not subject for searching -> these are the only ones with onn-string fields
-                if (prop.PropertyType != typeof(string)) continue;
 
 
-                string potentialSearchTerm = (string)prop.GetValue(searchEntity);
-                if (potentialSearchTerm.HasSearchTerm())
-                {
-                    searchResult = searchResult.Where(k =>
-                    {
-                        string contentOfCustomerThatIsEvaluated = (string)prop.GetValue(k);
-                        return contentOfCustomerThatIsEvaluated != null &&
-                               contentOfCustomerThatIsEvaluated.Contains(potentialSearchTerm);
+            var query = from t in Context.Transaktionen.Include(tra => tra.Maschine)
+                where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                where searchEntity.Von == null || searchEntity.Von <= t.Datum
+                where searchEntity.Bis == null || t.Datum <= searchEntity.Bis 
+                orderby t.Datum descending 
+                select t;
 
-                    });
-                }
-            }
-
-            return searchResult.ToList();
+            return query.ToList();
         }
     }
 }

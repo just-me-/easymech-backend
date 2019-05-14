@@ -1,5 +1,7 @@
 ﻿
-namespace EasyMechBackend.ServiceLayer.DataTransferObject.DTOs
+using EasyMechBackend.ServiceLayer.DataTransferObject;
+
+namespace EasyMechBackend.Common.DataTransferObject.DTOs
 {
     public class MaschinentypDto : DtoBase
     {

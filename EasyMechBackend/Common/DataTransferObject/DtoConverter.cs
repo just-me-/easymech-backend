@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
+using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
-namespace EasyMechBackend.ServiceLayer.DataTransferObject
+namespace EasyMechBackend.Common.DataTransferObject
 {
     public static class DtoConverter
     {
