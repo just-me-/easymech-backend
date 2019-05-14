@@ -102,7 +102,7 @@ namespace BusinessLayerTest
     }
 
     [TestClass]
-    public class TransaktionManagerSearchTests : ManagerBaseTests
+    public class ReservationsManagerSearchTests : ManagerBaseTests
     {
         /*
          *
@@ -251,7 +251,7 @@ namespace BusinessLayerTest
 
 
         [TestMethod]
-        public void BF_Test()
+        public void TestItAllTogether()
         {
             using (var context = new EMContext(options))
             {

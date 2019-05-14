@@ -186,7 +186,7 @@ namespace EasyMechBackend.BusinessLayer
         {
 
             DateTime wantedStart = r.Startdatum ?? DateTime.Now;
-            DateTime wantedEnd = r.Enddatum ?? new DateTime(2099,12,31);   //if there is no reservation end just reserve it "forever"
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;   //if there is no reservation end just reserve it "forever"
             var myAuto = r.MaschinenId;
             var myReservation = r.Id;
 
@@ -199,8 +199,8 @@ namespace EasyMechBackend.BusinessLayer
                 {
                     lv.KundenId,
                     Von = lv.Startdatum ?? DateTime.Now,
-                    Bis = lv.Enddatum ?? new DateTime(2099, 12, 31)
-                };
+                    Bis = lv.Enddatum ?? DateTime.MaxValue
+        };
 
             foreach (var lv in reservedDates)
             {
@@ -208,6 +208,9 @@ namespace EasyMechBackend.BusinessLayer
                 //der andere hat es noch nicht wieder zurückgegeben
                 if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
                 {
+
+                    //TOdo: Message verschönern:
+                    //Wer ist Kunde 5? "Bis 12.12.9999 reserviert" <=> "open-end reserviert"
                     throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
                 }
 
