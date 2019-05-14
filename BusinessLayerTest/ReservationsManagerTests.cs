@@ -12,20 +12,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class ReservationsManagerTests : ManagerBaseTests
     {
-        /*
-        
-                 from init:
-                {
-                    Id = 1,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum =   new DateTime(2020, 05, 12),
-                    MaschinenId = 1, (gehört Kunde 1)
-                    KundenId = 2
-                };
-
-    */
-
 
 
         //Default Cases

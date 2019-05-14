@@ -1,11 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using EasyMechBackend.DataAccessLayer;
-using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.Util;
 
-namespace EasyMechBackend.ServiceLayer.DataTransferObject.DTOs
+namespace EasyMechBackend.Common.DataTransferObject.DTOs
 {
     public class ReservationDto
     {

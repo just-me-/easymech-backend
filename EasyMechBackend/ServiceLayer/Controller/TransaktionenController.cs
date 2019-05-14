@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
-using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
+using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -131,14 +132,14 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // POST: transaktionen/suchen
         [HttpPost("suchen")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<TransaktionDto>>>> GetSearchResult(TransaktionDto k)
+        public async Task<ActionResult<ResponseObject<IEnumerable<TransaktionDto>>>> GetSearchResult(ServiceSearchDto k)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new TransaktionManager();
-                    var transaktionDtos = manager.GetSearchResult(k.ConvertToEntity()).ConvertToDtos();
+                    var transaktionDtos = manager.GetServiceSearchResult(k).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<TransaktionDto>>(transaktionDtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;

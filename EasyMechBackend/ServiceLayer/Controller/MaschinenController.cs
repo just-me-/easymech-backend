@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
+using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common.Exceptions;
-using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 

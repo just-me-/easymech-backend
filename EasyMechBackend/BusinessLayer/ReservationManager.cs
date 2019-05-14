@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,9 @@ namespace EasyMechBackend.BusinessLayer
         {
         }
 
-
         public ReservationManager()
         {
         }
-
 
         public List<Reservation> GetReservationen()
         {
@@ -55,7 +54,6 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation UpdateReservation(Reservation r)
         {
-            //Todo: Available, in besitz etc
             //Comment on WHY [=comment allowed] the following code is as it is:
             //I delete the old übergabe und rücknahme, and than i just add new ones (or leave them as null if wanted so).
             //This way it does not matter, if the rücknahme/übergabe-operation is add, delete, or update.
@@ -63,7 +61,6 @@ namespace EasyMechBackend.BusinessLayer
             //otherwise we would have to care if we actually add or update the übergabe.
             //and, as a bonus, the frontend is totally absolutely independent of the Fields "Id" and "ReservationsId" of a Übergabe/Rücknahme.
             //So much independent that the DTO does actually not even contain these fields.
-
 
             CheckAndValidate(r);
 
@@ -99,152 +96,42 @@ namespace EasyMechBackend.BusinessLayer
         }
 
 
-        //probably not needed:
-        //Todo: remove this if not needed
-        public List<Reservation> GetSearchResult(Reservation searchEntity)
+        public List<Reservation> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
 
-            List<Reservation> allEntities = GetReservationen();
-            IEnumerable<Reservation> searchResult = allEntities;
-            PropertyInfo[] props = typeof(Reservation).GetProperties();
+            //Basic Query
+            var query = from t in Context.Reservationen
+                    .Include(res => res.Uebergabe)
+                    .Include(res => res.Ruecknahme)
+                where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum   //if t.Datum== null evaluates to false which is what we want
+                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis    //if t.Datum== null evaluates to false which is what we want
+                select t;
 
-            foreach (var prop in props)
+            switch (searchEntity.Status)
             {
-                // Handling String Fields with lower case contains
-                if (prop.PropertyType == typeof(string))
-                {
-                    string potentialSearchTerm = (string) prop.GetValue(searchEntity);
-                    if (potentialSearchTerm.HasSearchTerm())
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            string contentOfEntityThatIsEvaluated = (string) prop.GetValue(m);
-                            return contentOfEntityThatIsEvaluated != null &&
-                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
-                        });
-                    }
-                }
-
-                // Handling int or int? Fields with exact match
-                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
-                {
-                    int targetValue = (int?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            int contentOfEntityThatIsEvaluated = (int?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling long (PK, FK) with exact matching
-                //seperate treatment to int is necessary as int can't be castet to long?
-                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
-                {
-                    long targetValue = (long?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            long contentOfEntityThatIsEvaluated = (long?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling DateTime Fields with exact match
-                else if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTime?))
-                {
-                    DateTime? targetValueOrNull = (DateTime?) prop.GetValue(searchEntity);
-                    if (targetValueOrNull == null) continue;
-
-                    DateTime targetValue = (DateTime) targetValueOrNull;
-                    searchResult = searchResult.Where(m =>
-                    {
-                        DateTime? contentOfEntityThatIsEvaluated = (DateTime?) prop.GetValue(m);
-                        return contentOfEntityThatIsEvaluated != null &&
-                               DateTime.Equals((DateTime) contentOfEntityThatIsEvaluated, targetValue);
-                    });
-                }
+                case ServiceState.All:
+                case null:
+                    break;
+                case ServiceState.Pending:
+                    query = query.Where(t => t.Uebergabe == null);
+                    break;
+                case ServiceState.Running:
+                    query = query.Where(t => t.Uebergabe != null && t.Ruecknahme == null);
+                    break;
+                case ServiceState.Completed:
+                    query = query.Where(t => t.Ruecknahme != null); //note: übergabe can't be null if rücknahme is set. class invariant.
+                    break;
+                default:
+                    throw new ArgumentException("Konnte den Service-Status nicht einordnen.");
             }
 
-            return searchResult.ToList();
-
+            return query.ToList();
         }
-
-        //Get Rücknahme etc: Probably not needed. Here if we decided tgo use it anyway in some way:
-        /*
-         *TODO : Remove this if not needed
-         *
-         
-        //Uebergabe und Ruecknahme
-        public MaschinenUebergabe GetMaschinenUebergabe(long reservationsId)
-        {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Uebergabe)
-                .SingleOrDefault(res => res.Id == reservationsId);
-
-            if (r == null)
-            {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
-            }
-            return r.Uebergabe;
-        }
-
-        public MaschinenRuecknahme GetMaschinenRuecknahme(long reservationsId)
-        {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Ruecknahme)
-                .SingleOrDefault(res => res.Id == reservationsId);
-
-            if (r == null)
-            {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
-            }
-            return r.Ruecknahme;
-        }
-
-
-        public Reservation AddUebergabe(MaschinenUebergabe u)
-        { 
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen??? [bitte ja]
-            return GetReseervationById(u.ReservationsId);
-        }
-
-        public Reservation AddRuecknahme(MaschinenRuecknahme u)
-        {
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(u.ReservationsId);
-        }
-
-        public Reservation UpdateUebergabe(MaschinenUebergabe u)
-        {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(entity.ReservationsId);
-        }
-
-        public Reservation UpdateRuecknahme(MaschinenRuecknahme u)
-        {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReseervationById(u.ReservationsId);
-        }
-
-    */
-
-
+        
+        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
 
         private void CheckAndValidate(Reservation r)
         {
