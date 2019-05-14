@@ -90,14 +90,15 @@ namespace EasyMechBackend.BusinessLayer
         public List<Transaktion> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
 
-            //Basic Query
+
             var query = from t in Context.Transaktionen.Include(tra => tra.Maschine)
                 where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
                 where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
                 where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
-                where searchEntity.Von == null || searchEntity.Von <= t.Datum   //if t.Datum== null evaluates to false which is what we want
-                where searchEntity.Bis == null || t.Datum <= searchEntity.Bis    //if t.Datum== null evaluates to false which is what we want
-                        select t;
+                where searchEntity.Von == null || searchEntity.Von <= t.Datum
+                where searchEntity.Bis == null || t.Datum <= searchEntity.Bis 
+                orderby t.Datum descending 
+                select t;
 
             return query.ToList();
         }

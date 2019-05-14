@@ -105,8 +105,8 @@ namespace EasyMechBackend.BusinessLayer
                 where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
                 where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
                 where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
-                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum   //if t.Datum== null evaluates to false which is what we want
-                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis    //if t.Datum== null evaluates to false which is what we want
+                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
+                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
                 select t;
 
             switch (searchEntity.Status)
@@ -127,7 +127,7 @@ namespace EasyMechBackend.BusinessLayer
                     throw new ArgumentException("Konnte den Service-Status nicht einordnen.");
             }
 
-            return query.ToList();
+            return query.OrderByDescending(t => t.Startdatum).ToList();
         }
         
         //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
