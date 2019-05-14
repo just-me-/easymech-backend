@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EasyMechBackend.DataAccessLayer.Entities;
+using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -18,20 +19,12 @@ namespace EasyMechBackend.BusinessLayer
         public ServiceManager()
         {
         }
-        public List<Service> GetAllServices()
-        {
-            var query =
-            from r in Context.Services
-            orderby r.Beginn descending
-            select r;
-            return query.ToList();
-        }
 
-        public List<Service> GetServices(Service.ServiceStatus status)
+        public List<Service> GetServices(ServiceState status)
         {
             var query =
             from r in Context.Services
-            where r.Status == status
+            where status == ServiceState.All || r.Status == status
             orderby r.Beginn descending
             select r;
             return query.ToList();
@@ -82,7 +75,7 @@ namespace EasyMechBackend.BusinessLayer
         public List<Service> GetSearchResult(Service searchEntity)
         {
 
-            List<Service> allEntities = GetAllServices();
+            List<Service> allEntities = GetServices(ServiceState.All);
             IEnumerable<Service> searchResult = allEntities;
             PropertyInfo[] props = typeof(Service).GetProperties();
 
