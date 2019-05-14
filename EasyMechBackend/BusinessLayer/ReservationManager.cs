@@ -99,7 +99,6 @@ namespace EasyMechBackend.BusinessLayer
         public List<Reservation> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
 
-            //Basic Query
             var query = from t in Context.Reservationen
                     .Include(res => res.Uebergabe)
                     .Include(res => res.Ruecknahme)

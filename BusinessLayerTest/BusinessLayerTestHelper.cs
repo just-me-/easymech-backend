@@ -106,7 +106,7 @@ namespace BusinessLayerTest
                     Id = 1,
                     Preis = 50000,
                     Typ = Transaktion.TransaktionsTyp.Einkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 15),
                     MaschinenId = 1,
                     KundenId = 1
                 };
@@ -116,7 +116,7 @@ namespace BusinessLayerTest
                     Id = 2,
                     Preis = 45000,
                     Typ = Transaktion.TransaktionsTyp.Verkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 16),
                     MaschinenId = 2,
                     KundenId = 1
                 };
