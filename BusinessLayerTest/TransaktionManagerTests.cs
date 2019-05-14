@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.DataAccessLayer.Entities;
 
 namespace BusinessLayerTest
@@ -11,7 +12,7 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerTests : ManagerBaseTests
     {
-        
+
         [TestMethod]
         public void AddTransaktionEinkaufTest()
         {
@@ -36,6 +37,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(1, newBesitzer.Id);
             }
         }
+
         [TestMethod]
         public void GetTransaktionenTest()
         {
@@ -46,6 +48,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, transaktionenListe.Count);
             }
         }
+
         [TestMethod]
         public void GetTransaktionByIdTest()
         {
@@ -56,6 +59,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(1, transaktion1.Id);
             }
         }
+
         [TestMethod]
         public void GetTransaktionByNonexistantIdTest()
         {
@@ -65,6 +69,7 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<InvalidOperationException>(() => transaktionManager.GetTransaktionById(666));
             }
         }
+
         [TestMethod]
         public void UpdateTransaktionPreisTest()
         {
@@ -94,22 +99,177 @@ namespace BusinessLayerTest
             }
         }
 
+    }
+
+    [TestClass]
+    public class ReservationsManagerSearchTests : ManagerBaseTests
+    {
+        /*
+         *
+         *
+         * TESTDATA FOR REFERENCE:::::
+
+                {
+                    Id = 1,
+                    Preis = 50000,
+                    Typ = Transaktion.TransaktionsTyp.Einkauf,
+                    Datum = new DateTime(2019, 05, 15),
+                    MaschinenId = 1, [type 1]
+                    KundenId = 1
+                };
+
+                {
+                    Id = 2,
+                    Preis = 45000,
+                    Typ = Transaktion.TransaktionsTyp.Verkauf,
+                    Datum = new DateTime(2019, 05, 16),
+                    MaschinenId = 2,  [type 1]
+                    KundenId = 1
+                };
+         */
 
         [TestMethod]
-        public void GetSearchResultTransaktionTest()
+        public void TestCustomerSearch()
         {
             using (var context = new EMContext(options))
             {
-                TransaktionManager transaktionManager = new TransaktionManager(context);
-                Transaktion m = new Transaktion
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
                 {
-                    Id = 1,
-                    Preis = 50000
+                    KundenId = 1
                 };
-                var resultList = transaktionManager.GetSearchResult(m);
-                Assert.AreEqual(1, resultList.First().Id);
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Count);
             }
         }
 
+        [TestMethod]
+        public void TestMachineSearch()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinenId = 2
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Single().Id);
+            }
+        }
+
+        [TestMethod]
+        public void TestMachinetypeSearchWithMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinentypId = 1
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestMachinetypeSearchWithoutMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    MaschinentypId = 2
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.IsFalse(result.Any());
+            }
+        }
+
+
+        [TestMethod]
+        public void TestFromDateWithPartialMatches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    Von = new DateTime(2019, 05, 16)
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(2, result.Single().Id);
+            }
+        }
+
+
+        [TestMethod]
+        public void TestToDateWithPartialMatchches()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity = new ServiceSearchDto
+                {
+                    Bis = new DateTime(2019, 05, 15)
+                };
+                var result = man.GetServiceSearchResult(searchEntity);
+
+                Assert.AreEqual(1, result.Single().Id);
+            }
+        }
+
+        [TestMethod]
+        public void EnsureStateFieldIsPointless()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    Bis = new DateTime(2019, 05, 15),
+                    Status = ServiceState.All
+                };
+                var searchEntity2 = new ServiceSearchDto
+                {
+                    Bis = new DateTime(2019, 05, 15),
+                    Status = ServiceState.Completed
+                };
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+                var result2 = man.GetServiceSearchResult(searchEntity2);
+
+                Assert.AreEqual(result1.Count, result2.Count);
+            }
+        }
+
+
+        [TestMethod]
+        public void TestItAllTogether()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new TransaktionManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    MaschinentypId = 1,
+                    Von = new DateTime(2012, 01, 01),
+                    Bis = new DateTime(2019, 05, 15),
+                    Status = ServiceState.All
+                };
+
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+
+                Assert.AreEqual(1, result1.Single().Id);
+            }
+        }
     }
 }

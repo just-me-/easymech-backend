@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,9 @@ namespace EasyMechBackend.BusinessLayer
         {
         }
 
-
         public ReservationManager()
         {
         }
-
 
         public List<Reservation> GetReservationen()
         {
@@ -32,7 +31,7 @@ namespace EasyMechBackend.BusinessLayer
             return query.ToList();
         }
 
-        public Reservation GetReservationById(long id)
+        public Reservation GetReseervationById(long id)
         {
             Reservation r = Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme).SingleOrDefault(res => res.Id == id);
             if (r == null)
@@ -44,8 +43,10 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation AddReservation(Reservation r)
         {
-            //Todo: Available, in besitz etc
-            r.Validate();
+
+            CheckAndValidate(r);
+
+
             Context.Add(r);
             Context.SaveChanges();
             return r;
@@ -53,156 +54,169 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation UpdateReservation(Reservation r)
         {
-            //Todo: Available, in besitz etc
-            r.Validate();
-            var entity = Context.Reservationen.Single(res => res.Id == r.Id);
-            Context.Entry(entity).CurrentValues.SetValues(r);
+            //Comment on WHY [=comment allowed] the following code is as it is:
+            //I delete the old übergabe und rücknahme, and than i just add new ones (or leave them as null if wanted so).
+            //This way it does not matter, if the rücknahme/übergabe-operation is add, delete, or update.
+            //We also dont have to care about a ReservationsId-FK-must-be-unique-in-Uebergabe-Restriction, as the old entity is deleted and the FK will be available again.
+            //otherwise we would have to care if we actually add or update the übergabe.
+            //and, as a bonus, the frontend is totally absolutely independent of the Fields "Id" and "ReservationsId" of a Übergabe/Rücknahme.
+            //So much independent that the DTO does actually not even contain these fields.
+
+            CheckAndValidate(r);
+
+            Reservation old = Context.Reservationen
+                .Include(res => res.Uebergabe)
+                .Include(res => res.Ruecknahme)
+                .Single(res => res.Id == r.Id);
+
+            if (old.Uebergabe != null)
+            {
+                Context.Remove(old.Uebergabe);
+            }
+
+            if (old.Ruecknahme != null)
+            {
+                Context.Remove(old.Ruecknahme);
+            }
+
             Context.SaveChanges();
-            return entity;
+            Context.Entry(old).State = EntityState.Detached;
+
+            
+            Context.Update(r);
+            Context.SaveChanges();
+            return r;
         }
 
 
         public void DeleteReservation(Reservation r)
         {
-            Context.Remove(r);
+            Context.Remove(r);       //cascade deletes the übergabe rücknahme
             Context.SaveChanges();
         }
 
-        public List<Reservation> GetSearchResult(Reservation searchEntity)
+
+        public List<Reservation> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
 
-            List<Reservation> allEntities = GetReservationen();
-            IEnumerable<Reservation> searchResult = allEntities;
-            PropertyInfo[] props = typeof(Reservation).GetProperties();
+            var query = from t in Context.Reservationen
+                    .Include(res => res.Uebergabe)
+                    .Include(res => res.Ruecknahme)
+                where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
+                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
+                select t;
 
-            foreach (var prop in props)
+            switch (searchEntity.Status)
             {
-                // Handling String Fields with lower case contains
-                if (prop.PropertyType == typeof(string))
-                {
-                    string potentialSearchTerm = (string) prop.GetValue(searchEntity);
-                    if (potentialSearchTerm.HasSearchTerm())
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            string contentOfEntityThatIsEvaluated = (string) prop.GetValue(m);
-                            return contentOfEntityThatIsEvaluated != null &&
-                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
-                        });
-                    }
-                }
-
-                // Handling int or int? Fields with exact match
-                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
-                {
-                    int targetValue = (int?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            int contentOfEntityThatIsEvaluated = (int?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling long (PK, FK) with exact matching
-                //seperate treatment to int is necessary as int can't be castet to long?
-                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
-                {
-                    long targetValue = (long?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            long contentOfEntityThatIsEvaluated = (long?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling DateTime Fields with exact match
-                else if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTime?))
-                {
-                    DateTime? targetValueOrNull = (DateTime?) prop.GetValue(searchEntity);
-                    if (targetValueOrNull == null) continue;
-
-                    DateTime targetValue = (DateTime) targetValueOrNull;
-                    searchResult = searchResult.Where(m =>
-                    {
-                        DateTime? contentOfEntityThatIsEvaluated = (DateTime?) prop.GetValue(m);
-                        return contentOfEntityThatIsEvaluated != null &&
-                               DateTime.Equals((DateTime) contentOfEntityThatIsEvaluated, targetValue);
-                    });
-                }
+                case ServiceState.All:
+                case null:
+                    break;
+                case ServiceState.Pending:
+                    query = query.Where(t => t.Uebergabe == null);
+                    break;
+                case ServiceState.Running:
+                    query = query.Where(t => t.Uebergabe != null && t.Ruecknahme == null);
+                    break;
+                case ServiceState.Completed:
+                    query = query.Where(t => t.Ruecknahme != null); //note: übergabe can't be null if rücknahme is set. class invariant.
+                    break;
+                default:
+                    throw new ArgumentException("Konnte den Service-Status nicht einordnen.");
             }
 
-            return searchResult.ToList();
+            return query.OrderByDescending(t => t.Startdatum).ToList();
+        }
+        
+        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
 
+        private void CheckAndValidate(Reservation r)
+        {
+            CopyInnerDates(r);                  //if pickup or return exists, take those inner dates as reservation dates.
+            EnsureOwnProperty(r);               //checks if vehicle has owner 1
+            EnsureReturnHasPrecedingPickup(r);  //no return if there was no pickup before
+            EnsureStartBeforeEnd(r);            //checks if start < enddate
+            EnsureNoOverlappingReservations(r); //checks ifr already reserved
+            r.Validate();                       //clips properties
         }
 
-
-        //Uebergabe und Ruecknahme
-        public MaschinenUebergabe GetMaschinenUebergabe(long reservationsId)
+        private void EnsureOwnProperty(Reservation r)
         {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Uebergabe)
-                .SingleOrDefault(res => res.Id == reservationsId);
+            Maschine ma = Context.Maschinen.SingleOrDefault(m => m.Id == r.MaschinenId);
 
-            if (r == null)
+            if (ma.BesitzerId != 1)
             {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
+                throw new ReservationException($"Maschine {r.MaschinenId} befindet sich nicht in Eigenbesitz. (Besitzer Id: {ma.BesitzerId})");
             }
-            return r.Uebergabe;
         }
 
-        public MaschinenRuecknahme GetMaschinenRuecknahme(long reservationsId)
+        private void CopyInnerDates(Reservation r)
         {
-            Reservation r = Context.Reservationen
-                .Include(res => res.Ruecknahme)
-                .SingleOrDefault(res => res.Id == reservationsId);
-
-            if (r == null)
+            if (r.Uebergabe != null)
             {
-                throw new ArgumentException($"Reservation {reservationsId} existiert nicht.");
+                r.Startdatum = r.Uebergabe.Datum;
             }
-            return r.Ruecknahme;
+            if (r.Ruecknahme != null)
+            {
+                r.Enddatum = r.Ruecknahme.Datum;
+            }
         }
 
-
-        public Reservation AddUebergabe(MaschinenUebergabe u)
-        { 
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen??? [bitte ja]
-            return GetReservationById(u.ReservationsId);
-        }
-
-        public Reservation AddRuecknahme(MaschinenRuecknahme u)
+        private void EnsureReturnHasPrecedingPickup(Reservation r)
         {
-            Context.Add(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(u.ReservationsId);
+            if (r.Uebergabe == null && r.Ruecknahme != null)
+            {
+                throw new ReservationException("Sie können keine Rückgabe erfassen, wenn es keine Übergabe gibt.");
+            }
         }
 
-        public Reservation UpdateUebergabe(MaschinenUebergabe u)
+        private void EnsureStartBeforeEnd(Reservation r)
         {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(entity.ReservationsId);
+            var start = r.Startdatum;
+            var end = r.Enddatum;
+            if (start > end)
+            {
+                throw new ReservationException("Das Reservations-Startdatum liegt vor dem Enddatum, bzw die Rückgabe ist vor der Abholung.");
+            }
         }
 
-        public Reservation UpdateRuecknahme(MaschinenRuecknahme u)
+        private void EnsureNoOverlappingReservations(Reservation r)
         {
-            var entity = Context.MaschinenUebergaben.Single(ent => ent.Id == u.Id);
-            Context.Entry(entity).CurrentValues.SetValues(u);
-            Context.SaveChanges();
-            //Todo: Frage: Gut hier die Rservation zu returnen???
-            return GetReservationById(u.ReservationsId);
+
+            DateTime wantedStart = r.Startdatum ?? DateTime.Now;
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;   //if there is no reservation end just reserve it "forever"
+            var myAuto = r.MaschinenId;
+            var myReservation = r.Id;
+
+            List<Reservation> reservationes = GetReservationen();
+
+            var reservedDates =
+                from lv in reservationes
+                where lv.MaschinenId == myAuto && lv.Id != myReservation
+                select new
+                {
+                    lv.KundenId,
+                    Von = lv.Startdatum ?? DateTime.Now,
+                    Bis = lv.Enddatum ?? DateTime.MaxValue
+        };
+
+            foreach (var lv in reservedDates)
+            {
+                //ich reserviere, nachdem es jeman anders reserviert hat &&
+                //der andere hat es noch nicht wieder zurückgegeben
+                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
+                {
+
+                    //TOdo: Message verschönern:
+                    //Wer ist Kunde 5? "Bis 12.12.9999 reserviert" <=> "open-end reserviert"
+                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
+                }
+
+            }
+
+
         }
 
     }

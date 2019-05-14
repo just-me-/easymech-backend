@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
+using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common.Exceptions;
-using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -56,7 +57,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new MaschinentypManager();
                     MaschinentypDto maschinentypDto = manager.GetMaschinentypById(id).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<MaschinentypDto>(maschinentypDto);
                 }
                 catch (Exception e)

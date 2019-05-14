@@ -12,15 +12,17 @@ namespace UtilTest
         {
             string s = "bla";
             string r = s.ClipToNChars(128);
-            Assert.AreEqual(s,r);
+            Assert.AreEqual(s, r);
         }
 
         [TestMethod]
         public void TestLong()
         {
-            string s = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567XXXXXXXX";
+            string s =
+                "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567XXXXXXXX";
             //                    10        20        30          40       50        60            70   80         90        100      110       120
-            string e = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+            string e =
+                "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
             string r = s.ClipToNChars(128);
             Assert.AreEqual(e, r);
         }
@@ -28,9 +30,11 @@ namespace UtilTest
         [TestMethod]
         public void TestEdgeCase()
         {
-            string s = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+            string s =
+                "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
             //                    10        20        30          40       50        60            70   80         90        100      110       120
-            string e = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+            string e =
+                "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
             string r = s.ClipToNChars(128);
             Assert.AreEqual(e, r);
         }
@@ -42,6 +46,7 @@ namespace UtilTest
             string r = s.ClipToNChars(128);
             Assert.AreEqual(s, r);
         }
+
         [TestMethod]
         public void TestNull()
         {
@@ -149,4 +154,78 @@ namespace UtilTest
         }
     }
 
+    [TestClass]
+    public class OverlappingDates
+    {
+        [TestMethod]
+        public void NoOverlap()
+        {
+            DateTime a1 = new DateTime(1900, 01, 01);
+            DateTime a2 = new DateTime(1901, 01, 01);
+            DateTime b1 = new DateTime(1902, 01, 01);
+            DateTime b2 = new DateTime(1903, 01, 01);
+            Assert.IsFalse(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void Overlap1()
+        {
+            DateTime a1 = new DateTime(1900, 01, 01);
+            DateTime a2 = new DateTime(1905, 01, 01);
+            DateTime b1 = new DateTime(1902, 01, 01);
+            DateTime b2 = new DateTime(1903, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void Overlap2()
+        {
+            DateTime a1 = new DateTime(1902, 01, 01);
+            DateTime a2 = new DateTime(1903, 01, 01);
+            DateTime b1 = new DateTime(1901, 01, 01);
+            DateTime b2 = new DateTime(1905, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void Overlap3()
+        {
+            DateTime a1 = new DateTime(1900, 01, 01);
+            DateTime a2 = new DateTime(1905, 01, 01);
+            DateTime b1 = new DateTime(1902, 01, 01);
+            DateTime b2 = new DateTime(1908, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void Overlap4()
+        {
+            DateTime a1 = new DateTime(1905, 01, 01);
+            DateTime a2 = new DateTime(1909, 01, 01);
+            DateTime b1 = new DateTime(1902, 01, 01);
+            DateTime b2 = new DateTime(1907, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void OverlapEdgeSameDay_IsTrue()
+        {
+            DateTime a1 = new DateTime(1900, 01, 01);
+            DateTime a2 = new DateTime(1900, 05, 20);
+            DateTime b1 = new DateTime(1900, 05, 20);
+            DateTime b2 = new DateTime(1907, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+        [TestMethod]
+        public void OverlapEdgeSameDay_IsTrue2()
+        {
+            DateTime b1 = new DateTime(1900, 01, 01);
+            DateTime b2 = new DateTime(1900, 05, 20);
+            DateTime a1 = new DateTime(1900, 05, 20);
+            DateTime a2 = new DateTime(1907, 01, 01);
+            Assert.IsTrue(Helpers.Overlap(a1, a2, b1, b2));
+        }
+
+    }
 }

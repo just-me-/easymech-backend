@@ -1,13 +1,26 @@
 
 --Procedure
---Man könnte auch einfach return null statt expection, dann passiert nix, oder man könnte noch spezifisch prüfen ob der Name / IstAktiv geändert wird und anderes Zeug zulassen.
---Procedure änderbar ohne Trigger neu aufzusetzen.
 create or replace function cust1Protector() returns trigger as $$
 begin
-	if (OLD."Id" = 1::bigint)
-	then raise exception 'Kunde 1 kann nicht editiert oder gelöscht werden';
+	if (TG_OP = 'UPDATE') then
+		if (OLD."Id" = 1 and NEW."Firma" != OLD."Firma")
+			then raise exception 'Kunde 1 kann nicht umbenennt werden';
+		end if;
+	
+		if (OLD."Id" = 1 and not NEW."IstAktiv")
+			then raise exception 'Kunde 1 kann nicht inaktiv gesetzt werden';
+		end if;
+		
+		return NEW;
 	end if;
-	return  NEW;
+	
+	if (TG_OP = 'DELETE') then
+		if (OLD."Id" = 1)
+			then raise exception 'Kunde 1 kann nicht aus der Datenbank gelöscht werden';
+		end if;
+		
+		return OLD;
+	end if;
 end;
 $$ language plpgsql;
 

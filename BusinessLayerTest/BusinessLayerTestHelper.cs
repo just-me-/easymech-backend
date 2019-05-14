@@ -16,10 +16,16 @@ namespace BusinessLayerTest
 
             using (var context = new EMContext(options))
             {
+                ReservationManager resManager = new ReservationManager(context);
                 TransaktionManager transaktionManager = new TransaktionManager(context);
                 KundeManager kundeManager = new KundeManager(context);
                 MaschineManager maschineManager = new MaschineManager(context);
                 MaschinentypManager typManager = new MaschinentypManager(context);
+
+                foreach (Reservation r in resManager.GetReservationen())
+                {
+                    context.Remove(r);
+                }
                 foreach (Transaktion t in transaktionManager.GetTransaktionen())
                 {
                     context.Remove(t);
@@ -36,6 +42,7 @@ namespace BusinessLayerTest
                 {
                     context.Remove(typ);
                 }
+
                 context.SaveChanges();
                 Kunde k1 = new Kunde
                 {
@@ -99,7 +106,7 @@ namespace BusinessLayerTest
                     Id = 1,
                     Preis = 50000,
                     Typ = Transaktion.TransaktionsTyp.Einkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 15),
                     MaschinenId = 1,
                     KundenId = 1
                 };
@@ -109,10 +116,34 @@ namespace BusinessLayerTest
                     Id = 2,
                     Preis = 45000,
                     Typ = Transaktion.TransaktionsTyp.Verkauf,
-                    Datum = DateTime.Now,
+                    Datum = new DateTime(2019, 05, 16),
                     MaschinenId = 2,
                     KundenId = 1
                 };
+
+                Reservation r1 = new Reservation
+                {
+                    Id = 1,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2019, 05, 10),
+                    Enddatum =   new DateTime(2019, 05, 12),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                Reservation r2 = new Reservation
+                {
+                    Id = 2,
+                    Standort = "In Tümpel gefahren",
+                    Startdatum = new DateTime(2019, 05, 14),
+                    Enddatum = new DateTime(2019, 05, 16),
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Uebergabe = new MaschinenUebergabe()
+                };
+
+
+
                 context.Add(k1);
                 context.Add(k2);
                 context.Add(t1);
@@ -120,6 +151,8 @@ namespace BusinessLayerTest
                 context.Add(m2);
                 context.Add(startTransaktionEinkauf);
                 context.Add(startTransaktionVerkauf);
+                context.Add(r1);
+                context.Add(r2);
                 context.SaveChanges();
             }
             return options;
