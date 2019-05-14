@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("GeplanterService", Schema = "public")]
     public class Service : IValidatable
     {
-        public enum ServiceStatus { Geplant, InArbeit, Abgeschlossen }
-
         [Key]
         public long Id { get; set; }
 
@@ -20,7 +19,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public DateTime Beginn { get; set; }
         public DateTime Ende { get; set; }
 
-        public ServiceStatus Status { get; set; }
+        public ServiceState Status { get; set; }
 
         [ForeignKey(nameof(MaschinenId))]
         [Required]
