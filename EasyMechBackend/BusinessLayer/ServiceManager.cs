@@ -21,17 +21,17 @@ namespace EasyMechBackend.BusinessLayer
         }
 
 
-        public List<GeplanterService> GetGeplanteServices()
+        public List<Service> GetGeplanteServices()
         {
             var query =
-            from r in Context.GeplanteServices
+            from r in Context.Services
             where r.ServiceDurchfuehrung == null
             orderby r.Beginn descending
             select r;
             return query.ToList();
         }
 
-        public List<GeplanterService> GetDurchgefuehrteServices()
+        public List<Service> GetDurchgefuehrteServices()
         {
             var query =
             from r in Context.GeplanteServices
@@ -41,9 +41,9 @@ namespace EasyMechBackend.BusinessLayer
             return query.ToList();
         }
 
-        public GeplanterService GetGeplanterServiceById(long id)
+        public Service GetGeplanterServiceById(long id)
         {
-            GeplanterService r = Context.GeplanteServices.SingleOrDefault(res => res.Id == id);
+            Service r = Context.GeplanteServices.SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
                 throw new InvalidOperationException($"GeplanterService with id {id} is not in database");
@@ -51,7 +51,7 @@ namespace EasyMechBackend.BusinessLayer
             return r;
         }
 
-        public GeplanterService AddGeplanterService(GeplanterService s)
+        public Service AddGeplanterService(Service s)
         {
             s.Validate();
             Context.Add(s);
@@ -59,7 +59,7 @@ namespace EasyMechBackend.BusinessLayer
             return s;
         }
 
-        public GeplanterService UpdateGeplanterService(GeplanterService s)
+        public Service UpdateGeplanterService(Service s)
         {
             s.Validate();
             var entity = Context.GeplanteServices.Single(res => res.Id == s.Id);
@@ -69,18 +69,18 @@ namespace EasyMechBackend.BusinessLayer
         }
 
 
-        public void DeleteGeplanterService(GeplanterService s)
+        public void DeleteGeplanterService(Service s)
         {
             Context.Remove(s);
             Context.SaveChanges();
         }
 
-        public List<GeplanterService> GetSearchResult(GeplanterService searchEntity)
+        public List<Service> GetSearchResult(Service searchEntity)
         {
 
-            List<GeplanterService> allEntities = GetGeplanteServices();
-            IEnumerable<GeplanterService> searchResult = allEntities;
-            PropertyInfo[] props = typeof(GeplanterService).GetProperties();
+            List<Service> allEntities = GetGeplanteServices();
+            IEnumerable<Service> searchResult = allEntities;
+            PropertyInfo[] props = typeof(Service).GetProperties();
 
             foreach (var prop in props)
             {

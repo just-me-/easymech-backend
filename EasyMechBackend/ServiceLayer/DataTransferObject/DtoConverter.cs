@@ -327,11 +327,11 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         #endregion
 
         #region Service
-        public static GeplanterService ConvertToEntity(this GeplanterServiceDto dto)
+        public static Service ConvertToEntity(this GeplanterServiceDto dto)
         {
             if (dto == null) { return null; }
 
-            GeplanterService t = new GeplanterService
+            Service t = new Service
             {
                 Id = dto.Id,
                 MaschinenId = dto.MaschinenId,
@@ -344,7 +344,7 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             return t;
         }
 
-        public static GeplanterServiceDto ConvertToDto(this GeplanterService entity)
+        public static GeplanterServiceDto ConvertToDto(this Service entity)
         {
             if (entity == null) { return null; }
 
@@ -361,11 +361,11 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             return dto;
         }
 
-        public static List<GeplanterService> ConvertToEntities(this IEnumerable<GeplanterServiceDto> dtos)
+        public static List<Service> ConvertToEntities(this IEnumerable<GeplanterServiceDto> dtos)
         {
             return ConvertGenericList(dtos, ConvertToEntity);
         }
-        public static List<GeplanterServiceDto> ConvertToDtos(this IEnumerable<GeplanterService> entities)
+        public static List<GeplanterServiceDto> ConvertToDtos(this IEnumerable<Service> entities)
         {
             return ConvertGenericList(entities, ConvertToDto);
         }

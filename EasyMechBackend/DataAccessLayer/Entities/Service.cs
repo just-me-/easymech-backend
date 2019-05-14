@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("GeplanterService", Schema = "public")]
-    public class GeplanterService : EntityWithValidate
+    public class Service : EntityWithValidate
     {
+        public enum ServiceStatus { Geplant, InArbeit, Abgeschlossen }
+
         [Key]
         public long Id { get; set; }
 
@@ -16,6 +18,8 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         public DateTime Beginn { get; set; }
         public DateTime Ende { get; set; }
+
+        public ServiceStatus Status { get; set; }
 
         [ForeignKey(nameof(MaschinenId))]
         [Required]
@@ -26,7 +30,8 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public Kunde Kunde { get; set; }
         public long KundenId { get; set; }
 
-        public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
+        public List<Materialposten> Materialposten { get; set; }
+        public List<Arbeitsschritt> Arbeitsschritte { get; set; }
 
         protected override void ClipProps()
         {
@@ -38,6 +43,4 @@ namespace EasyMechBackend.DataAccessLayer.Entities
             throw new NotImplementedException();
         }
     }
-
-
 }

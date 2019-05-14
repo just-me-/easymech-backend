@@ -12,7 +12,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         [ForeignKey(nameof(GeplanterServiceId))]
         [Required]
-        public GeplanterService GeplanterService { get; set; }
+        public Service GeplanterService { get; set; }
         public long GeplanterServiceId { get; set; }
 
         public List<Materialposten> Materialposten { get; set; }

@@ -22,7 +22,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         public List<Transaktion> Transaktionen { get; set; }
 
-        public List<GeplanterService> GeplanteServices { get; set; }
+        public List<Service> GeplanteServices { get; set; }
 
     }
 }
