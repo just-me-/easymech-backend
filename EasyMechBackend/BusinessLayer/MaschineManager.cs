@@ -43,6 +43,13 @@ namespace EasyMechBackend.BusinessLayer
         public Maschine AddMaschine(Maschine m)
         {
             m.Validate();
+            if (IsRestoreOperation(m))
+            {
+                long id = Context.Maschinen.First(c => c.Seriennummer == m.Seriennummer).Id;
+                m.Id = id;
+                m.IstAktiv = true;
+                return UpdateMaschine(m);
+            }
             EnsureUniqueness(m);
             Context.Add(m);
             Context.SaveChanges();
@@ -145,6 +152,15 @@ namespace EasyMechBackend.BusinessLayer
             {
                 throw new UniquenessException($"Die Maschinen-Seriennummer {m.Seriennummer} ist bereits im System registriert.");
             }
+        }
+
+        private bool IsRestoreOperation(Maschine m)
+        {
+            var query = from laufvar in Context.Maschinen
+                where laufvar.Seriennummer == m.Seriennummer
+                where !(laufvar.IstAktiv ?? true)
+                select m;
+            return query.Any();
         }
     }
 }
