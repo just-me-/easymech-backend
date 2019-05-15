@@ -327,45 +327,98 @@ namespace EasyMechBackend.Common.DataTransferObject
         public static Service ConvertToEntity(this ServiceDto dto)
         {
             if (dto == null) { return null; }
+            List<Arbeitsschritt> arbeitsschritte = new List<Arbeitsschritt>();
+            List<Materialposten> materialposten = new List<Materialposten>();
+            foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
+            {
+                Arbeitsschritt a = new Arbeitsschritt
+                {
+                    Id = aDto.Id,
+                    Bezeichnung = aDto.Bezeichnung,
+                    Stundenansatz = aDto.Stundenansatz,
+                    Arbeitsstunden = aDto.Arbeitsstunden,
+                    ServiceId = aDto.ServiceId
+                };
+                arbeitsschritte.Add(a);
+            }
+            foreach (MaterialpostenDto mDto in dto.Materialposten)
+            {
+                Materialposten m = new Materialposten
+                {
+                    Id = mDto.Id,
+                    Bezeichnung = mDto.Bezeichnung,
+                    Stueckpreis = mDto.Stueckpreis,
+                    Anzahl = mDto.Anzahl,
+                    ServiceId = mDto.ServiceId
+                };
+                materialposten.Add(m);
+            }
 
-            Reservation t = new Reservation
+            Service t = new Service
             {
                 Id = dto.Id,
+                Bezeichnung = dto.Bezeichnung,
+                Beginn = dto.Beginn,
+                Ende = dto.Ende,
+                Status = dto.Status,
                 MaschinenId = dto.MaschinenId,
                 KundenId = dto.KundenId,
-                Startdatum = dto.Startdatum,
-                Enddatum = dto.Enddatum,
-                Ruecknahme = dto.Ruecknahme.ConvertToEntity(),
-                Uebergabe = dto.Uebergabe.ConvertToEntity(),
-                Standort = dto.Standort
+                Materialposten = materialposten,
+                Arbeitsschritte = arbeitsschritte
             };
             return t;
         }
 
-        public static ReservationDto ConvertToDto(this Reservation entity)
+        public static ServiceDto ConvertToDto(this Service entity)
         {
             if (entity == null) { return null; }
+            List<ArbeitsschrittDto> arbeitsschritte = new List<ArbeitsschrittDto>();
+            List<MaterialpostenDto> materialposten = new List<MaterialpostenDto>();
+            foreach (Arbeitsschritt a in entity.Arbeitsschritte)
+            {
+                ArbeitsschrittDto aDto = new ArbeitsschrittDto
+                {
+                    Id = a.Id,
+                    Bezeichnung = a.Bezeichnung,
+                    Stundenansatz = a.Stundenansatz,
+                    Arbeitsstunden = a.Arbeitsstunden,
+                    ServiceId = a.ServiceId
+                };
+                arbeitsschritte.Add(aDto);
+            }
+            foreach (Materialposten m in entity.Materialposten)
+            {
+                MaterialpostenDto mDto = new MaterialpostenDto
+                {
+                    Id = m.Id,
+                    Bezeichnung = m.Bezeichnung,
+                    Stueckpreis = m.Stueckpreis,
+                    Anzahl = m.Anzahl,
+                    ServiceId = m.ServiceId
+                };
+                materialposten.Add(mDto);
+            }
 
-            ReservationDto dto = new ReservationDto
+            ServiceDto s = new ServiceDto
             {
                 Id = entity.Id,
+                Bezeichnung = entity.Bezeichnung,
+                Beginn = entity.Beginn,
+                Ende = entity.Ende,
+                Status = entity.Status,
                 MaschinenId = entity.MaschinenId,
                 KundenId = entity.KundenId,
-                Startdatum = entity.Startdatum,
-                Enddatum = entity.Enddatum,
-                Ruecknahme = entity.Ruecknahme.ConvertToDto(),
-                Uebergabe = entity.Uebergabe.ConvertToDto(),
-                Standort = entity.Standort
+                Materialposten = materialposten,
+                Arbeitsschritte = arbeitsschritte
             };
-
-            return dto;
+            return s;
         }
 
-        public static List<Reservation> ConvertToEntities(this IEnumerable<ReservationDto> dtos)
+        public static List<Service> ConvertToEntities(this IEnumerable<ServiceDto> dtos)
         {
             return ConvertGenericList(dtos, ConvertToEntity);
         }
-        public static List<ReservationDto> ConvertToDtos(this IEnumerable<Reservation> entities)
+        public static List<ServiceDto> ConvertToDtos(this IEnumerable<Service> entities)
         {
             return ConvertGenericList(entities, ConvertToDto);
         }
