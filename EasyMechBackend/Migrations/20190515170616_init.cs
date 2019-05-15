@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EasyMechBackend.Migrations
 {
-    public partial class datum_obligatorisch_bei_rueckuebergae : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -94,38 +94,6 @@ namespace EasyMechBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GeplanterService",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Bezeichnung = table.Column<string>(maxLength: 128, nullable: true),
-                    Beginn = table.Column<DateTime>(nullable: false),
-                    Ende = table.Column<DateTime>(nullable: false),
-                    MaschinenId = table.Column<long>(nullable: false),
-                    KundenId = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GeplanterService", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GeplanterService_Kunden_KundenId",
-                        column: x => x.KundenId,
-                        principalSchema: "public",
-                        principalTable: "Kunden",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GeplanterService_Maschine_MaschinenId",
-                        column: x => x.MaschinenId,
-                        principalSchema: "public",
-                        principalTable: "Maschine",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Reservationen",
                 schema: "public",
                 columns: table => new
@@ -150,6 +118,39 @@ namespace EasyMechBackend.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reservationen_Maschine_MaschinenId",
+                        column: x => x.MaschinenId,
+                        principalSchema: "public",
+                        principalTable: "Maschine",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Bezeichnung = table.Column<string>(maxLength: 128, nullable: true),
+                    Beginn = table.Column<DateTime>(nullable: false),
+                    Ende = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    MaschinenId = table.Column<long>(nullable: false),
+                    KundenId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Kunden_KundenId",
+                        column: x => x.KundenId,
+                        principalSchema: "public",
+                        principalTable: "Kunden",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Services_Maschine_MaschinenId",
                         column: x => x.MaschinenId,
                         principalSchema: "public",
                         principalTable: "Maschine",
@@ -185,27 +186,6 @@ namespace EasyMechBackend.Migrations
                         column: x => x.MaschinenId,
                         principalSchema: "public",
                         principalTable: "Maschine",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceDurchfuehrung",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    GeplanterServiceId = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceDurchfuehrung", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServiceDurchfuehrung_GeplanterService_GeplanterServiceId",
-                        column: x => x.GeplanterServiceId,
-                        principalSchema: "public",
-                        principalTable: "GeplanterService",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -257,7 +237,7 @@ namespace EasyMechBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Arbeitsschritt",
+                name: "Arbeitsschritte",
                 schema: "public",
                 columns: table => new
                 {
@@ -266,16 +246,16 @@ namespace EasyMechBackend.Migrations
                     Bezeichnung = table.Column<string>(maxLength: 256, nullable: true),
                     Stundenansatz = table.Column<double>(nullable: true),
                     Arbeitsstunden = table.Column<double>(nullable: true),
-                    ServiceDurchfuehrungId = table.Column<long>(nullable: false)
+                    ServiceId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Arbeitsschritt", x => x.Id);
+                    table.PrimaryKey("PK_Arbeitsschritte", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Arbeitsschritt_ServiceDurchfuehrung_ServiceDurchfuehrungId",
-                        column: x => x.ServiceDurchfuehrungId,
+                        name: "FK_Arbeitsschritte_Services_ServiceId",
+                        column: x => x.ServiceId,
                         principalSchema: "public",
-                        principalTable: "ServiceDurchfuehrung",
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -290,37 +270,25 @@ namespace EasyMechBackend.Migrations
                     Stueckpreis = table.Column<double>(nullable: false),
                     Anzahl = table.Column<int>(nullable: false),
                     Bezeichnung = table.Column<string>(maxLength: 256, nullable: true),
-                    ServiceDurchfuehrungId = table.Column<long>(nullable: false)
+                    ServiceId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Materialposten", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Materialposten_ServiceDurchfuehrung_ServiceDurchfuehrungId",
-                        column: x => x.ServiceDurchfuehrungId,
+                        name: "FK_Materialposten_Services_ServiceId",
+                        column: x => x.ServiceId,
                         principalSchema: "public",
-                        principalTable: "ServiceDurchfuehrung",
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Arbeitsschritt_ServiceDurchfuehrungId",
+                name: "IX_Arbeitsschritte_ServiceId",
                 schema: "public",
-                table: "Arbeitsschritt",
-                column: "ServiceDurchfuehrungId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GeplanterService_KundenId",
-                schema: "public",
-                table: "GeplanterService",
-                column: "KundenId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GeplanterService_MaschinenId",
-                schema: "public",
-                table: "GeplanterService",
-                column: "MaschinenId");
+                table: "Arbeitsschritte",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Maschine_BesitzerId",
@@ -349,10 +317,10 @@ namespace EasyMechBackend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materialposten_ServiceDurchfuehrungId",
+                name: "IX_Materialposten_ServiceId",
                 schema: "public",
                 table: "Materialposten",
-                column: "ServiceDurchfuehrungId");
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservationen_KundenId",
@@ -367,11 +335,16 @@ namespace EasyMechBackend.Migrations
                 column: "MaschinenId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceDurchfuehrung_GeplanterServiceId",
+                name: "IX_Services_KundenId",
                 schema: "public",
-                table: "ServiceDurchfuehrung",
-                column: "GeplanterServiceId",
-                unique: true);
+                table: "Services",
+                column: "KundenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_MaschinenId",
+                schema: "public",
+                table: "Services",
+                column: "MaschinenId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaktionen_KundenId",
@@ -389,7 +362,7 @@ namespace EasyMechBackend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Arbeitsschritt",
+                name: "Arbeitsschritte",
                 schema: "public");
 
             migrationBuilder.DropTable(
@@ -413,11 +386,7 @@ namespace EasyMechBackend.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "ServiceDurchfuehrung",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "GeplanterService",
+                name: "Services",
                 schema: "public");
 
             migrationBuilder.DropTable(

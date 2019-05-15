@@ -1,6 +1,7 @@
 ﻿using System;
+using static EasyMechBackend.Common.EnumHelper;
 
-namespace EasyMechBackend.Common.DataTransferObject
+namespace EasyMechBackend.Common
 {
     public class ServiceSearchDto
     {
@@ -11,6 +12,4 @@ namespace EasyMechBackend.Common.DataTransferObject
         public long? KundenId { get; set; }
         public ServiceState? Status { get; set; }
     }
-
-    public enum ServiceState { All = 0, Pending = 1, Running = 2, Completed = 3}
 }

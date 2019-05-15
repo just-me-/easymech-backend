@@ -41,7 +41,7 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         public ICollection<Transaktion> Transaktionen { get; set; }
         public ICollection<Reservation> Reservationen { get; set; }
-        public ICollection<GeplanterService> Services { get; set; }
+        public ICollection<Service> Services { get; set; }
 
 
         public void Validate()

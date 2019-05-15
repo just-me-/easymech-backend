@@ -323,7 +323,107 @@ namespace EasyMechBackend.Common.DataTransferObject
         }
 
         #endregion
-        
+        #region Service
+        public static Service ConvertToEntity(this ServiceDto dto)
+        {
+            if (dto == null) { return null; }
+            List<Arbeitsschritt> arbeitsschritte = new List<Arbeitsschritt>();
+            List<Materialposten> materialposten = new List<Materialposten>();
+            foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
+            {
+                Arbeitsschritt a = new Arbeitsschritt
+                {
+                    Id = aDto.Id,
+                    Bezeichnung = aDto.Bezeichnung,
+                    Stundenansatz = aDto.Stundenansatz,
+                    Arbeitsstunden = aDto.Arbeitsstunden,
+                    ServiceId = aDto.ServiceId
+                };
+                arbeitsschritte.Add(a);
+            }
+            foreach (MaterialpostenDto mDto in dto.Materialposten)
+            {
+                Materialposten m = new Materialposten
+                {
+                    Id = mDto.Id,
+                    Bezeichnung = mDto.Bezeichnung,
+                    Stueckpreis = mDto.Stueckpreis,
+                    Anzahl = mDto.Anzahl,
+                    ServiceId = mDto.ServiceId
+                };
+                materialposten.Add(m);
+            }
+
+            Service t = new Service
+            {
+                Id = dto.Id,
+                Bezeichnung = dto.Bezeichnung,
+                Beginn = dto.Beginn,
+                Ende = dto.Ende,
+                Status = dto.Status,
+                MaschinenId = dto.MaschinenId,
+                KundenId = dto.KundenId,
+                Materialposten = materialposten,
+                Arbeitsschritte = arbeitsschritte
+            };
+            return t;
+        }
+
+        public static ServiceDto ConvertToDto(this Service entity)
+        {
+            if (entity == null) { return null; }
+            List<ArbeitsschrittDto> arbeitsschritte = new List<ArbeitsschrittDto>();
+            List<MaterialpostenDto> materialposten = new List<MaterialpostenDto>();
+            foreach (Arbeitsschritt a in entity.Arbeitsschritte)
+            {
+                ArbeitsschrittDto aDto = new ArbeitsschrittDto
+                {
+                    Id = a.Id,
+                    Bezeichnung = a.Bezeichnung,
+                    Stundenansatz = a.Stundenansatz,
+                    Arbeitsstunden = a.Arbeitsstunden,
+                    ServiceId = a.ServiceId
+                };
+                arbeitsschritte.Add(aDto);
+            }
+            foreach (Materialposten m in entity.Materialposten)
+            {
+                MaterialpostenDto mDto = new MaterialpostenDto
+                {
+                    Id = m.Id,
+                    Bezeichnung = m.Bezeichnung,
+                    Stueckpreis = m.Stueckpreis,
+                    Anzahl = m.Anzahl,
+                    ServiceId = m.ServiceId
+                };
+                materialposten.Add(mDto);
+            }
+
+            ServiceDto s = new ServiceDto
+            {
+                Id = entity.Id,
+                Bezeichnung = entity.Bezeichnung,
+                Beginn = entity.Beginn,
+                Ende = entity.Ende,
+                Status = entity.Status,
+                MaschinenId = entity.MaschinenId,
+                KundenId = entity.KundenId,
+                Materialposten = materialposten,
+                Arbeitsschritte = arbeitsschritte
+            };
+            return s;
+        }
+
+        public static List<Service> ConvertToEntities(this IEnumerable<ServiceDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<ServiceDto> ConvertToDtos(this IEnumerable<Service> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+        #endregion
+
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {
             if (source == null) { return null; }

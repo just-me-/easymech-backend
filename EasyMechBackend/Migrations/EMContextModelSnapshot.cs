@@ -29,40 +29,15 @@ namespace EasyMechBackend.Migrations
                     b.Property<string>("Bezeichnung")
                         .HasMaxLength(256);
 
-                    b.Property<long>("ServiceDurchfuehrungId");
+                    b.Property<long>("ServiceId");
 
                     b.Property<double?>("Stundenansatz");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceDurchfuehrungId");
+                    b.HasIndex("ServiceId");
 
-                    b.ToTable("Arbeitsschritt","public");
-                });
-
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.GeplanterService", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Beginn");
-
-                    b.Property<string>("Bezeichnung")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime>("Ende");
-
-                    b.Property<long>("KundenId");
-
-                    b.Property<long>("MaschinenId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KundenId");
-
-                    b.HasIndex("MaschinenId");
-
-                    b.ToTable("GeplanterService","public");
+                    b.ToTable("Arbeitsschritte","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Kunde", b =>
@@ -222,13 +197,13 @@ namespace EasyMechBackend.Migrations
                     b.Property<string>("Bezeichnung")
                         .HasMaxLength(256);
 
-                    b.Property<long>("ServiceDurchfuehrungId");
+                    b.Property<long>("ServiceId");
 
                     b.Property<double>("Stueckpreis");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceDurchfuehrungId");
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("Materialposten","public");
                 });
@@ -258,19 +233,31 @@ namespace EasyMechBackend.Migrations
                     b.ToTable("Reservationen","public");
                 });
 
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.ServiceDurchfuehrung", b =>
+            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Service", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("GeplanterServiceId");
+                    b.Property<DateTime>("Beginn");
+
+                    b.Property<string>("Bezeichnung")
+                        .HasMaxLength(128);
+
+                    b.Property<DateTime>("Ende");
+
+                    b.Property<long>("KundenId");
+
+                    b.Property<long>("MaschinenId");
+
+                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeplanterServiceId")
-                        .IsUnique();
+                    b.HasIndex("KundenId");
 
-                    b.ToTable("ServiceDurchfuehrung","public");
+                    b.HasIndex("MaschinenId");
+
+                    b.ToTable("Services","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Transaktion", b =>
@@ -299,22 +286,9 @@ namespace EasyMechBackend.Migrations
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Arbeitsschritt", b =>
                 {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.ServiceDurchfuehrung", "ServiceDurchfuehrung")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Service", "Service")
                         .WithMany("Arbeitsschritte")
-                        .HasForeignKey("ServiceDurchfuehrungId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.GeplanterService", b =>
-                {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Kunde", "Kunde")
-                        .WithMany("Services")
-                        .HasForeignKey("KundenId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Maschine", "Maschine")
-                        .WithMany("Services")
-                        .HasForeignKey("MaschinenId")
+                        .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -349,9 +323,9 @@ namespace EasyMechBackend.Migrations
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Materialposten", b =>
                 {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.ServiceDurchfuehrung", "ServiceDurchfuehrung")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Service", "Service")
                         .WithMany("Materialposten")
-                        .HasForeignKey("ServiceDurchfuehrungId")
+                        .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -367,11 +341,16 @@ namespace EasyMechBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.ServiceDurchfuehrung", b =>
+            modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Service", b =>
                 {
-                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.GeplanterService", "GeplanterService")
-                        .WithOne("ServiceDurchfuehrung")
-                        .HasForeignKey("EasyMechBackend.DataAccessLayer.Entities.ServiceDurchfuehrung", "GeplanterServiceId")
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Kunde", "Kunde")
+                        .WithMany("Services")
+                        .HasForeignKey("KundenId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EasyMechBackend.DataAccessLayer.Entities.Maschine", "Maschine")
+                        .WithMany("Services")
+                        .HasForeignKey("MaschinenId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
