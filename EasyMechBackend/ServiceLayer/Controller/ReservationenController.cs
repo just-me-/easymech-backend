@@ -10,6 +10,7 @@ using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common.Exceptions;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
+using EasyMechBackend.Common;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 

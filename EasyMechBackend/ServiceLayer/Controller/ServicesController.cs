@@ -10,6 +10,8 @@ using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using static EasyMechBackend.Common.EnumHelper;
+using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common.DataTransferObject.DTOs;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -26,9 +28,9 @@ namespace EasyMechBackend.ServiceLayer.Controller
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
-        // GET: /Services
+        // GET: /Services/0
         [HttpGet("{status}")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<GeplanterServiceDto>>>> GetServices(ServiceState status)
+        public async Task<ActionResult<ResponseObject<IEnumerable<ServiceDto>>>> GetServices(ServiceState status)
         {
             var task = Task.Run(() =>
             {
@@ -36,14 +38,14 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new ServiceManager();
                     var dtos = manager.GetServices(status).ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<GeplanterServiceDto>>(dtos);
+                    var response = new ResponseObject<IEnumerable<ServiceDto>>(dtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<GeplanterServiceDto>>(e.Message, ErrorCode.General);
+                    return new ResponseObject<IEnumerable<ServiceDto>>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -51,52 +53,52 @@ namespace EasyMechBackend.ServiceLayer.Controller
         }
 
 
-        // GET: /Services/2
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseObject<GeplanterServiceDto>>> GetServiceById(long id)
+        // GET: /Services/id/2
+        [HttpGet("id/{id}")]
+        public async Task<ActionResult<ResponseObject<ServiceDto>>> GetServiceById(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new ServiceManager();
-                    var dto = manager.GetGeplanterServiceById(id).ConvertToDto();
+                    var dto = manager.GetServiceById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
-                    return new ResponseObject<GeplanterServiceDto>(dto);
+                    return new ResponseObject<ServiceDto>(dto);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message, ErrorCode.General);
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.General);
                 }
             });
 
             return await task;
         }
 
-        // POST: /services/geplant
-        [HttpPost("geplant")]
-        public async Task<ActionResult<ResponseObject<GeplanterServiceDto>>> AddGeplanterService(GeplanterServiceDto toAddDto)
+        // POST: /services
+        [HttpPost]
+        public async Task<ActionResult<ResponseObject<ServiceDto>>> AddService(ServiceDto toAddDto)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new ServiceManager();
-                    GeplanterServiceDto addedDto = manager.AddGeplanterService(toAddDto.ConvertToEntity()).ConvertToDto();
+                    ServiceDto addedDto = manager.AddService(toAddDto.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: GeplanterService {addedDto.Id} added");
-                    return new ResponseObject<GeplanterServiceDto>(addedDto);
+                    return new ResponseObject<ServiceDto>(addedDto);
 
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<GeplanterServiceDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<ServiceDto>("DB Update Exception: " + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message, ErrorCode.General);
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.General);
                 }
             });
 
@@ -105,31 +107,31 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // PUT: services/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseObject<GeplanterServiceDto>>> UpdateService(long id, GeplanterServiceDto toEditDto)        {
-
+        public async Task<ActionResult<ResponseObject<ServiceDto>>> UpdateService(long id, ServiceDto toEditDto)
+        {
             var task = Task.Run(() =>
             {
                 try
                 {
                     if (id != toEditDto.Id)
                     {
-                        return new ResponseObject<GeplanterServiceDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
+                        return new ResponseObject<ServiceDto>("ID in URL does not match ID in the request's body data", ErrorCode.IDMismatch);
                     }
                     var manager = new ServiceManager();
-                    var editedDto = manager.UpdateGeplanterService(toEditDto.ConvertToEntity()).ConvertToDto();
+                    var editedDto = manager.UpdateService(toEditDto.ConvertToEntity()).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: GeplanterService {id} updated");
-                    return new ResponseObject<GeplanterServiceDto>(editedDto);
+                    return new ResponseObject<ServiceDto>(editedDto);
                 }
 
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<ServiceDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message, ErrorCode.General);
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.General);
                 }
 
             });
@@ -139,27 +141,27 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // DELETE: services/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseObject<GeplanterServiceDto>>> DeleteGeplanterService(long id)
+        public async Task<ActionResult<ResponseObject<ServiceDto>>> DeleteService(long id)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new ServiceManager();
-                    var entity = manager.GetGeplanterServiceById(id);
-                    manager.DeleteGeplanterService(entity);
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
-                    return new ResponseObject<GeplanterServiceDto>(null, OKTAG, $"Removed GeplanterService {id} from database", 0);
+                    var entity = manager.GetServiceById(id);
+                    manager.DeleteService(entity);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Delete Service with id {id} ");
+                    return new ResponseObject<ServiceDto>(null, OKTAG, $"Removed Service {id} from database", 0);
                 }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
+                    return new ResponseObject<ServiceDto>(e.Message + e.InnerException.Message, ErrorCode.DBUpdate);
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<GeplanterServiceDto>(e.Message, ErrorCode.General);
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.General);
                 }
             });
             return await task;
@@ -169,7 +171,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // POST: services/suchen
         [HttpPost("suchen")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<GeplanterServiceDto>>>> GetSearchResult(GeplanterServiceDto dto)
+        public async Task<ActionResult<ResponseObject<IEnumerable<ServiceDto>>>> GetSearchResult(ServiceDto dto)
         {
             var task = Task.Run(() =>
             {
@@ -177,14 +179,14 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new ServiceManager();
                     var dtos = manager.GetSearchResult(dto.ConvertToEntity()).ConvertToDtos();
-                    var response = new ResponseObject<IEnumerable<GeplanterServiceDto>>(dtos);
+                    var response = new ResponseObject<IEnumerable<ServiceDto>>(dtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;
                 }
                 catch (Exception e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
-                    return new ResponseObject<IEnumerable<GeplanterServiceDto>>(e.Message, ErrorCode.General);
+                    return new ResponseObject<IEnumerable<ServiceDto>>(e.Message, ErrorCode.General);
                 }
             });
 
