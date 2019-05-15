@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
-using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
+using EasyMechBackend.Common;
+using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
 {
