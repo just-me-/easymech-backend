@@ -58,16 +58,18 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
 
         [HttpGet("log")]
-        public void GetLog()
+        public async Task<FileResult> GetLog()
         {
-
-            Response.ContentType = "text/plain";
-            IFileInfo file = new PhysicalFileInfo(new FileInfo("easymech.log"));
-            Response.SendFileAsync(file);
+            var task = Task.Run(() =>
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes("easymech.log");
+                return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, "log.txt");
+            });
+            return await task;
         }
 
-        [HttpGet("logAlt")]
-        public ActionResult GetLogAlt()
+        [HttpGet("log2")]
+        public ActionResult GetLog2()
         {
 
             using (var fileStream = new FileStream("easymech.log", FileMode.Open, FileAccess.Read))
@@ -84,6 +86,15 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
 
             }
+        }
+
+        [HttpGet("log3")]
+        public void GetLog3()
+        {
+
+            Response.ContentType = "text/plain";
+            IFileInfo file = new PhysicalFileInfo(new FileInfo("easymech.log"));
+            Response.SendFileAsync(file);
         }
 
     }
