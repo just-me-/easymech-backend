@@ -14,13 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\**" />
     <Compile Remove="wwwroot\**" />
-    <Content Remove="Migrations\**" />
     <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="Migrations\**" />
     <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="Migrations\**" />
     <None Remove="wwwroot\**" />
   </ItemGroup>
 

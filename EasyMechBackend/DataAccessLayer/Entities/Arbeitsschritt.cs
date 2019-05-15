@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EasyMechBackend.Util;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
-    [Table("Arbeitsschritt", Schema = "public")]
-    public class Arbeitsschritt
+    [Table("Arbeitsschritte", Schema = "public")]
+    public class Arbeitsschritt : IValidatable
     {
         [Key]
         public long Id { get; set; }        
@@ -19,5 +20,10 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [ForeignKey(nameof(ServiceId))]
         [Required]
         public Service Service { get; set; }
+
+        public void Validate()
+        {
+            Bezeichnung = Bezeichnung.ClipToNChars(256);
+        }
     }
 }

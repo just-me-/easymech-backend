@@ -35,7 +35,7 @@ namespace EasyMechBackend.BusinessLayer
             Service r = Context.Services.SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
-                throw new InvalidOperationException($"GeplanterService with id {id} is not in database");
+                throw new InvalidOperationException($"Service with id {id} is not in database");
             }
             return r;
         }

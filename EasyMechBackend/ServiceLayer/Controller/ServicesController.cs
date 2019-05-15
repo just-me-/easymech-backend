@@ -83,7 +83,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 {
                     var manager = new ServiceManager();
                     ServiceDto addedDto = manager.AddService(toAddDto.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: GeplanterService {addedDto.Id} added");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Service {addedDto.Id} added");
                     return new ResponseObject<ServiceDto>(addedDto);
 
                 }
@@ -116,7 +116,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     }
                     var manager = new ServiceManager();
                     var editedDto = manager.UpdateService(toEditDto.ConvertToEntity()).ConvertToDto();
-                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: GeplanterService {id} updated");
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Service {id} updated");
                     return new ResponseObject<ServiceDto>(editedDto);
                 }
 

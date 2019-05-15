@@ -7,7 +7,7 @@ using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
-    [Table("GeplanterService", Schema = "public")]
+    [Table("Services", Schema = "public")]
     public class Service : IValidatable
     {
         [Key]
