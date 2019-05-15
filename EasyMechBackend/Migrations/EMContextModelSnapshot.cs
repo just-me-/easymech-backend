@@ -37,7 +37,7 @@ namespace EasyMechBackend.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Arbeitsschritt","public");
+                    b.ToTable("Arbeitsschritte","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Kunde", b =>
@@ -257,7 +257,7 @@ namespace EasyMechBackend.Migrations
 
                     b.HasIndex("MaschinenId");
 
-                    b.ToTable("GeplanterService","public");
+                    b.ToTable("Services","public");
                 });
 
             modelBuilder.Entity("EasyMechBackend.DataAccessLayer.Entities.Transaktion", b =>
