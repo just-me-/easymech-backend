@@ -18,10 +18,10 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [MaxLength(256)]
         public string Bezeichnung { get; set; }
 
-        public long ServiceDurchfuehrungId { get; set; }
-        [ForeignKey(nameof(ServiceDurchfuehrungId))]
+        public long ServiceId { get; set; }
+        [ForeignKey(nameof(ServiceId))]
         [Required]
-        public ServiceDurchfuehrung ServiceDurchfuehrung { get; set; }
+        public Service Service { get; set; }
 
     }
 

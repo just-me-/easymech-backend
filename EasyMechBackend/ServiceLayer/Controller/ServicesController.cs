@@ -9,6 +9,7 @@ using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.ServiceLayer.DataTransferObject.DTOs;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
+using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -26,15 +27,15 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
 
         // GET: /Services
-        [HttpGet]
-        public async Task<ActionResult<ResponseObject<IEnumerable<GeplanterServiceDto>>>> GetServices()
+        [HttpGet("{status}")]
+        public async Task<ActionResult<ResponseObject<IEnumerable<GeplanterServiceDto>>>> GetServices(ServiceState status)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new ServiceManager();
-                    var dtos = manager.GetGeplanteServices().ConvertToDtos();
+                    var dtos = manager.GetServices(status).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<GeplanterServiceDto>>(dtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;

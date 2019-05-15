@@ -323,7 +323,54 @@ namespace EasyMechBackend.Common.DataTransferObject
         }
 
         #endregion
-        
+        #region Service
+        public static Service ConvertToEntity(this ServiceDto dto)
+        {
+            if (dto == null) { return null; }
+
+            Reservation t = new Reservation
+            {
+                Id = dto.Id,
+                MaschinenId = dto.MaschinenId,
+                KundenId = dto.KundenId,
+                Startdatum = dto.Startdatum,
+                Enddatum = dto.Enddatum,
+                Ruecknahme = dto.Ruecknahme.ConvertToEntity(),
+                Uebergabe = dto.Uebergabe.ConvertToEntity(),
+                Standort = dto.Standort
+            };
+            return t;
+        }
+
+        public static ReservationDto ConvertToDto(this Reservation entity)
+        {
+            if (entity == null) { return null; }
+
+            ReservationDto dto = new ReservationDto
+            {
+                Id = entity.Id,
+                MaschinenId = entity.MaschinenId,
+                KundenId = entity.KundenId,
+                Startdatum = entity.Startdatum,
+                Enddatum = entity.Enddatum,
+                Ruecknahme = entity.Ruecknahme.ConvertToDto(),
+                Uebergabe = entity.Uebergabe.ConvertToDto(),
+                Standort = entity.Standort
+            };
+
+            return dto;
+        }
+
+        public static List<Reservation> ConvertToEntities(this IEnumerable<ReservationDto> dtos)
+        {
+            return ConvertGenericList(dtos, ConvertToEntity);
+        }
+        public static List<ReservationDto> ConvertToDtos(this IEnumerable<Reservation> entities)
+        {
+            return ConvertGenericList(entities, ConvertToDto);
+        }
+        #endregion
+
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {
             if (source == null) { return null; }
