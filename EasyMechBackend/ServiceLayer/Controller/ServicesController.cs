@@ -49,6 +49,30 @@ namespace EasyMechBackend.ServiceLayer.Controller
             return await task;
         }
 
+        // GET: /Services
+        [HttpGet]
+        public async Task<ActionResult<ResponseObject<IEnumerable<ServiceDto>>>> GetAllServices()
+        {
+            var task = Task.Run(() =>
+            {
+                try
+                {
+                    var manager = new ServiceManager();
+                    var dtos = manager.GetServices(0).ConvertToDtos();
+                    var response = new ResponseObject<IEnumerable<ServiceDto>>(dtos);
+                    log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched Exception: {e.Message}");
+                    return new ResponseObject<IEnumerable<ServiceDto>>(e.Message, ErrorCode.General);
+                }
+            });
+
+            return await task;
+        }
+
 
         // GET: /Services/id/2
         [HttpGet("id/{id}")]
