@@ -14,14 +14,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class MaschinentypManagerTests : ManagerBaseTests
     {
-        public DbContextOptions<EMContext> options;
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            options = BusinessLayerTestHelper.InitTestDb();
-        }
-
         [TestMethod]
         public void AddMaschinentypTest()
         {

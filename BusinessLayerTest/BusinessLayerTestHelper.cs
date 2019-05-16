@@ -21,6 +21,8 @@ namespace BusinessLayerTest
                 KundeManager kundeManager = new KundeManager(context);
                 MaschineManager maschineManager = new MaschineManager(context);
                 MaschinentypManager typManager = new MaschinentypManager(context);
+                ServiceManager serviceManager = new ServiceManager(context);
+
 
                 foreach (Reservation r in resManager.GetReservationen())
                 {
@@ -41,6 +43,10 @@ namespace BusinessLayerTest
                 foreach (Maschinentyp typ in typManager.GetMaschinentypen())
                 {
                     context.Remove(typ);
+                }
+                foreach (Service s in serviceManager.GetServices(0))
+                {
+                    context.Remove(s);
                 }
 
                 context.SaveChanges();
