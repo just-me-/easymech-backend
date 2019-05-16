@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -23,7 +24,7 @@ namespace EasyMechBackend.BusinessLayer
         public List<Service> GetServices(ServiceState status)
         {
             var query =
-            from r in Context.Services
+            from r in Context.Services.Include(a => a.Arbeitsschritte).Include(m => m.Materialposten)
             where status == ServiceState.All || r.Status == status
             orderby r.Beginn descending
             select r;
@@ -49,13 +50,24 @@ namespace EasyMechBackend.BusinessLayer
         }
 
         public Service UpdateService(Service s)
-        {
-            //Todo: update arbeitsschritte und material
+        { 
             s.Validate();
-            var entity = Context.Services.Single(res => res.Id == s.Id);
-            Context.Entry(entity).CurrentValues.SetValues(s);
+            var old = Context.Services
+                .Single(res => res.Id == s.Id);
+            foreach(var schritt in old.Arbeitsschritte)
+            {
+                Context.Remove(schritt);
+            }
+            foreach(var material in old.Materialposten)
+            {
+                Context.Remove(material);
+            }
             Context.SaveChanges();
-            return entity;
+            Context.Entry(old).State = EntityState.Detached;
+
+            Context.Entry(old).CurrentValues.SetValues(s);
+            Context.SaveChanges();
+            return s;
         }
 
 
