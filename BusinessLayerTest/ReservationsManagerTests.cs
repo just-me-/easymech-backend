@@ -549,5 +549,25 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, result1.Single().Id);
             }
         }
+
+        [TestMethod]
+        public void SearchWith0()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    MaschinenId = 0,
+                    KundenId = 0,
+                    MaschinentypId = 0,
+                    Status = ServiceState.All
+                };
+
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+
+                Assert.AreEqual(2, result1.Count);
+            }
+        }
     }
 }
