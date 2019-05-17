@@ -158,20 +158,20 @@ namespace BusinessLayerTest
         }
 
 
-        //[TestMethod]
-        //public void DeleteServiceTest()
-        //{
-        //    using (var context = new EMContext(options))
-        //    {
-        //        var man = new ServiceManager(context);
+        [TestMethod]
+        public void DeleteServiceTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ServiceManager(context);
 
-        //        var doomed = man.GetServiceById(1);
-        //        man.DeleteService(doomed);
+                var doomed = man.GetServiceById(1);
+                man.DeleteService(doomed);
 
-        //        var list = man.GetServices(0);
-        //        Assert.AreEqual(2, list.Count);
-        //    }
-        //}
+                var list = man.GetServices(0);
+                Assert.AreEqual(2, list.Count);
+            }
+        }
     }
 
 
