@@ -3,6 +3,8 @@ using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
 {
@@ -148,7 +150,44 @@ namespace BusinessLayerTest
                     Uebergabe = new MaschinenUebergabe()
                 };
 
+                Service s1 = new Service
+                {
+                    Id = 1,
+                    Bezeichnung = "Oelwechsel",
+                    Beginn = new DateTime(2020, 01, 12),
+                    Ende = new DateTime(2020, 01, 13),
+                    Status = ServiceState.Pending,
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()                    
+                };
 
+                Service s2 = new Service
+                {
+                    Id = 2,
+                    Bezeichnung = "Oelwechsel",
+                    Beginn = new DateTime(2019, 05, 17),
+                    Ende = new DateTime(2019, 05, 19),
+                    Status = ServiceState.Running,
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()
+                };
+
+                Service s3 = new Service
+                {
+                    Id = 3,
+                    Bezeichnung = "Oelwechsel",
+                    Beginn = new DateTime(2019, 01, 17),
+                    Ende = new DateTime(2019, 01, 19),
+                    Status = ServiceState.Completed,
+                    MaschinenId = 1,
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()
+                };
 
                 context.Add(k1);
                 context.Add(k2);
@@ -159,6 +198,9 @@ namespace BusinessLayerTest
                 context.Add(startTransaktionVerkauf);
                 context.Add(r1);
                 context.Add(r2);
+                context.Add(s1);
+                context.Add(s2);
+                context.Add(s3);
                 context.SaveChanges();
             }
             return options;

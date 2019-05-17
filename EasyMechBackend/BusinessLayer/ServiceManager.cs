@@ -7,6 +7,7 @@ using System.Reflection;
 using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
+using EasyMechBackend.Common;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -30,7 +31,7 @@ namespace EasyMechBackend.BusinessLayer
             select r;
             return query.ToList();
         }
-        
+
         public Service GetServiceById(long id)
         {
             Service r = Context.Services.SingleOrDefault(res => res.Id == id);
@@ -50,15 +51,15 @@ namespace EasyMechBackend.BusinessLayer
         }
 
         public Service UpdateService(Service s)
-        { 
+        {
             s.Validate();
             var old = Context.Services
                 .Single(res => res.Id == s.Id);
-            foreach(var schritt in old.Arbeitsschritte)
+            foreach (var schritt in old.Arbeitsschritte)
             {
                 Context.Remove(schritt);
             }
-            foreach(var material in old.Materialposten)
+            foreach (var material in old.Materialposten)
             {
                 Context.Remove(material);
             }
@@ -73,10 +74,11 @@ namespace EasyMechBackend.BusinessLayer
 
         public void DeleteService(Service s)
         {
-            foreach(Materialposten m in s.Materialposten) {
+            foreach (Materialposten m in s.Materialposten)
+            {
                 Context.Remove(m);
             }
-            foreach(Arbeitsschritt a in s.Arbeitsschritte)
+            foreach (Arbeitsschritt a in s.Arbeitsschritte)
             {
                 Context.Remove(a);
             }
@@ -84,76 +86,21 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
         }
 
-        public List<Service> GetSearchResult(Service searchEntity)
+        public List<Service> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
+            var query = from t in Context.Services
+                    .Include(ser => ser.Arbeitsschritte)
+                    .Include(ser => ser.Materialposten)
+                    .Include(m => m.Maschine)
+                        where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                        where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                        where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                        where searchEntity.Von == null || searchEntity.Von <= t.Beginn
+                        where searchEntity.Bis == null || t.Ende <= searchEntity.Bis
+                        where searchEntity.Status == null || searchEntity.Status == 0 || searchEntity.Status == t.Status
+                        select t;
 
-            List<Service> allEntities = GetServices(ServiceState.All);
-            IEnumerable<Service> searchResult = allEntities;
-            PropertyInfo[] props = typeof(Service).GetProperties();
-
-            foreach (var prop in props)
-            {
-                // Handling String Fields with lower case contains
-                if (prop.PropertyType == typeof(string))
-                {
-                    string potentialSearchTerm = (string) prop.GetValue(searchEntity);
-                    if (potentialSearchTerm.HasSearchTerm())
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            string contentOfEntityThatIsEvaluated = (string) prop.GetValue(m);
-                            return contentOfEntityThatIsEvaluated != null &&
-                                   contentOfEntityThatIsEvaluated.ContainsCaseInsensitive(potentialSearchTerm);
-                        });
-                    }
-                }
-
-                // Handling int or int? Fields with exact match
-                else if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?))
-                {
-                    int targetValue = (int?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            int contentOfEntityThatIsEvaluated = (int?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling long (PK, FK) with exact matching
-                //seperate treatment to int is necessary as int can't be castet to long?
-                else if (prop.PropertyType == typeof(long) || prop.PropertyType == typeof(long?))
-                {
-                    long targetValue = (long?) prop.GetValue(searchEntity) ?? 0;
-                    if (targetValue != 0)
-                    {
-                        searchResult = searchResult.Where(m =>
-                        {
-                            long contentOfEntityThatIsEvaluated = (long?) prop.GetValue(m) ?? 0;
-                            return contentOfEntityThatIsEvaluated == targetValue;
-                        });
-                    }
-                }
-
-                //Handling DateTime Fields with exact match
-                else if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTime?))
-                {
-                    DateTime? targetValueOrNull = (DateTime?) prop.GetValue(searchEntity);
-                    if (targetValueOrNull == null) continue;
-
-                    DateTime targetValue = (DateTime) targetValueOrNull;
-                    searchResult = searchResult.Where(m =>
-                    {
-                        DateTime? contentOfEntityThatIsEvaluated = (DateTime?) prop.GetValue(m);
-                        return contentOfEntityThatIsEvaluated != null &&
-                               DateTime.Equals((DateTime) contentOfEntityThatIsEvaluated, targetValue);
-                    });
-                }
-            }
-
-            return searchResult.ToList();
-        } 
+            return query.OrderByDescending(t => t.Beginn).ToList();
+        }
     }
 }

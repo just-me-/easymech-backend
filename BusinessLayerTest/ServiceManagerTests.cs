@@ -8,6 +8,7 @@ using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Common;
 using static EasyMechBackend.Common.EnumHelper;
+using System.Collections.Generic;
 
 namespace BusinessLayerTest
 {
@@ -15,167 +16,162 @@ namespace BusinessLayerTest
     public class ServiceManagerDefaultCasesTests : ManagerBaseTests
     {
         [TestMethod]
-        public void GetReservationenTest()
+        public void GetAllServicesTest()
         {
             using (var context = new EMContext(options))
             {
-                ReservationManager man = new ReservationManager(context);
-                var list = man.GetReservationen();
-                Assert.AreEqual(2, list.Count);
+                ServiceManager man = new ServiceManager(context);
+                var list = man.GetServices(ServiceState.All);
+                Assert.AreEqual(3, list.Count);
             }
         }
 
         [TestMethod]
-        public void GetSingleReservationTest()
+        public void GetPendingServicesTest()
         {
             using (var context = new EMContext(options))
             {
-                ReservationManager man = new ReservationManager(context);
-                var res = man.GetReseervationById(1);
+                ServiceManager man = new ServiceManager(context);
+                var list = man.GetServices(ServiceState.Pending);
+                Assert.AreEqual(1, list.First().Id);
+            }
+        }
+
+        [TestMethod]
+        public void GetRunningServicesTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                ServiceManager man = new ServiceManager(context);
+                var list = man.GetServices(ServiceState.Running);
+                Assert.AreEqual(2, list.First().Id);
+            }
+        }
+
+        [TestMethod]
+        public void GetCompletetServicesTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                ServiceManager man = new ServiceManager(context);
+                var list = man.GetServices(ServiceState.Completed);
+                Assert.AreEqual(3, list.First().Id);
+            }
+        }
+
+        [TestMethod]
+        public void GetServiceByIdTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                ServiceManager man = new ServiceManager(context);
+                var res = man.GetServiceById(1);
                 Assert.AreEqual(1, res.Id);
-                Assert.AreEqual("Chur", res.Standort);
-                Assert.IsNull(res.Uebergabe);
-                Assert.IsNull(res.Ruecknahme);
-
             }
         }
 
 
         [TestMethod]
-        public void AddReservation_NoU_NoR()
+        public void AddReservationWithoutMaterialOrArbeit()
         {
             using (var context = new EMContext(options))
             {
-                int id = 3;
-                Reservation e = new Reservation
+                int id = 4;
+                Service s = new Service
                 {
                     Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2030, 05, 12),
-                    Enddatum = new DateTime(2040, 05, 12),
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2019, 06, 17),
+                    Ende = new DateTime(2019, 07, 19),
+                    Status = ServiceState.Pending,
                     MaschinenId = 1,
-                    KundenId = 2
+                    KundenId = 1
                 };
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-                var addedEntity = context.Reservationen.Single(res => res.Id == id);
+                var man = new ServiceManager(context);
+                man.AddService(s);
+                var addedEntity = context.Services.Single(res => res.Id == id);
                 Assert.AreEqual(id, addedEntity.Id);
-                Assert.IsNull(addedEntity.Uebergabe);
-                Assert.IsNull(addedEntity.Ruecknahme);
+                Assert.IsTrue(!addedEntity.Materialposten.Any());
+                Assert.IsTrue(!addedEntity.Arbeitsschritte.Any());
             }
         }
 
 
         [TestMethod]
-        public void AddReservation_WithU_NoR()
+        public void AddServiceWithMaterialAndArbeit()
         {
             using (var context = new EMContext(options))
             {
-                int id = 3;
-                Reservation e = new Reservation
+                int id = 4;
+                Service s = new Service
                 {
                     Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2030, 05, 12),
-                    Enddatum = new DateTime(2040, 05, 12),
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2019, 06, 17),
+                    Ende = new DateTime(2019, 07, 19),
+                    Status = ServiceState.Pending,
                     MaschinenId = 1,
-                    KundenId = 2,
-                    Uebergabe = new MaschinenUebergabe
+                    KundenId = 1,
+                    Arbeitsschritte = new List<Arbeitsschritt>
                     {
-                        Datum = new DateTime(2030, 05, 12)
-                    }
-                };
-
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-                var addedEntity = context.Reservationen.Single(res => res.Id == id);
-                Assert.AreEqual(id, addedEntity.Id);
-                Assert.IsNotNull(addedEntity.Uebergabe);
-                Assert.IsNull(addedEntity.Ruecknahme);
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_WithU_WithR()
-        {
-            using (var context = new EMContext(options))
-            {
-                int id = 3;
-                Reservation e = new Reservation
-                {
-                    Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2030, 05, 12),
-                    Enddatum = new DateTime(2040, 05, 12),
-                    MaschinenId = 1,
-                    KundenId = 2,
-                    Uebergabe = new MaschinenUebergabe
-                    {
-                        Datum = new DateTime(2030, 05, 12)
+                        new Arbeitsschritt
+                        {
+                            Bezeichnung = "Schraube Anziehen"
+                        },
+                        new Arbeitsschritt
+                        {
+                            Bezeichnung = "noch fester Anziehen"
+                        }
                     },
-                    Ruecknahme = new MaschinenRuecknahme
+                    Materialposten = new List<Materialposten>
                     {
-                        Datum = new DateTime(2040, 05, 13)
+                        new Materialposten
+                        {
+                            Bezeichnung = "Schraube t64"
+                        }
                     }
                 };
-
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-                var addedEntity = context.Reservationen.Single(res => res.Id == id);
+                var man = new ServiceManager(context);
+                man.AddService(s);
+                var addedEntity = context.Services.Single(res => res.Id == id);
                 Assert.AreEqual(id, addedEntity.Id);
-                Assert.IsNotNull(addedEntity.Uebergabe);
-                Assert.IsNotNull(addedEntity.Ruecknahme);
+                Assert.AreEqual(1, addedEntity.Materialposten.Count);
+                Assert.AreEqual(2, addedEntity.Arbeitsschritte.Count);
             }
         }
 
-
+     
         [TestMethod]
-        public void UpdateReservation()
+        public void UpdateServiceSimple()
         {
             using (var context = new EMContext(options))
             {
-                var man = new ReservationManager(context);
-                var original = man.GetReseervationById(1);
-                original.Standort = "Rappi";
+                var man = new ServiceManager(context);
+                var original = man.GetServiceById(1);
+                original.Bezeichnung = "Updated Service";
 
-                //Snippet not working in In Memory DB as Nav Props dont load properly. Tested in Postman.
+                man.UpdateService(original);
+                var updated = man.GetServiceById(1);
 
-                //original.Uebergabe = new MaschinenUebergabe
-                //{
-                //    Id = 12,
-                //    Datum = new DateTime(2020, 1, 1)
-                //};
-                //original.Ruecknahme = null;
-
-
-                man.UpdateReservation(original);
-                var updated = man.GetReseervationById(1);
-
-                Assert.AreEqual("Rappi", updated.Standort);
-                //Assert.IsNotNull(updated.Uebergabe);
-                //Assert.IsNull(updated.Ruecknahme);
+                Assert.AreEqual("Updated Service", updated.Bezeichnung);
             }
         }
 
 
-        [TestMethod]
-        public void DeleteTest()
-        {
-            using (var context = new EMContext(options))
-            {
-                var man = new ReservationManager(context);
+        //[TestMethod]
+        //public void DeleteServiceTest()
+        //{
+        //    using (var context = new EMContext(options))
+        //    {
+        //        var man = new ServiceManager(context);
 
-                var doomed = man.GetReseervationById(1);
-                man.DeleteReservation(doomed);
+        //        var doomed = man.GetServiceById(1);
+        //        man.DeleteService(doomed);
 
-                doomed = man.GetReseervationById(2);
-                man.DeleteReservation(doomed);
-
-                var list = man.GetReservationen();
-                Assert.IsFalse(list.Any());
-
-            }
-        }
+        //        var list = man.GetServices(0);
+        //        Assert.AreEqual(2, list.Count);
+        //    }
+        //}
     }
 
 
@@ -306,7 +302,7 @@ namespace BusinessLayerTest
 
                 Reservation e2 = new Reservation
                 {
-                    Id = id+1,
+                    Id = id + 1,
                     Standort = "Chur",
                     Startdatum = new DateTime(2050, 01, 11),
                     Enddatum = new DateTime(2060, 01, 11),
@@ -377,7 +373,7 @@ namespace BusinessLayerTest
 
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
-                var added = man.GetReseervationById(3);
+                var added = man.GetReservationById(3);
                 Assert.AreEqual(a, added.Uebergabe.Datum);
                 Assert.AreEqual(b, added.Ruecknahme.Datum);
             }

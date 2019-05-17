@@ -36,6 +36,8 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public void Validate()
         {
             Bezeichnung = Bezeichnung.ClipToNChars(128);
+            if (Materialposten == null) Materialposten = new List<Materialposten>();
+            if (Arbeitsschritte == null) Arbeitsschritte = new List<Arbeitsschritt>();
         }
     }
 }
