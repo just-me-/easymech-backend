@@ -84,7 +84,7 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
-            
+
             Context.Update(r);
             Context.SaveChanges();
             return r;
@@ -104,6 +104,7 @@ namespace EasyMechBackend.BusinessLayer
             var query = from t in Context.Reservationen
                     .Include(res => res.Uebergabe)
                     .Include(res => res.Ruecknahme)
+                    .Include (res => res.Maschine)
                 where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
                 where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
                 where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
