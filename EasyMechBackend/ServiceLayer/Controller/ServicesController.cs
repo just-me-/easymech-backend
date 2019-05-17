@@ -9,6 +9,7 @@ using log4net;
 using static EasyMechBackend.Common.EnumHelper;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.DataTransferObject.DTOs;
+using EasyMechBackend.Common;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -192,14 +193,14 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         // POST: services/suchen
         [HttpPost("suchen")]
-        public async Task<ActionResult<ResponseObject<IEnumerable<ServiceDto>>>> GetSearchResult(ServiceDto dto)
+        public async Task<ActionResult<ResponseObject<IEnumerable<ServiceDto>>>> GetSearchResult(ServiceSearchDto dto)
         {
             var task = Task.Run(() =>
             {
                 try
                 {
                     var manager = new ServiceManager();
-                    var dtos = manager.GetSearchResult(dto.ConvertToEntity()).ConvertToDtos();
+                    var dtos = manager.GetServiceSearchResult(dto).ConvertToDtos();
                     var response = new ResponseObject<IEnumerable<ServiceDto>>(dtos);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called");
                     return response;

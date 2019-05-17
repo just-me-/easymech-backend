@@ -31,7 +31,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 ReservationManager man = new ReservationManager(context);
-                var res = man.GetReseervationById(1);
+                var res = man.GetReservationById(1);
                 Assert.AreEqual(1, res.Id);
                 Assert.AreEqual("Chur", res.Standort);
                 Assert.IsNull(res.Uebergabe);
@@ -135,7 +135,7 @@ namespace BusinessLayerTest
             using (var context = new EMContext(options))
             {
                 var man = new ReservationManager(context);
-                var original = man.GetReseervationById(1);
+                var original = man.GetReservationById(1);
                 original.Standort = "Rappi";
 
                 //Snippet not working in In Memory DB as Nav Props dont load properly. Tested in Postman.
@@ -149,7 +149,7 @@ namespace BusinessLayerTest
 
 
                 man.UpdateReservation(original);
-                var updated = man.GetReseervationById(1);
+                var updated = man.GetReservationById(1);
 
                 Assert.AreEqual("Rappi", updated.Standort);
                 //Assert.IsNotNull(updated.Uebergabe);
@@ -165,10 +165,10 @@ namespace BusinessLayerTest
             {
                 var man = new ReservationManager(context);
 
-                var doomed = man.GetReseervationById(1);
+                var doomed = man.GetReservationById(1);
                 man.DeleteReservation(doomed);
 
-                doomed = man.GetReseervationById(2);
+                doomed = man.GetReservationById(2);
                 man.DeleteReservation(doomed);
 
                 var list = man.GetReservationen();
@@ -377,7 +377,7 @@ namespace BusinessLayerTest
 
                 var man = new ReservationManager(context);
                 man.AddReservation(e);
-                var added = man.GetReseervationById(3);
+                var added = man.GetReservationById(3);
                 Assert.AreEqual(a, added.Uebergabe.Datum);
                 Assert.AreEqual(b, added.Ruecknahme.Datum);
             }

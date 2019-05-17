@@ -3,6 +3,7 @@ using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
@@ -157,29 +158,35 @@ namespace BusinessLayerTest
                     Ende = new DateTime(2020, 01, 13),
                     Status = ServiceState.Pending,
                     MaschinenId = 1,
-                    KundenId = 1
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()                    
                 };
 
                 Service s2 = new Service
                 {
-                    Id = 1,
+                    Id = 2,
                     Bezeichnung = "Oelwechsel",
                     Beginn = new DateTime(2019, 05, 17),
                     Ende = new DateTime(2019, 05, 19),
                     Status = ServiceState.Running,
                     MaschinenId = 1,
-                    KundenId = 1
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()
                 };
 
                 Service s3 = new Service
                 {
-                    Id = 1,
+                    Id = 3,
                     Bezeichnung = "Oelwechsel",
                     Beginn = new DateTime(2019, 01, 17),
                     Ende = new DateTime(2019, 01, 19),
                     Status = ServiceState.Completed,
                     MaschinenId = 1,
-                    KundenId = 1
+                    KundenId = 1,
+                    Materialposten = new List<Materialposten>(),
+                    Arbeitsschritte = new List<Arbeitsschritt>()
                 };
 
                 context.Add(k1);

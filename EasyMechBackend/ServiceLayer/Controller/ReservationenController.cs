@@ -61,7 +61,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 try
                 {
                     var manager = new ReservationManager();
-                    var dto = manager.GetReseervationById(id).ConvertToDto();
+                    var dto = manager.GetReservationById(id).ConvertToDto();
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called on Entity {id}");
                     return new ResponseObject<ReservationDto>(dto);
                 }
@@ -153,7 +153,7 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 try
                 {
                     var manager = new ReservationManager();
-                    var entity = manager.GetReseervationById(id);
+                    var entity = manager.GetReservationById(id);
                     manager.DeleteReservation(entity);
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Set Kunde {id} to inactive");
                     return new ResponseObject<ReservationDto>(null, OKTAG, $"Removed Reservation {id} from database", 0);

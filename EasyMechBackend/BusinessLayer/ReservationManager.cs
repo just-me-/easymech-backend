@@ -33,7 +33,7 @@ namespace EasyMechBackend.BusinessLayer
             return query.ToList();
         }
 
-        public Reservation GetReseervationById(long id)
+        public Reservation GetReservationById(long id)
         {
             Reservation r = Context.Reservationen.Include(a => a.Uebergabe).Include(a => a.Ruecknahme).SingleOrDefault(res => res.Id == id);
             if (r == null)
