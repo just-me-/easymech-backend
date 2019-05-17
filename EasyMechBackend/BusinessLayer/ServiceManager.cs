@@ -25,7 +25,9 @@ namespace EasyMechBackend.BusinessLayer
         public List<Service> GetServices(ServiceState status)
         {
             var query =
-            from r in Context.Services.Include(a => a.Arbeitsschritte).Include(m => m.Materialposten)
+            from r in Context.Services
+            .Include(a => a.Arbeitsschritte)
+            .Include(m => m.Materialposten)
             where status == ServiceState.All || r.Status == status
             orderby r.Beginn descending
             select r;
@@ -34,7 +36,10 @@ namespace EasyMechBackend.BusinessLayer
 
         public Service GetServiceById(long id)
         {
-            Service r = Context.Services.SingleOrDefault(res => res.Id == id);
+            Service r = Context.Services
+                .Include(a => a.Arbeitsschritte)
+                .Include(m => m.Materialposten)
+                .SingleOrDefault(res => res.Id == id);
             if (r == null)
             {
                 throw new InvalidOperationException($"Service with id {id} is not in database");
