@@ -15,7 +15,7 @@ namespace BusinessLayerTest
     public class ServiceManagerDefaultCasesTests : ManagerBaseTests
     {
         [TestMethod]
-        public void GetReservationenTest()
+        public void GetAllServicesTest()
         {
             using (var context = new EMContext(options))
             {
