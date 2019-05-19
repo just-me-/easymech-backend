@@ -48,7 +48,6 @@ namespace EasyMechBackend.BusinessLayer
 
             CheckAndValidate(r);
 
-
             Context.Add(r);
             Context.SaveChanges();
             return r;
@@ -104,13 +103,13 @@ namespace EasyMechBackend.BusinessLayer
             var query = from t in Context.Reservationen
                     .Include(res => res.Uebergabe)
                     .Include(res => res.Ruecknahme)
-                    .Include (res => res.Maschine)
-                where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
-                where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
-                where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
-                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
-                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
-                select t;
+                    .Include(res => res.Maschine)
+                        where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                        where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                        where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                        where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
+                        where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
+                        select t;
 
             switch (searchEntity.Status)
             {
@@ -132,7 +131,7 @@ namespace EasyMechBackend.BusinessLayer
 
             return query.OrderByDescending(t => t.Startdatum).ToList();
         }
-        
+
         //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
 
         private void CheckAndValidate(Reservation r)
@@ -142,6 +141,7 @@ namespace EasyMechBackend.BusinessLayer
             EnsureReturnHasPrecedingPickup(r);  //no return if there was no pickup before
             EnsureStartBeforeEnd(r);            //checks if start < enddate
             EnsureNoOverlappingReservations(r); //checks ifr already reserved
+            EnsureNoOverlappingMaintenances(r);
             r.Validate();                       //clips properties
         }
 
@@ -203,7 +203,7 @@ namespace EasyMechBackend.BusinessLayer
                     lv.KundenId,
                     Von = lv.Startdatum ?? DateTime.Now,
                     Bis = lv.Enddatum ?? DateTime.MaxValue
-        };
+                };
 
             foreach (var lv in reservedDates)
             {
@@ -215,6 +215,34 @@ namespace EasyMechBackend.BusinessLayer
                     //TOdo: Message verschönern:
                     //Wer ist Kunde 5? "Bis 12.12.9999 reserviert" <=> "open-end reserviert"
                     throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
+                }
+
+            }
+
+
+        }
+
+        private void EnsureNoOverlappingMaintenances(Reservation r)
+        {
+
+            DateTime wantedStart = r.Startdatum ?? DateTime.Now;
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;
+            var myAuto = r.MaschinenId;
+
+            var maintenanceDates =
+                from lv in Context.Services
+                where lv.MaschinenId == myAuto
+                select new
+                {
+                    Von = lv.Beginn,
+                    Bis = lv.Ende
+                };
+
+            foreach (var lv in maintenanceDates)
+            {
+                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
+                {
+                    throw new ReservationException($"Die Maschine befindet sich von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} im Service und kann nicht reserviert werden.");
                 }
 
             }

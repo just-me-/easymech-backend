@@ -252,6 +252,48 @@ namespace BusinessLayerTest
             }
         }
 
+        [TestMethod]
+        public void AddReservation_DateOverlapWithService()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Reservation e = new Reservation
+                {
+                    Id = id,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2020, 01, 12),
+                    Enddatum = new DateTime(2020, 01, 13),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                var man = new ReservationManager(context);
+                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
+            }
+        }
+
+        [TestMethod]
+        public void AddReservation_DateOverlapWithService2()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Reservation e = new Reservation
+                {
+                    Id = id,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2000, 01, 12),
+                    Enddatum = new DateTime(2050, 01, 13),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                var man = new ReservationManager(context);
+                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
+            }
+        }
+
 
         [TestMethod]
         public void AddReservation_DateOverlap_ButDifferentMachine()
@@ -387,31 +429,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerSearchTests : ManagerBaseTests
     {
-        /*
-                    ::::::::::::TESTDATA FOR REFERENCE:::::
-
-
-                Reservation r1 = new Reservation
-                {
-                    Id = 1,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 10),
-                    Enddatum =   new DateTime(2020, 05, 12),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                Reservation r2 = new Reservation
-                {
-                    Id = 2,
-                    Standort = "In Tümpel gefahren",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum = new DateTime(2020, 05, 14),
-                    MaschinenId = 1,
-                    KundenId = 1,
-                    Uebergabe = new MaschinenUebergabe()
-                };
-         */
 
         [TestMethod]
         public void TestMaschinenSearch()
