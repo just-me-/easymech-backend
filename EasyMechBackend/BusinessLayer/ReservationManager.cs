@@ -136,13 +136,13 @@ namespace EasyMechBackend.BusinessLayer
 
         private void CheckAndValidate(Reservation r)
         {
-            CopyInnerDates(r);                  //if pickup or return exists, take those inner dates as reservation dates.
-            EnsureOwnProperty(r);               //checks if vehicle has owner 1
-            EnsureReturnHasPrecedingPickup(r);  //no return if there was no pickup before
-            EnsureStartBeforeEnd(r);            //checks if start < enddate
-            EnsureNoOverlappingReservations(r); //checks ifr already reserved
+            CopyInnerDates(r);
+            EnsureOwnProperty(r);
+            EnsureReturnHasPrecedingPickup(r);
+            EnsureStartBeforeEnd(r);
+            EnsureNoOverlappingReservations(r);
             EnsureNoOverlappingMaintenances(r);
-            r.Validate();                       //clips properties
+            r.Validate();
         }
 
         private void EnsureOwnProperty(Reservation r)
@@ -187,38 +187,29 @@ namespace EasyMechBackend.BusinessLayer
 
         private void EnsureNoOverlappingReservations(Reservation r)
         {
-
             DateTime wantedStart = r.Startdatum ?? DateTime.Now;
-            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;   //if there is no reservation end just reserve it "forever"
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;
             var myAuto = r.MaschinenId;
             var myReservation = r.Id;
 
-            List<Reservation> reservationes = GetReservationen();
-
-            var reservedDates =
-                from lv in reservationes
+            var reservedDates = from lv in Context.Reservationen.Include(reser => reser.Kunde)
                 where lv.MaschinenId == myAuto && lv.Id != myReservation
+                where Helpers.Overlap(lv.Startdatum ?? DateTime.Now, 
+                    lv.Enddatum ?? DateTime.MaxValue,
+                    wantedStart,
+                    wantedEnd)
                 select new
                 {
-                    lv.KundenId,
+                    Kunde = lv.Kunde.Firma,
                     Von = lv.Startdatum ?? DateTime.Now,
                     Bis = lv.Enddatum ?? DateTime.MaxValue
                 };
 
-            foreach (var lv in reservedDates)
+            if (reservedDates.Any())
             {
-                //ich reserviere, nachdem es jeman anders reserviert hat &&
-                //der andere hat es noch nicht wieder zurückgegeben
-                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
-                {
-
-                    //TOdo: Message verschönern:
-                    //Wer ist Kunde 5? "Bis 12.12.9999 reserviert" <=> "open-end reserviert"
-                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
-                }
-
+                var overlappingEntity = reservedDates.FirstOrDefault();
+                throw new ReservationException($"Die Maschine ist bereits von Kunde {overlappingEntity.Kunde} von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} resrviert.");
             }
-
 
         }
 
@@ -232,23 +223,19 @@ namespace EasyMechBackend.BusinessLayer
             var maintenanceDates =
                 from lv in Context.Services
                 where lv.MaschinenId == myAuto
+                where Helpers.Overlap(lv.Beginn, lv.Ende, wantedStart, wantedEnd)
                 select new
                 {
                     Von = lv.Beginn,
                     Bis = lv.Ende
                 };
 
-            foreach (var lv in maintenanceDates)
+            if (maintenanceDates.Any())
             {
-                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
-                {
-                    throw new ReservationException($"Die Maschine befindet sich von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} im Service und kann nicht reserviert werden.");
-                }
-
+                var overlappingEntity = maintenanceDates.FirstOrDefault();
+                throw new ReservationException($"Die Maschine befindet sich von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} im Service und kann nicht reserviert werden.");
             }
-
-
+            
         }
-
     }
 }
