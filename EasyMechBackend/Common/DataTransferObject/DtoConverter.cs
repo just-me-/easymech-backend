@@ -329,29 +329,37 @@ namespace EasyMechBackend.Common.DataTransferObject
             if (dto == null) { return null; }
             List<Arbeitsschritt> arbeitsschritte = new List<Arbeitsschritt>();
             List<Materialposten> materialposten = new List<Materialposten>();
-            foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
+
+            if (dto.Arbeitsschritte != null)
             {
-                Arbeitsschritt a = new Arbeitsschritt
+                foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
                 {
-                    Id = aDto.Id,
-                    Bezeichnung = aDto.Bezeichnung,
-                    Stundenansatz = aDto.Stundenansatz,
-                    Arbeitsstunden = aDto.Arbeitsstunden,
-                    ServiceId = aDto.ServiceId
-                };
-                arbeitsschritte.Add(a);
+                    Arbeitsschritt a = new Arbeitsschritt
+                    {
+                        Id = aDto.Id,
+                        Bezeichnung = aDto.Bezeichnung,
+                        Stundenansatz = aDto.Stundenansatz,
+                        Arbeitsstunden = aDto.Arbeitsstunden,
+                        ServiceId = aDto.ServiceId
+                    };
+                    arbeitsschritte.Add(a);
+                }
             }
-            foreach (MaterialpostenDto mDto in dto.Materialposten)
+
+            if (dto.Materialposten != null)
             {
-                Materialposten m = new Materialposten
+                foreach (MaterialpostenDto mDto in dto.Materialposten)
                 {
-                    Id = mDto.Id,
-                    Bezeichnung = mDto.Bezeichnung,
-                    Stueckpreis = mDto.Stueckpreis,
-                    Anzahl = mDto.Anzahl,
-                    ServiceId = mDto.ServiceId
-                };
-                materialposten.Add(m);
+                    Materialposten m = new Materialposten
+                    {
+                        Id = mDto.Id,
+                        Bezeichnung = mDto.Bezeichnung,
+                        Stueckpreis = mDto.Stueckpreis,
+                        Anzahl = mDto.Anzahl,
+                        ServiceId = mDto.ServiceId
+                    };
+                    materialposten.Add(m);
+                }
             }
 
             Service t = new Service

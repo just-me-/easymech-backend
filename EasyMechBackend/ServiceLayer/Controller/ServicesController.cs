@@ -10,6 +10,7 @@ using static EasyMechBackend.Common.EnumHelper;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common;
+using EasyMechBackend.Common.Exceptions;
 
 namespace EasyMechBackend.ServiceLayer.Controller
 
@@ -112,6 +113,11 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     return new ResponseObject<ServiceDto>(addedDto);
 
                 }
+                catch (MaintenanceException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Maintenance Exception: {e.Message}");
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.MaintenanceException);
+                }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");
@@ -144,7 +150,11 @@ namespace EasyMechBackend.ServiceLayer.Controller
                     log.Debug($"{System.Reflection.MethodBase.GetCurrentMethod().Name} was called: Service {id} updated");
                     return new ResponseObject<ServiceDto>(editedDto);
                 }
-
+                catch (MaintenanceException e)
+                {
+                    log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a Maintenance Exception: {e.Message}");
+                    return new ResponseObject<ServiceDto>(e.Message, ErrorCode.MaintenanceException);
+                }
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException.Message}");

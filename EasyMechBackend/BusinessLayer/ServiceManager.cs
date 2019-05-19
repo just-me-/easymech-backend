@@ -8,6 +8,7 @@ using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.Common;
+using EasyMechBackend.Common.Exceptions;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -49,7 +50,7 @@ namespace EasyMechBackend.BusinessLayer
 
         public Service AddService(Service s)
         {
-            s.Validate();
+            CheckAndValidate(s);
             Context.Add(s);
             Context.SaveChanges();
             return s;
@@ -57,17 +58,25 @@ namespace EasyMechBackend.BusinessLayer
 
         public Service UpdateService(Service s)
         {
-            s.Validate();
+            CheckAndValidate(s);
             var old = Context.Services
                 .Single(res => res.Id == s.Id);
-            foreach (var schritt in old.Arbeitsschritte)
+            if (old.Arbeitsschritte != null)
             {
-                Context.Remove(schritt);
+                foreach (var schritt in old.Arbeitsschritte)
+                {
+                    Context.Remove(schritt);
+                }
             }
-            foreach (var material in old.Materialposten)
+
+            if (old.Materialposten != null)
             {
-                Context.Remove(material);
+                foreach (var material in old.Materialposten)
+                {
+                    Context.Remove(material);
+                }
             }
+
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
@@ -107,5 +116,89 @@ namespace EasyMechBackend.BusinessLayer
 
             return query.OrderByDescending(t => t.Beginn).ToList();
         }
+
+
+        private void CheckAndValidate(Service s)
+        {
+;
+            EnsureStartBeforeEnd(s);
+            EnsureNoOverlappingMaintenances(s);
+            EnsureNoOverlappingReservations(s);
+            s.Validate();
+        }
+
+        private void EnsureStartBeforeEnd(Service s)
+        {
+            var start = s.Beginn;
+            var end = s.Ende;
+            if (start > end)
+            {
+                throw new MaintenanceException("Das Startdatum liegt vor dem Enddatum.");
+            }
+        }
+
+        private void EnsureNoOverlappingMaintenances(Service s)
+        {
+            DateTime wantedStart = s.Beginn;
+            DateTime wantedEnd = s.Ende;
+            var myAuto = s.MaschinenId;
+            var myService = s.Id;
+
+            var serviceDates = from lv in Context.Services
+                                where lv.MaschinenId == myAuto && lv.Id != myService
+                                where Helpers.Overlap(lv.Beginn,
+                                    lv.Ende,
+                                    wantedStart,
+                                    wantedEnd)
+                                select new
+                                {
+                                    Von = lv.Beginn,
+                                    Bis = lv.Ende 
+                                };
+
+            if (serviceDates.Any())
+            {
+                var overlappingEntity = serviceDates.FirstOrDefault();
+                string msg =
+                    $"Die Maschine befindet sich bereits von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                    $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} im Service";
+                throw new MaintenanceException(msg);
+            }
+
+        }
+
+        private void EnsureNoOverlappingReservations(Service r)
+        {
+
+            DateTime wantedStart = r.Beginn;
+            DateTime wantedEnd = r.Ende;
+            var myAuto = r.MaschinenId;
+
+            var reservedDates =
+                from lv in Context.Reservationen.Include(reser => reser.Kunde)
+                where lv.MaschinenId == myAuto
+                where Helpers.Overlap(lv.Startdatum ?? DateTime.Now,
+                    lv.Enddatum ?? DateTime.MaxValue,
+                    wantedStart,
+                    wantedEnd)
+                select new
+                {
+                    Kunde = lv.Kunde.Firma,
+                    Von = lv.Startdatum ?? DateTime.Now,
+                    Bis = lv.Enddatum ?? DateTime.MaxValue
+                };
+
+            if (reservedDates.Any())
+            {
+                var overlappingEntity = reservedDates.FirstOrDefault();
+                string msg = $"Die Maschine ist vom {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} " +
+                             $"von {overlappingEntity.Kunde} reserviert und nicht für einen Service verfügbar.";
+                throw new MaintenanceException(msg);
+            }
+
+        }
+
+
     }
 }
