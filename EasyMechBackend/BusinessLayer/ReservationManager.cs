@@ -132,7 +132,7 @@ namespace EasyMechBackend.BusinessLayer
             return query.OrderByDescending(t => t.Startdatum).ToList();
         }
 
-        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
+        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt. Gemeinsam mit Service nutzen (unavbailable dates oder so)
 
         private void CheckAndValidate(Reservation r)
         {
@@ -208,7 +208,10 @@ namespace EasyMechBackend.BusinessLayer
             if (reservedDates.Any())
             {
                 var overlappingEntity = reservedDates.FirstOrDefault();
-                throw new ReservationException($"Die Maschine ist bereits von Kunde {overlappingEntity.Kunde} von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} resrviert.");
+                string msg = $"Die Maschine ist bereits von Kunde {overlappingEntity.Kunde} " +
+                             $"von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} reserviert.";
+                throw new ReservationException(msg);
             }
 
         }
@@ -233,7 +236,10 @@ namespace EasyMechBackend.BusinessLayer
             if (maintenanceDates.Any())
             {
                 var overlappingEntity = maintenanceDates.FirstOrDefault();
-                throw new ReservationException($"Die Maschine befindet sich von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} im Service und kann nicht reserviert werden.");
+                string msg = $"Die Maschine befindet sich von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} " +
+                             $"im Service und kann nicht reserviert werden.";
+                throw new ReservationException(msg);
             }
             
         }
