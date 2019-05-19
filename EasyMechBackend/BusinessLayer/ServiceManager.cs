@@ -61,14 +61,22 @@ namespace EasyMechBackend.BusinessLayer
             CheckAndValidate(s);
             var old = Context.Services
                 .Single(res => res.Id == s.Id);
-            foreach (var schritt in old.Arbeitsschritte)
+            if (old.Arbeitsschritte != null)
             {
-                Context.Remove(schritt);
+                foreach (var schritt in old.Arbeitsschritte)
+                {
+                    Context.Remove(schritt);
+                }
             }
-            foreach (var material in old.Materialposten)
+
+            if (old.Materialposten != null)
             {
-                Context.Remove(material);
+                foreach (var material in old.Materialposten)
+                {
+                    Context.Remove(material);
+                }
             }
+
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
