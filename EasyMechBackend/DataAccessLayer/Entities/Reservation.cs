@@ -16,30 +16,21 @@ namespace EasyMechBackend.DataAccessLayer.Entities
 
         public DateTime? Enddatum { get; set; }
 
-
         [ForeignKey(nameof(MaschinenId))]
         [Required]
         public Maschine Maschine { get; set; }
 
         public long MaschinenId { get; set; }
 
-
-
         [ForeignKey(nameof(KundenId))] public Kunde Kunde { get; set; }
         public long? KundenId { get; set; }
 
-
         public virtual MaschinenUebergabe Uebergabe { get; set; }
         public virtual MaschinenRuecknahme Ruecknahme { get; set; }
-
-
-
-
-
+        
         public void Validate()
         {
             Standort = Standort.ClipToNChars(256);
         }
     }
-
 }

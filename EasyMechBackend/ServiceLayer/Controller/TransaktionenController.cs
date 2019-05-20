@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using EasyMechBackend.Common.DataTransferObject;
@@ -10,14 +9,11 @@ using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common;
 
 namespace EasyMechBackend.ServiceLayer.Controller
-
 {
     [Route("[controller]")]
     [ApiController]
     public class TransaktionenController : ControllerBase
     {
-        private const string OKTAG = ResponseObject<object>.OKTAG;
-
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
              (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -129,7 +125,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
             return await task;
         }
-
 
         // POST: transaktionen/suchen
         [HttpPost("suchen")]

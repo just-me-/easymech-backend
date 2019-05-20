@@ -1,5 +1,7 @@
 ﻿
-namespace EasyMechBackend.ServiceLayer.DataTransferObject
+using EasyMechBackend.Common;
+
+namespace EasyMechBackend.ServiceLayer
 {
     public class ResponseObject<T>
         where T: class
@@ -12,7 +14,6 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
         public string Message { get; set; }
 
         public ErrorCode ErrorCode { get; set; }
-
 
         //Regular case: Data provided, no message
         public ResponseObject(T data)
@@ -40,7 +41,5 @@ namespace EasyMechBackend.ServiceLayer.DataTransferObject
             Message = msg;
             ErrorCode = errorCode;
         }
-
-
     }
 }

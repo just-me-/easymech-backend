@@ -1,19 +1,16 @@
 ﻿using EasyMechBackend.DataAccessLayer;
-using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class ServiceManager : ManagerBase
     {
-
         public ServiceManager(EMContext context) : base(context)
         {
         }
@@ -75,7 +72,6 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             return s;
         }
-
 
         public void DeleteService(Service s)
         {

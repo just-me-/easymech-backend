@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
@@ -40,7 +39,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddReservation_NoU_NoR()
         {
@@ -64,7 +62,6 @@ namespace BusinessLayerTest
                 Assert.IsNull(addedEntity.Ruecknahme);
             }
         }
-
 
         [TestMethod]
         public void AddReservation_WithU_NoR()
@@ -128,7 +125,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void UpdateReservation()
         {
@@ -156,7 +152,6 @@ namespace BusinessLayerTest
                 //Assert.IsNull(updated.Ruecknahme);
             }
         }
-
 
         [TestMethod]
         public void DeleteTest()
@@ -209,7 +204,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddReservation_Return_before_Take()
         {
@@ -252,7 +246,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddReservation_DateOverlap_ButDifferentMachine()
         {
@@ -284,7 +277,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(3, man.GetReservationen().Count);
             }
         }
-
 
         [TestMethod]
         public void AddReservation_OpenEnd()
@@ -387,32 +379,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerSearchTests : ManagerBaseTests
     {
-        /*
-                    ::::::::::::TESTDATA FOR REFERENCE:::::
-
-
-                Reservation r1 = new Reservation
-                {
-                    Id = 1,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 10),
-                    Enddatum =   new DateTime(2020, 05, 12),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                Reservation r2 = new Reservation
-                {
-                    Id = 2,
-                    Standort = "In Tümpel gefahren",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum = new DateTime(2020, 05, 14),
-                    MaschinenId = 1,
-                    KundenId = 1,
-                    Uebergabe = new MaschinenUebergabe()
-                };
-         */
-
         [TestMethod]
         public void TestMaschinenSearch()
         {
@@ -477,7 +443,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void TestFromDateWithPartialMatches()
         {
@@ -493,7 +458,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, result.Single().Id);
             }
         }
-
 
         [TestMethod]
         public void TestToDateWithPartialMatchches()
@@ -526,7 +490,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, result1.Single().Id);
             }
         }
-
 
         [TestMethod]
         public void TestItAllTogether()

@@ -1,14 +1,11 @@
-using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
 
 namespace DALTest
 {
     [TestClass]
     public class KundeTest : DalBase
     {
-
         [TestMethod]
         public void ValidateSimple()
         {
@@ -45,9 +42,6 @@ namespace DALTest
 
             Assert.IsTrue(HaveSameData(expected, cust));
         }
-
-
-
 
         [TestMethod]
         public void ValidateMissingFields()
@@ -98,7 +92,7 @@ namespace DALTest
                 Ort = clippedText,
                 Email = clippedText,
                 Telefon = clippedText,
-                Notiz = longText, // unlmited
+                Notiz = longText, // unclipped field
                 IstAktiv = true
             };
 

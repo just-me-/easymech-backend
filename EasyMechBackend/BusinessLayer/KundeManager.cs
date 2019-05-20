@@ -11,16 +11,13 @@ namespace EasyMechBackend.BusinessLayer
 {
     public class KundeManager : ManagerBase
     {
-
         public KundeManager(EMContext context) : base(context)
         {
         }
 
-
         public KundeManager()
         {
         }
-
 
         public List<Kunde> GetKunden(bool withInactive)
         {
@@ -137,7 +134,6 @@ namespace EasyMechBackend.BusinessLayer
             return searchResult.ToList();
 
         }
-
 
         private void EnsureUniqueness(Kunde k)
         {

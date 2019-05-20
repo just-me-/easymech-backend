@@ -1,9 +1,7 @@
 using EasyMechBackend.BusinessLayer;
 using EasyMechBackend.DataAccessLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Collections.Generic;
 using System;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
@@ -54,7 +52,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddKundeIntoDeleteIntoAddAgainShouldReactivate()
         {
@@ -71,7 +68,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, after.Id);
             }
         }
-
 
         [TestMethod]
         public void GetKundenTest()
@@ -107,6 +103,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual("duko Stapler", kunde.Firma);
             }
         }
+
         [TestMethod]
         public void GetKundeByNonexistantIdTest()
         {
@@ -116,6 +113,7 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<InvalidOperationException>(() => kundeManager.GetKundeById(666));
             }
         }
+
         [TestMethod]
         public void UpdateKundeTest()
         {

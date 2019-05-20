@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
@@ -19,7 +16,7 @@ namespace BusinessLayerTest
         {
             using (var context = new EMContext(options))
             {
-                int id = 2;
+                int id = 3;
                 Maschinentyp f = new Maschinentyp
                 {
                     Id = id,
@@ -32,7 +29,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual("Tester grande 2", addedMaschinentyp.Fabrikat);
             }
         }
-
 
         [TestMethod]
         public void AddDuplicateTypTest()
@@ -49,14 +45,6 @@ namespace BusinessLayerTest
             }
         }
 
-
-        //TODO: Add Maschinentyp, use it as type for a machine
-        // Delete MAchinenentyp must throw ForeignKeyExcepion
-
-        //TODO: Add Maschinentyp, use it as type for a machine, set this machine to inactive
-        // Delete MAchinenentyp must work, delete the machinentyp as well as the machine
-
-
         [TestMethod]
         public void GetMaschinentypenTest()
         {
@@ -64,9 +52,10 @@ namespace BusinessLayerTest
             {
                 MaschinentypManager maschinentypManager = new MaschinentypManager(context);
                 var maschinentypenList = maschinentypManager.GetMaschinentypen();
-                Assert.AreEqual(1, maschinentypenList.Count);
+                Assert.AreEqual(2, maschinentypenList.Count);
             }
         }
+
         [TestMethod]
         public void GetMaschinentypByIdTest()
         {
@@ -77,6 +66,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual("Tester grande", maschinentyp1.Fabrikat);
             }
         }
+
         [TestMethod]
         public void GetMaschinentypByNonexistantIdTest()
         {
@@ -86,6 +76,7 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<InvalidOperationException>(() => maschinentypManager.GetMaschinentypById(666));
             }
         }
+
         [TestMethod]
         public void UpdateMaschinentypTest()
         {
@@ -99,21 +90,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual("Updated Fabrikat", updatedTyp.Fabrikat);
             }
         }
-
-        //[TestMethod]
-        //public void DeleteMaschinentypTest()
-        //{
-        //    using (var context = new EMContext(options))
-        //    {
-                
-        //        MaschinentypManager maschinentypManager = new MaschinentypManager(context);
-        //        var originalTyp = maschinentypManager.GetMaschinentypById(1);
-        //        Maschine maschine = context.Maschinen.Single(m => m.Id == 1);
-                
-        //        Assert.ThrowsException<ForeignKeyRestrictionException>(() => maschinentypManager.DeleteMaschinentyp(originalTyp));
-        //    }
-        //}
-
+        
         [TestMethod]
         public void DeleteMaschinentypWithExistingMachinesTest()
         {
@@ -125,7 +102,17 @@ namespace BusinessLayerTest
             }
         }
 
-
+        [TestMethod]
+        public void DeleteMaschinentypWithoutExistingMachinesTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                MaschinentypManager t_man = new MaschinentypManager(context);
+                var t1 = t_man.GetMaschinentypById(2);
+                t_man.DeleteMaschinentyp(t1);
+                Assert.AreEqual(1, context.Maschinentypen.Count());
+            }
+        }
 
         [TestMethod]
         public void GetSearchResultMaschinentypTest()
@@ -143,7 +130,5 @@ namespace BusinessLayerTest
                 Assert.AreEqual(1, resultList.First().Id);
             }
         }
-
-
     }
 }

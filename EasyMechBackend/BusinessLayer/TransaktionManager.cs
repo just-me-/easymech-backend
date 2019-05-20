@@ -1,14 +1,10 @@
 ﻿using EasyMechBackend.DataAccessLayer;
-using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using Remotion.Linq.Clauses;
-using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -31,26 +27,6 @@ namespace EasyMechBackend.BusinessLayer
             return query.ToList();
         }
 
-        public List<Transaktion> GetVerkaeufe()
-        {
-            var query =
-            from t in Context.Transaktionen
-            where t.Typ == Transaktion.TransaktionsTyp.Verkauf
-            orderby t.Id descending
-            select t;
-            return query.ToList();
-        }
-
-        public List<Transaktion> GetEinkaeufe()
-        {
-            var query =
-            from t in Context.Transaktionen
-            where t.Typ == Transaktion.TransaktionsTyp.Einkauf
-            orderby t.Id descending
-            select t;
-            return query.ToList();
-        }
-
         public Transaktion GetTransaktionById(long id)
         {
             Transaktion k = Context.Transaktionen.SingleOrDefault(transaktion => transaktion.Id == id);
@@ -65,16 +41,22 @@ namespace EasyMechBackend.BusinessLayer
         {
             Context.Add(t);
             Maschine m = Context.Maschinen.SingleOrDefault(maschine => maschine.Id == t.MaschinenId);
+            if (m == null)
+            {
+                throw new InvalidOperationException($"Maschine with id {t.MaschinenId} is not in database");
+            }
             Kunde dukoStapler = Context.Kunden.SingleOrDefault(kunde => kunde.Id == 1);
-            if (t.Typ == Transaktion.TransaktionsTyp.Einkauf)
+            switch (t.Typ)
             {
-                m.Besitzer = dukoStapler;
-            } else if (t.Typ == Transaktion.TransaktionsTyp.Verkauf)
-            {
-                m.Besitzer = t.Kunde;
-            } else
-            {
-                Context.Remove(t);
+                case Transaktion.TransaktionsTyp.Einkauf:
+                    m.Besitzer = dukoStapler;
+                    break;
+                case Transaktion.TransaktionsTyp.Verkauf:
+                    m.Besitzer = t.Kunde;
+                    break;
+                default:
+                    Context.Remove(t);
+                    break;
             }
             Context.SaveChanges();
             return t;

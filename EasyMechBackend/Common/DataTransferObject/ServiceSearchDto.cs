@@ -1,7 +1,7 @@
 ﻿using System;
 using static EasyMechBackend.Common.EnumHelper;
 
-namespace EasyMechBackend.Common
+namespace EasyMechBackend.Common.DataTransferObject
 {
     public class ServiceSearchDto
     {

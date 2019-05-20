@@ -15,7 +15,6 @@ namespace EasyMechBackend.BusinessLayer
         {
         }
 
-
         public MaschineManager()
         {
         }
@@ -137,7 +136,6 @@ namespace EasyMechBackend.BusinessLayer
             return searchResult.ToList();
 
         }
-
 
         private void EnsureUniqueness(Maschine m)
         {

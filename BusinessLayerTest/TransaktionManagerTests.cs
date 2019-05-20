@@ -1,12 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
-using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
@@ -14,7 +12,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerTests : ManagerBaseTests
     {
-
         [TestMethod]
         public void AddTransaktionEinkaufTest()
         {
@@ -37,6 +34,51 @@ namespace BusinessLayerTest
                 var maschine = context.Maschinen.Single(m => m.Id == addedTransaktion.MaschinenId);
                 var newBesitzer = context.Kunden.Single(kunde => kunde.Id == maschine.BesitzerId);
                 Assert.AreEqual(1, newBesitzer.Id);
+            }
+        }
+
+        [TestMethod]
+        public void AddTransaktionVerkaufTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Transaktion t = new Transaktion
+                {
+                    Id = id,
+                    Preis = 40000,
+                    Typ = Transaktion.TransaktionsTyp.Verkauf,
+                    Datum = DateTime.Now,
+                    MaschinenId = 1,
+                    Kunde = context.Kunden.Single(k => k.Id == 2)
+                };
+                TransaktionManager transaktionManager = new TransaktionManager(context);
+                transaktionManager.AddTransaktion(t);
+                var addedTransaktion = context.Transaktionen.Single(transaktion => transaktion.Id == id);
+                Assert.AreEqual(3, addedTransaktion.Id);
+                var maschine = context.Maschinen.Single(m => m.Id == addedTransaktion.MaschinenId);
+                var newBesitzer = context.Kunden.Single(kunde => kunde.Id == maschine.BesitzerId);
+                Assert.AreEqual(2, newBesitzer.Id);
+            }
+        }
+
+        [TestMethod]
+        public void AddTransaktionForNonexistantMaschineTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Transaktion t = new Transaktion
+                {
+                    Id = id,
+                    Preis = 60000,
+                    Typ = Transaktion.TransaktionsTyp.Einkauf,
+                    Datum = DateTime.Now,
+                    MaschinenId = 666,
+                    Kunde = context.Kunden.Single(k => k.Id == 2)
+                };
+                TransaktionManager transaktionManager = new TransaktionManager(context);
+                Assert.ThrowsException<InvalidOperationException>(() => transaktionManager.AddTransaktion(t));
             }
         }
 
@@ -100,36 +142,11 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, updated.KundenId);
             }
         }
-
     }
 
     [TestClass]
     public class ReservationsManagerSearchTests : ManagerBaseTests
     {
-        /*
-         *
-         *
-         * TESTDATA FOR REFERENCE:::::
-
-                {
-                    Id = 1,
-                    Preis = 50000,
-                    Typ = Transaktion.TransaktionsTyp.Einkauf,
-                    Datum = new DateTime(2019, 05, 15),
-                    MaschinenId = 1, [type 1]
-                    KundenId = 1
-                };
-
-                {
-                    Id = 2,
-                    Preis = 45000,
-                    Typ = Transaktion.TransaktionsTyp.Verkauf,
-                    Datum = new DateTime(2019, 05, 16),
-                    MaschinenId = 2,  [type 1]
-                    KundenId = 1
-                };
-         */
-
         [TestMethod]
         public void TestCustomerSearch()
         {
@@ -194,7 +211,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void TestFromDateWithPartialMatches()
         {
@@ -210,7 +226,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, result.Single().Id);
             }
         }
-
 
         [TestMethod]
         public void TestToDateWithPartialMatchches()
@@ -250,7 +265,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(result1.Count, result2.Count);
             }
         }
-
 
         [TestMethod]
         public void TestItAllTogether()

@@ -1,6 +1,5 @@
 ﻿using System;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 
 namespace EasyMechBackend.Common.DataTransferObject.DTOs
 {

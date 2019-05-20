@@ -3,15 +3,11 @@ using System.Threading.Tasks;
 using EasyMechBackend.BusinessLayer;
 using System;
 using System.IO;
-using System.Net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Physical;
 
 namespace EasyMechBackend.ServiceLayer.Controller
-
 {
     [Route("[controller]")]
     [ApiController]
@@ -56,7 +52,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
         }
 
-
         [HttpGet("log")]
         public void GetLog()
         {
@@ -85,6 +80,5 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
             }
         }
-
     }
 }

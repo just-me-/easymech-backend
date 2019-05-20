@@ -22,8 +22,5 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [ForeignKey(nameof(ServiceId))]
         [Required]
         public Service Service { get; set; }
-
     }
-
-
 }

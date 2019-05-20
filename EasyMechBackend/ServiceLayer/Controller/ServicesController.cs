@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using log4net;
@@ -12,8 +11,6 @@ using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common;
 
 namespace EasyMechBackend.ServiceLayer.Controller
-
-
 {
     //[Authorize]
     [Route("[controller]")]
@@ -188,8 +185,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
             });
             return await task;
         }
-
-
 
         // POST: services/suchen
         [HttpPost("suchen")]

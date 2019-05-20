@@ -3,19 +3,16 @@ using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class ReservationManager : ManagerBase
     {
-
         public ReservationManager(EMContext context) : base(context)
         {
         }
@@ -45,10 +42,7 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation AddReservation(Reservation r)
         {
-
             CheckAndValidate(r);
-
-
             Context.Add(r);
             Context.SaveChanges();
             return r;
@@ -90,13 +84,11 @@ namespace EasyMechBackend.BusinessLayer
             return r;
         }
 
-
         public void DeleteReservation(Reservation r)
         {
             Context.Remove(r);       //cascade deletes the übergabe rücknahme
             Context.SaveChanges();
         }
-
 
         public List<Reservation> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
@@ -131,8 +123,6 @@ namespace EasyMechBackend.BusinessLayer
 
             return query.OrderByDescending(t => t.Startdatum).ToList();
         }
-        
-        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt.
 
         private void CheckAndValidate(Reservation r)
         {
@@ -147,14 +137,17 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureOwnProperty(Reservation r)
         {
             Maschine ma = Context.Maschinen.SingleOrDefault(m => m.Id == r.MaschinenId);
-
+            if (ma == null)
+            {
+                throw new InvalidOperationException($"Maschine {r.MaschinenId} existiert nicht.");
+            }
             if (ma.BesitzerId != 1)
             {
                 throw new ReservationException($"Maschine {r.MaschinenId} befindet sich nicht in Eigenbesitz. (Besitzer Id: {ma.BesitzerId})");
             }
         }
 
-        private void CopyInnerDates(Reservation r)
+        private static void CopyInnerDates(Reservation r)
         {
             if (r.Uebergabe != null)
             {
@@ -166,15 +159,15 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        private void EnsureReturnHasPrecedingPickup(Reservation r)
+        private static void EnsureReturnHasPrecedingPickup(Reservation r)
         {
             if (r.Uebergabe == null && r.Ruecknahme != null)
             {
-                throw new ReservationException("Sie können keine Rückgabe erfassen, wenn es keine Übergabe gibt.");
+                throw new ReservationException($"Sie können keine Rücknahme erfassen, wenn es keine Übergabe gibt. Reservations Id: {r.Id}");
             }
         }
 
-        private void EnsureStartBeforeEnd(Reservation r)
+        private static void EnsureStartBeforeEnd(Reservation r)
         {
             var start = r.Startdatum;
             var end = r.Enddatum;
@@ -186,7 +179,6 @@ namespace EasyMechBackend.BusinessLayer
 
         private void EnsureNoOverlappingReservations(Reservation r)
         {
-
             DateTime wantedStart = r.Startdatum ?? DateTime.Now;
             DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;   //if there is no reservation end just reserve it "forever"
             var myAuto = r.MaschinenId;
@@ -210,16 +202,12 @@ namespace EasyMechBackend.BusinessLayer
                 //der andere hat es noch nicht wieder zurückgegeben
                 if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
                 {
-
-                    //TOdo: Message verschönern:
-                    //Wer ist Kunde 5? "Bis 12.12.9999 reserviert" <=> "open-end reserviert"
-                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von.ToString("ddd dd.MM.yyyy")} bis {lv.Bis.ToString("ddd dd.MM.yyyy")} reserviert.");
+                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von:ddd dd.MM.yyyy} bis {lv.Bis:ddd dd.MM.yyyy} reserviert.");
                 }
 
             }
 
 
         }
-
     }
 }

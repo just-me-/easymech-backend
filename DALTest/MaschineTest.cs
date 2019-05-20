@@ -1,4 +1,3 @@
-using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +6,6 @@ namespace DALTest
     [TestClass]
     public class MaschineTest : DalBase
     {
-
         [TestMethod]
         public void ValidateSimple()
         {
@@ -43,9 +41,6 @@ namespace DALTest
 
             Assert.IsTrue(HaveSameData(expected, machine));
         }
-
-
-
 
         [TestMethod]
         public void ValidateMissingFields()

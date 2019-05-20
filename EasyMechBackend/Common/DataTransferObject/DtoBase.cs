@@ -1,5 +1,4 @@
-﻿
-namespace EasyMechBackend.Common.DataTransferObject
+﻿namespace EasyMechBackend.Common.DataTransferObject
 {
     public class DtoBase
     {

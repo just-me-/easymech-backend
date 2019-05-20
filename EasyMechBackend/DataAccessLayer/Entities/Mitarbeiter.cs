@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace EasyMechBackend.DataAccessLayer.Entities
 {
     [Table("Mitarbeiter", Schema = "public")]
@@ -23,6 +22,5 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public List<Transaktion> Transaktionen { get; set; }
 
         public List<Service> Services { get; set; }
-
     }
 }

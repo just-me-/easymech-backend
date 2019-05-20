@@ -65,7 +65,6 @@ namespace UtilTest
         }
     }
 
-
     [TestClass]
     public class HasSearchTerm
     {
@@ -101,7 +100,6 @@ namespace UtilTest
             Assert.IsFalse(r);
         }
     }
-
 
     [TestClass]
     public class ContainsCaseInsensitive

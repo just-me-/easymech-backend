@@ -19,8 +19,5 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         [Required]
         public Reservation Reservation { get; set; }
         public long ReservationsId { get; set; }
-
     }
-
-
 }

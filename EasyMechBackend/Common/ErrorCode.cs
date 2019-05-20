@@ -1,6 +1,4 @@
-﻿
-
-namespace EasyMechBackend.ServiceLayer
+﻿namespace EasyMechBackend.Common
 {
     public enum ErrorCode
     {
@@ -10,6 +8,8 @@ namespace EasyMechBackend.ServiceLayer
         Uniqueness = 200,
         ForeignKey = 201,
         IDMismatch = 202,
-        ReservationException = 203
+        ReservationException = 203,
+
+        Unknown = 400
     }
 }

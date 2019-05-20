@@ -1,12 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.Common;
 using static EasyMechBackend.Common.EnumHelper;
 using System.Collections.Generic;
 
@@ -70,7 +68,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddReservationWithoutMaterialOrArbeit()
         {
@@ -95,7 +92,6 @@ namespace BusinessLayerTest
                 Assert.IsTrue(!addedEntity.Arbeitsschritte.Any());
             }
         }
-
 
         [TestMethod]
         public void AddServiceWithMaterialAndArbeit()
@@ -139,7 +135,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, addedEntity.Arbeitsschritte.Count);
             }
         }
-
      
         [TestMethod]
         public void UpdateServiceSimple()
@@ -157,7 +152,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void DeleteServiceTest()
         {
@@ -165,7 +159,7 @@ namespace BusinessLayerTest
             {
                 var man = new ServiceManager(context);
 
-                var doomed = man.GetServiceById(1);
+                var doomed = man.GetServiceById(3);
                 man.DeleteService(doomed);
 
                 var list = man.GetServices(0);
@@ -179,7 +173,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class ServiceManagerSpecialCasesTests : ManagerBaseTests
     {
-
         [TestMethod]
         public void AddReservation_NoU_WithR_MustThrow()
         {
@@ -204,7 +197,6 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
             }
         }
-
 
         [TestMethod]
         public void AddReservation_Return_before_Take()
@@ -248,7 +240,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddReservation_DateOverlap_ButDifferentMachine()
         {
@@ -280,7 +271,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(3, man.GetReservationen().Count);
             }
         }
-
 
         [TestMethod]
         public void AddReservation_OpenEnd()
