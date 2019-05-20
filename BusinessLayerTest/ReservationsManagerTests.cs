@@ -1,11 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
-using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest
@@ -39,6 +40,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void AddReservation_NoU_NoR()
         {
@@ -62,6 +64,7 @@ namespace BusinessLayerTest
                 Assert.IsNull(addedEntity.Ruecknahme);
             }
         }
+
 
         [TestMethod]
         public void AddReservation_WithU_NoR()
@@ -125,6 +128,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void UpdateReservation()
         {
@@ -152,6 +156,7 @@ namespace BusinessLayerTest
                 //Assert.IsNull(updated.Ruecknahme);
             }
         }
+
 
         [TestMethod]
         public void DeleteTest()
@@ -204,6 +209,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void AddReservation_Return_before_Take()
         {
@@ -247,6 +253,49 @@ namespace BusinessLayerTest
         }
 
         [TestMethod]
+        public void AddReservation_DateOverlapWithService()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Reservation e = new Reservation
+                {
+                    Id = id,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2020, 01, 12),
+                    Enddatum = new DateTime(2020, 01, 13),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                var man = new ReservationManager(context);
+                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
+            }
+        }
+
+        [TestMethod]
+        public void AddReservation_DateOverlapWithService2()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 3;
+                Reservation e = new Reservation
+                {
+                    Id = id,
+                    Standort = "Chur",
+                    Startdatum = new DateTime(2000, 01, 12),
+                    Enddatum = new DateTime(2050, 01, 13),
+                    MaschinenId = 1,
+                    KundenId = 2
+                };
+
+                var man = new ReservationManager(context);
+                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
+            }
+        }
+
+
+        [TestMethod]
         public void AddReservation_DateOverlap_ButDifferentMachine()
         {
             using (var context = new EMContext(options))
@@ -277,6 +326,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(3, man.GetReservationen().Count);
             }
         }
+
 
         [TestMethod]
         public void AddReservation_OpenEnd()
@@ -379,6 +429,7 @@ namespace BusinessLayerTest
     [TestClass]
     public class TransaktionManagerSearchTests : ManagerBaseTests
     {
+
         [TestMethod]
         public void TestMaschinenSearch()
         {
@@ -443,6 +494,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void TestFromDateWithPartialMatches()
         {
@@ -458,6 +510,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, result.Single().Id);
             }
         }
+
 
         [TestMethod]
         public void TestToDateWithPartialMatchches()
@@ -491,6 +544,7 @@ namespace BusinessLayerTest
             }
         }
 
+
         [TestMethod]
         public void TestItAllTogether()
         {
@@ -510,6 +564,26 @@ namespace BusinessLayerTest
                 var result1 = man.GetServiceSearchResult(searchEntity1);
 
                 Assert.AreEqual(2, result1.Single().Id);
+            }
+        }
+
+        [TestMethod]
+        public void SearchWith0()
+        {
+            using (var context = new EMContext(options))
+            {
+                var man = new ReservationManager(context);
+                var searchEntity1 = new ServiceSearchDto
+                {
+                    MaschinenId = 0,
+                    KundenId = 0,
+                    MaschinentypId = 0,
+                    Status = ServiceState.All
+                };
+
+                var result1 = man.GetServiceSearchResult(searchEntity1);
+
+                Assert.AreEqual(2, result1.Count);
             }
         }
     }

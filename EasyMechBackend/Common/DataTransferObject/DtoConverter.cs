@@ -181,7 +181,7 @@ namespace EasyMechBackend.Common.DataTransferObject
                 Id = dto.Id,
                 Preis = dto.Preis,
                 Typ = dto.Typ,
-                Datum = dto.Datum,
+                Datum = dto.Datum == DateTime.MinValue ? new DateTime(1900,1,1) : dto.Datum,
                 MaschinenId = dto.MaschinenId,
                 KundenId = dto.KundenId
             };
@@ -265,12 +265,12 @@ namespace EasyMechBackend.Common.DataTransferObject
             return ConvertGenericList(entities, ConvertToDto);
         }
         #endregion
-        #region ResrevatrionsUebergabe
+        #region ReservationsÜbergabe
 
         public static MaschinenUebergabe ConvertToEntity(this MaschinenUebergabeDto dto)
         {
             if (dto == null) { return null; }
-
+            if (dto.Datum == DateTime.MinValue) { return null; }
 
             MaschinenUebergabe t = new MaschinenUebergabe
             {
@@ -294,12 +294,14 @@ namespace EasyMechBackend.Common.DataTransferObject
         }
 
         #endregion
-        #region ResrevatrionsRuecknahme
+        #region ReservationsRücknahme
 
 
         public static MaschinenRuecknahme ConvertToEntity(this MaschinenRuecknahmeDto dto)
         {
             if (dto == null) { return null; }
+
+            if (dto.Datum == DateTime.MinValue) { return null; }
 
             MaschinenRuecknahme t = new MaschinenRuecknahme
             {
@@ -327,31 +329,41 @@ namespace EasyMechBackend.Common.DataTransferObject
         public static Service ConvertToEntity(this ServiceDto dto)
         {
             if (dto == null) { return null; }
+            if (dto.Beginn == DateTime.MinValue) dto.Beginn = new DateTime(1900, 1, 1);
+            if (dto.Ende == DateTime.MinValue) dto.Ende = new DateTime(2999, 1, 1);
             List<Arbeitsschritt> arbeitsschritte = new List<Arbeitsschritt>();
             List<Materialposten> materialposten = new List<Materialposten>();
-            foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
+
+            if (dto.Arbeitsschritte != null)
             {
-                Arbeitsschritt a = new Arbeitsschritt
+                foreach (ArbeitsschrittDto aDto in dto.Arbeitsschritte)
                 {
-                    Id = aDto.Id,
-                    Bezeichnung = aDto.Bezeichnung,
-                    Stundenansatz = aDto.Stundenansatz,
-                    Arbeitsstunden = aDto.Arbeitsstunden,
-                    ServiceId = aDto.ServiceId
-                };
-                arbeitsschritte.Add(a);
+                    Arbeitsschritt a = new Arbeitsschritt
+                    {
+                        Id = aDto.Id,
+                        Bezeichnung = aDto.Bezeichnung,
+                        Stundenansatz = aDto.Stundenansatz,
+                        Arbeitsstunden = aDto.Arbeitsstunden,
+                        ServiceId = aDto.ServiceId
+                    };
+                    arbeitsschritte.Add(a);
+                }
             }
-            foreach (MaterialpostenDto mDto in dto.Materialposten)
+
+            if (dto.Materialposten != null)
             {
-                Materialposten m = new Materialposten
+                foreach (MaterialpostenDto mDto in dto.Materialposten)
                 {
-                    Id = mDto.Id,
-                    Bezeichnung = mDto.Bezeichnung,
-                    Stueckpreis = mDto.Stueckpreis,
-                    Anzahl = mDto.Anzahl,
-                    ServiceId = mDto.ServiceId
-                };
-                materialposten.Add(m);
+                    Materialposten m = new Materialposten
+                    {
+                        Id = mDto.Id,
+                        Bezeichnung = mDto.Bezeichnung,
+                        Stueckpreis = mDto.Stueckpreis,
+                        Anzahl = mDto.Anzahl,
+                        ServiceId = mDto.ServiceId
+                    };
+                    materialposten.Add(m);
+                }
             }
 
             Service t = new Service

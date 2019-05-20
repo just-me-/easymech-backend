@@ -3,16 +3,19 @@ using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.Common.DataTransferObject;
+using EasyMechBackend.Common;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.BusinessLayer
 {
     public class ReservationManager : ManagerBase
     {
+
         public ReservationManager(EMContext context) : base(context)
         {
         }
@@ -42,7 +45,9 @@ namespace EasyMechBackend.BusinessLayer
 
         public Reservation AddReservation(Reservation r)
         {
+
             CheckAndValidate(r);
+
             Context.Add(r);
             Context.SaveChanges();
             return r;
@@ -78,11 +83,12 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
-            
+
             Context.Update(r);
             Context.SaveChanges();
             return r;
         }
+
 
         public void DeleteReservation(Reservation r)
         {
@@ -90,18 +96,20 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
         }
 
+
         public List<Reservation> GetServiceSearchResult(ServiceSearchDto searchEntity)
         {
 
             var query = from t in Context.Reservationen
                     .Include(res => res.Uebergabe)
                     .Include(res => res.Ruecknahme)
-                where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
-                where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
-                where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
-                where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
-                where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
-                select t;
+                    .Include(res => res.Maschine)
+                        where searchEntity.KundenId == null || searchEntity.KundenId == t.KundenId
+                        where searchEntity.MaschinenId == null || searchEntity.MaschinenId == t.MaschinenId
+                        where searchEntity.MaschinentypId == null || searchEntity.MaschinentypId == t.Maschine.MaschinentypId
+                        where searchEntity.Von == null || searchEntity.Von <= t.Startdatum
+                        where searchEntity.Bis == null || t.Enddatum <= searchEntity.Bis
+                        select t;
 
             switch (searchEntity.Status)
             {
@@ -124,30 +132,30 @@ namespace EasyMechBackend.BusinessLayer
             return query.OrderByDescending(t => t.Startdatum).ToList();
         }
 
+        //TODO: Methoden in statische klasse auslagern, beiirgendwo inner dates iwas noch context migeben halt. Gemeinsam mit Service nutzen (unavbailable dates oder so)
+
         private void CheckAndValidate(Reservation r)
         {
-            CopyInnerDates(r);                  //if pickup or return exists, take those inner dates as reservation dates.
-            EnsureOwnProperty(r);               //checks if vehicle has owner 1
-            EnsureReturnHasPrecedingPickup(r);  //no return if there was no pickup before
-            EnsureStartBeforeEnd(r);            //checks if start < enddate
-            EnsureNoOverlappingReservations(r); //checks ifr already reserved
-            r.Validate();                       //clips properties
+            CopyInnerDates(r);
+            EnsureOwnProperty(r);
+            EnsureReturnHasPrecedingPickup(r);
+            EnsureStartBeforeEnd(r);
+            EnsureNoOverlappingReservations(r);
+            EnsureNoOverlappingMaintenances(r);
+            r.Validate();
         }
 
         private void EnsureOwnProperty(Reservation r)
         {
             Maschine ma = Context.Maschinen.SingleOrDefault(m => m.Id == r.MaschinenId);
-            if (ma == null)
-            {
-                throw new InvalidOperationException($"Maschine {r.MaschinenId} existiert nicht.");
-            }
+
             if (ma.BesitzerId != 1)
             {
                 throw new ReservationException($"Maschine {r.MaschinenId} befindet sich nicht in Eigenbesitz. (Besitzer Id: {ma.BesitzerId})");
             }
         }
 
-        private static void CopyInnerDates(Reservation r)
+        private void CopyInnerDates(Reservation r)
         {
             if (r.Uebergabe != null)
             {
@@ -159,15 +167,15 @@ namespace EasyMechBackend.BusinessLayer
             }
         }
 
-        private static void EnsureReturnHasPrecedingPickup(Reservation r)
+        private void EnsureReturnHasPrecedingPickup(Reservation r)
         {
             if (r.Uebergabe == null && r.Ruecknahme != null)
             {
-                throw new ReservationException($"Sie können keine Rücknahme erfassen, wenn es keine Übergabe gibt. Reservations Id: {r.Id}");
+                throw new ReservationException("Sie können keine Rückgabe erfassen, wenn es keine Übergabe gibt.");
             }
         }
 
-        private static void EnsureStartBeforeEnd(Reservation r)
+        private void EnsureStartBeforeEnd(Reservation r)
         {
             var start = r.Startdatum;
             var end = r.Enddatum;
@@ -180,34 +188,60 @@ namespace EasyMechBackend.BusinessLayer
         private void EnsureNoOverlappingReservations(Reservation r)
         {
             DateTime wantedStart = r.Startdatum ?? DateTime.Now;
-            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;   //if there is no reservation end just reserve it "forever"
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;
             var myAuto = r.MaschinenId;
             var myReservation = r.Id;
 
-            List<Reservation> reservationes = GetReservationen();
-
-            var reservedDates =
-                from lv in reservationes
+            var reservedDates = from lv in Context.Reservationen.Include(reser => reser.Kunde)
                 where lv.MaschinenId == myAuto && lv.Id != myReservation
+                where Helpers.Overlap(lv.Startdatum ?? DateTime.Now, 
+                    lv.Enddatum ?? DateTime.MaxValue,
+                    wantedStart,
+                    wantedEnd)
                 select new
                 {
-                    lv.KundenId,
+                    Kunde = lv.Kunde.Firma,
                     Von = lv.Startdatum ?? DateTime.Now,
                     Bis = lv.Enddatum ?? DateTime.MaxValue
-        };
+                };
 
-            foreach (var lv in reservedDates)
+            if (reservedDates.Any())
             {
-                //ich reserviere, nachdem es jeman anders reserviert hat &&
-                //der andere hat es noch nicht wieder zurückgegeben
-                if (Helpers.Overlap(lv.Von, lv.Bis, wantedStart, wantedEnd))
-                {
-                    throw new ReservationException($"Die Maschine ist bereits vond Kunde {lv.KundenId} von {lv.Von:ddd dd.MM.yyyy} bis {lv.Bis:ddd dd.MM.yyyy} reserviert.");
-                }
-
+                var overlappingEntity = reservedDates.FirstOrDefault();
+                string msg = $"Die Maschine ist bereits von Kunde {overlappingEntity.Kunde} " +
+                             $"von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} reserviert.";
+                throw new ReservationException(msg);
             }
 
+        }
 
+        private void EnsureNoOverlappingMaintenances(Reservation r)
+        {
+
+            DateTime wantedStart = r.Startdatum ?? DateTime.Now;
+            DateTime wantedEnd = r.Enddatum ?? DateTime.MaxValue;
+            var myAuto = r.MaschinenId;
+
+            var maintenanceDates =
+                from lv in Context.Services
+                where lv.MaschinenId == myAuto
+                where Helpers.Overlap(lv.Beginn, lv.Ende, wantedStart, wantedEnd)
+                select new
+                {
+                    Von = lv.Beginn,
+                    Bis = lv.Ende
+                };
+
+            if (maintenanceDates.Any())
+            {
+                var overlappingEntity = maintenanceDates.FirstOrDefault();
+                string msg = $"Die Maschine befindet sich von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
+                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} " +
+                             $"im Service und kann nicht reserviert werden.";
+                throw new ReservationException(msg);
+            }
+            
         }
     }
 }
