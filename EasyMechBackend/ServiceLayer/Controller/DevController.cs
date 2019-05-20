@@ -82,9 +82,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 Response.StatusCode = 200;
 
                 return File(buffer, "text/plain", "log.txt");
-
-
-
             }
         }
 

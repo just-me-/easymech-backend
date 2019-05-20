@@ -8,6 +8,7 @@ using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 
 namespace EasyMechBackend.BusinessLayer

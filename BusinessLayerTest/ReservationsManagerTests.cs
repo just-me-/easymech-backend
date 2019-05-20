@@ -7,6 +7,7 @@ using System.Linq;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Common;
+using EasyMechBackend.Common.DataTransferObject;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace BusinessLayerTest

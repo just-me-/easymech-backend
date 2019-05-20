@@ -9,6 +9,7 @@
         ForeignKey = 201,
         IDMismatch = 202,
         ReservationException = 203,
+        MaintenanceException = 204,
 
         Unknown = 400
     }
