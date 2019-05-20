@@ -329,6 +329,8 @@ namespace EasyMechBackend.Common.DataTransferObject
         public static Service ConvertToEntity(this ServiceDto dto)
         {
             if (dto == null) { return null; }
+            if (dto.Beginn == DateTime.MinValue) dto.Beginn = new DateTime(1900, 1, 1);
+            if (dto.Ende == DateTime.MinValue) dto.Beginn = new DateTime(1900, 1, 1);
             List<Arbeitsschritt> arbeitsschritte = new List<Arbeitsschritt>();
             List<Materialposten> materialposten = new List<Materialposten>();
 
