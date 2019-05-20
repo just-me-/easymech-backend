@@ -168,204 +168,119 @@ namespace BusinessLayerTest
         }
     }
 
-
-
     [TestClass]
     public class ServiceManagerSpecialCasesTests : ManagerBaseTests
     {
         [TestMethod]
-        public void AddReservation_NoU_WithR_MustThrow()
+        public void AddService_EndBeforeStart()
         {
             using (var context = new EMContext(options))
             {
-                int id = 3;
-                Reservation e = new Reservation
+                int id = 4;
+                Service s = new Service
                 {
                     Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2030, 05, 12),
-                    Enddatum = new DateTime(2040, 05, 12),
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2019, 06, 17),
+                    Ende = new DateTime(2019, 06, 16),
+                    Status = ServiceState.Pending,
                     MaschinenId = 1,
-                    KundenId = 2,
-                    Ruecknahme = new MaschinenRuecknahme
+                    KundenId = 1
+                };
+
+                var man = new ServiceManager(context);
+                Assert.ThrowsException<MaintenanceException>(() => man.AddService(s));
+            }
+        }
+
+        [TestMethod]
+        public void AddService_DateOverlap1_ExactDateMatch()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 4;
+                Service s = new Service
+                {
+                    Id = id,
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2020, 01, 12),
+                    Ende = new DateTime(2020, 01, 13),
+                    Status = ServiceState.Pending,
+                    MaschinenId = 1,
+                    KundenId = 1
+                };
+
+                var man = new ServiceManager(context);
+                Assert.ThrowsException<MaintenanceException>(() => man.AddService(s));
+            }
+        }
+
+        [TestMethod]
+        public void AddService_DateOverlap2_OutsideDate()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 4;
+                Service s = new Service
+                {
+                    Id = id,
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2000, 01, 12),
+                    Ende = new DateTime(2050, 01, 13),
+                    Status = ServiceState.Pending,
+                    MaschinenId = 1,
+                    KundenId = 1
+                };
+
+                var man = new ServiceManager(context);
+                Assert.ThrowsException<MaintenanceException>(() => man.AddService(s));
+            }
+        }
+
+        [TestMethod]
+        public void AddService_DateOverlap3_InsideDate()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 4;
+                Service s = new Service
+                {
+                    Id = id,
+                    Bezeichnung = "Added Service",
+                    Beginn = new DateTime(2019, 05, 16),
+                    Ende = new DateTime(2019, 05, 19),
+                    Status = ServiceState.Pending,
+                    MaschinenId = 1,
+                    KundenId = 1
+                };
+
+                var man = new ServiceManager(context);
+                Assert.ThrowsException<MaintenanceException>(() => man.AddService(s));
+            }
+        }
+
+        [TestMethod]
+        public void AddService_DateOverlap_ButDifferentMachine()
+        {
+            {
+                using (var context = new EMContext(options))
+                {
+                    int id = 4;
+                    Service s = new Service
                     {
-                        Datum = new DateTime(2040, 05, 13)
-                    }
-                };
+                        Id = id,
+                        Bezeichnung = "Added Service",
+                        Beginn = new DateTime(2000, 01, 12),
+                        Ende = new DateTime(2050, 01, 13),
+                        Status = ServiceState.Pending,
+                        MaschinenId = 2,
+                        KundenId = 1
+                    };
 
-                var man = new ReservationManager(context);
-                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_Return_before_Take()
-        {
-            using (var context = new EMContext(options))
-            {
-                int id = 3;
-                Reservation e = new Reservation
-                {
-                    Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2040, 05, 12),
-                    Enddatum = new DateTime(2030, 05, 12),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                var man = new ReservationManager(context);
-                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_DateOverlap()
-        {
-            using (var context = new EMContext(options))
-            {
-                int id = 3;
-                Reservation e = new Reservation
-                {
-                    Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2000, 08, 12),
-                    Enddatum = new DateTime(2019, 05, 13),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                var man = new ReservationManager(context);
-                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_DateOverlap_ButDifferentMachine()
-        {
-            using (var context = new EMContext(options))
-            {
-                long id = 12;
-                Maschine m5 = new Maschine
-                {
-                    Id = id,
-                    Seriennummer = "my machine 2",
-                    BesitzerId = 1
-                };
-
-                var man_masch = new MaschineManager(context);
-                man_masch.AddMaschine(m5);
-
-                Reservation e = new Reservation
-                {
-                    Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 12), //same as in machine 1
-                    Enddatum = new DateTime(2020, 05, 12),
-                    MaschinenId = id,
-                    KundenId = 2
-                };
-
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-                Assert.AreEqual(3, man.GetReservationen().Count);
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_OpenEnd()
-        {
-            using (var context = new EMContext(options))
-            {
-                int id = 3;
-                Reservation e = new Reservation
-                {
-                    Id = id,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2030, 01, 11),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-
-                Reservation e2 = new Reservation
-                {
-                    Id = id + 1,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2050, 01, 11),
-                    Enddatum = new DateTime(2060, 01, 11),
-                    MaschinenId = 1,
-                    KundenId = 2
-                };
-
-                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e2));
-
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_NotInOwnProperty()
-        {
-            using (var context = new EMContext(options))
-            {
-                long id = 12;
-                Maschine m5 = new Maschine
-                {
-                    Id = id,
-                    Seriennummer = "owner 2",
-                    BesitzerId = 2
-                };
-
-                var man_masch = new MaschineManager(context);
-                man_masch.AddMaschine(m5);
-
-                Reservation e = new Reservation
-                {
-                    Id = 3,
-                    Startdatum = new DateTime(2030, 05, 12),
-                    Enddatum = new DateTime(2040, 05, 12),
-                    MaschinenId = id,
-                    KundenId = 2
-                };
-
-                var man = new ReservationManager(context);
-                Assert.ThrowsException<ReservationException>(() => man.AddReservation(e));
-            }
-        }
-
-        [TestMethod]
-        public void AddReservation_Overwrite_Date_When_PickupOrReturn()
-        {
-            using (var context = new EMContext(options))
-            {
-
-                var a = new DateTime(2030, 1, 1);
-                var b = new DateTime(2030, 1, 2);
-                Reservation e = new Reservation
-                {
-                    Id = 3,
-                    Standort = "Chur",
-                    Startdatum = new DateTime(2019, 05, 12),
-                    Enddatum = new DateTime(2018, 05, 12),
-                    MaschinenId = 1,
-                    KundenId = 2,
-                    Uebergabe = new MaschinenUebergabe
-                    {
-                        Datum = a
-                    },
-                    Ruecknahme = new MaschinenRuecknahme
-                    {
-                        Datum = b
-                    }
-                };
-
-                var man = new ReservationManager(context);
-                man.AddReservation(e);
-                var added = man.GetReservationById(3);
-                Assert.AreEqual(a, added.Uebergabe.Datum);
-                Assert.AreEqual(b, added.Ruecknahme.Datum);
+                    var man = new ServiceManager(context);
+                    man.AddService(s);
+                    Assert.AreEqual(4, context.Services.Single(serv => serv.Id == 4).Id);
+                }
             }
         }
     }
