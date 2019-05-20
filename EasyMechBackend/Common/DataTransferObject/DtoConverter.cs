@@ -265,12 +265,12 @@ namespace EasyMechBackend.Common.DataTransferObject
             return ConvertGenericList(entities, ConvertToDto);
         }
         #endregion
-        #region ResrevatrionsUebergabe
+        #region ReservationsÜbergabe
 
         public static MaschinenUebergabe ConvertToEntity(this MaschinenUebergabeDto dto)
         {
             if (dto == null) { return null; }
-
+            if (dto.Datum == DateTime.MinValue) { return null; }
 
             MaschinenUebergabe t = new MaschinenUebergabe
             {
@@ -294,12 +294,14 @@ namespace EasyMechBackend.Common.DataTransferObject
         }
 
         #endregion
-        #region ResrevatrionsRuecknahme
+        #region ReservationsRücknahme
 
 
         public static MaschinenRuecknahme ConvertToEntity(this MaschinenRuecknahmeDto dto)
         {
             if (dto == null) { return null; }
+
+            if (dto.Datum == DateTime.MinValue) { return null; }
 
             MaschinenRuecknahme t = new MaschinenRuecknahme
             {
