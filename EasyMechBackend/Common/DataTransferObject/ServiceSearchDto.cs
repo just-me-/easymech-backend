@@ -1,7 +1,4 @@
 ﻿using System;
-using EasyMechBackend.DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.Common.DataTransferObject

@@ -3,11 +3,9 @@ using EasyMechBackend.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using EasyMechBackend.DataAccessLayer.Entities;
 using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.Common;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 
@@ -120,8 +118,7 @@ namespace EasyMechBackend.BusinessLayer
 
 
         private void CheckAndValidate(Service s)
-        {
-;
+        { 
             EnsureStartBeforeEnd(s);
             EnsureNoOverlappingMaintenances(s);
             EnsureNoOverlappingReservations(s);
@@ -157,14 +154,12 @@ namespace EasyMechBackend.BusinessLayer
                                     Bis = lv.Ende 
                                 };
 
-            if (serviceDates.Any())
-            {
-                var overlappingEntity = serviceDates.FirstOrDefault();
-                string msg =
-                    $"Die Maschine befindet sich bereits von {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
-                    $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} im Service";
-                throw new MaintenanceException(msg);
-            }
+            if (!serviceDates.Any()) return;
+            var overlappingEntity = serviceDates.First();
+            string msg =
+                $"Die Maschine befindet sich bereits von {overlappingEntity.Von:ddd dd.MM.yyyy} " +
+                $"bis {overlappingEntity.Bis:ddd dd.MM.yyyy} im Service";
+            throw new MaintenanceException(msg);
 
         }
 
@@ -189,14 +184,12 @@ namespace EasyMechBackend.BusinessLayer
                     Bis = lv.Enddatum ?? DateTime.MaxValue
                 };
 
-            if (reservedDates.Any())
-            {
-                var overlappingEntity = reservedDates.FirstOrDefault();
-                string msg = $"Die Maschine ist vom {overlappingEntity.Von.ToString("ddd dd.MM.yyyy")} " +
-                             $"bis {overlappingEntity.Bis.ToString("ddd dd.MM.yyyy")} " +
-                             $"von {overlappingEntity.Kunde} reserviert und nicht für einen Service verfügbar.";
-                throw new MaintenanceException(msg);
-            }
+            if (!reservedDates.Any()) return;
+            var overlappingEntity = reservedDates.First();
+            string msg = $"Die Maschine ist vom {overlappingEntity.Von:ddd dd.MM.yyyy} " +
+                         $"bis {overlappingEntity.Bis:ddd dd.MM.yyyy} " +
+                         $"von {overlappingEntity.Kunde} reserviert und nicht für einen Service verfügbar.";
+            throw new MaintenanceException(msg);
 
         }
 
