@@ -7,7 +7,6 @@ namespace EasyMechBackend.DataAccessLayer.Entities
     [Table("Transaktionen", Schema = "public")]
     public class Transaktion
     {
-
         public enum TransaktionsTyp { Verkauf = 0, Einkauf = 1 }
 
         [Key]
@@ -29,6 +28,5 @@ namespace EasyMechBackend.DataAccessLayer.Entities
         public long? KundenId { get; set; }
         [ForeignKey(nameof(KundenId))]
         public Kunde Kunde { get; set; }
-
     }
 }

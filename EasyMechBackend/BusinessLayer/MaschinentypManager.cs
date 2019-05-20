@@ -142,7 +142,6 @@ namespace EasyMechBackend.BusinessLayer
             return searchResult.ToList();
         }
 
-
         private void EnsureUniqueness(Maschinentyp t)
         {
             bool matches = Context.Maschinentypen.Any(e => e.Fabrikat == t.Fabrikat && e.Fabrikat != null && e.Id != t.Id);
@@ -152,6 +151,5 @@ namespace EasyMechBackend.BusinessLayer
                 throw new UniquenessException($"Der Typ \"{t.Fabrikat}\" ist bereits im System registriert.");
             }
         }
-
     }
 }

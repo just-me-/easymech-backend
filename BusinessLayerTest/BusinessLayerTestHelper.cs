@@ -87,6 +87,14 @@ namespace BusinessLayerTest
                 };
                 t1.Validate();
 
+                Maschinentyp t2 = new Maschinentyp
+                {
+                    Id = 2,
+                    Fabrikat = "Tester wird nicht benutzt",
+                    Nutzlast = 2000
+                };
+                t2.Validate();
+
                 Maschine m1 = new Maschine
                 {
                     Id = 1,
@@ -185,13 +193,31 @@ namespace BusinessLayerTest
                     Status = ServiceState.Completed,
                     MaschinenId = 1,
                     KundenId = 1,
-                    Materialposten = new List<Materialposten>(),
-                    Arbeitsschritte = new List<Arbeitsschritt>()
+                    Materialposten = new List<Materialposten>
+                    {
+                        new Materialposten
+                        {
+                            Anzahl = 2,
+                            Bezeichnung = "Schrauben b3",
+                            ServiceId = 3,
+                            Stueckpreis = 12.0
+                        }
+                    },
+                    Arbeitsschritte = new List<Arbeitsschritt>
+                    {
+                        new Arbeitsschritt
+                        {
+                            Arbeitsstunden = 2,
+                            Bezeichnung = "Schrauben anziehen",
+                            ServiceId = 3,
+                        }
+                    }
                 };
 
                 context.Add(k1);
                 context.Add(k2);
                 context.Add(t1);
+                context.Add(t2);
                 context.Add(m1);
                 context.Add(m2);
                 context.Add(startTransaktionEinkauf);

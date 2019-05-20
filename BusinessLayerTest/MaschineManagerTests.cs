@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.BusinessLayer;
 using System.Linq;
@@ -54,28 +51,26 @@ namespace BusinessLayerTest
             }
         }
 
-        //[TestMethod]
-        //public void AddMaschineIntoDeleteIntoAddAgain()
-        //{
-        //    var options = ResetDBwithMaschineHelper();
-        //    using (var context = new EMContext(options))
-        //    {
-        //        int id = 2;
-        //        Maschine newMaschine = new Maschine
-        //        {
-        //            Id = id,
-        //            Seriennummer = "123xyz!!"
-        //        };
+        [TestMethod]
+        public void AddMaschineIntoDeleteIntoAddAgain()
+        {
+            using (var context = new EMContext(options))
+            {
+                int id = 40;
+                Maschine newMaschine = new Maschine
+                {
+                    Id = id,
+                    Seriennummer = "123xyz"
+                };
 
-        //        MaschineManager man = new MaschineManager(context);
-        //        var original = man.GetMaschineById(1);
-        //        man.SetMaschineInactive(original);
-        //        man.AddMaschine(newMaschine);
-        //        var listen = man.GetMaschinen(true);
-        //        Assert.AreEqual(2, listen.Count);
-        //    }
-        //}
-
+                MaschineManager man = new MaschineManager(context);
+                var original = man.GetMaschineById(1);
+                man.SetMaschineInactive(original);
+                man.AddMaschine(newMaschine);
+                var listen = man.GetMaschinen(true);
+                Assert.AreEqual(2, listen.Count);
+            }
+        }
 
         [TestMethod]
         public void GetMaschinenTest()
@@ -87,6 +82,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, maschinenList.Count);
             }
         }
+
         [TestMethod]
         public void GetMaschineByIdTest()
         {
@@ -97,6 +93,7 @@ namespace BusinessLayerTest
                 Assert.AreEqual("123xyz", maschine1.Seriennummer);
             }
         }
+
         [TestMethod]
         public void GetMaschineByNonexistantIdTest()
         {
@@ -106,6 +103,7 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<InvalidOperationException>(() => maschineManager.GetMaschineById(666));
             }
         }
+
         [TestMethod]
         public void UpdateMaschineTest()
         {
@@ -145,7 +143,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void GetSearchResultMaschineTest()
         {
@@ -162,6 +159,5 @@ namespace BusinessLayerTest
                 Assert.AreEqual(1, resultList.First().Id);
             }
         }
-
     }
 }

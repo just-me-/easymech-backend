@@ -2,20 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
+using EasyMechBackend.Common;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common.Exceptions;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace EasyMechBackend.ServiceLayer.Controller
-
-
 {
-    //[Authorize]
     [Route("[controller]")]
     [ApiController]
     public class KundenController : ControllerBase
@@ -199,7 +195,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
             return await task;
         }
 
-
         // DELETE: kunden/5/hard
         [HttpDelete("{id}/hard")]
         public async Task<ActionResult<ResponseObject<KundeDto>>> DeleteKundeHard(long id)
@@ -217,7 +212,11 @@ namespace EasyMechBackend.ServiceLayer.Controller
                 catch (DbUpdateException e)
                 {
                     log.Error($"{System.Reflection.MethodBase.GetCurrentMethod().Name} catched a DB Update Exception: {e.InnerException?.Message}");
-                    return new ResponseObject<KundeDto>(e.InnerException.Message, ErrorCode.DBUpdate);
+                    if (e.InnerException != null)
+                    {
+                        return new ResponseObject<KundeDto>(e.InnerException.Message, ErrorCode.DBUpdate);
+                    }
+                    return new ResponseObject<KundeDto>("Unknown Exception!", ErrorCode.Unknown);
                 }
                 catch (Exception e)
                 {

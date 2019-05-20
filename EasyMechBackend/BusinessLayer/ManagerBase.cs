@@ -11,11 +11,9 @@ namespace EasyMechBackend.BusinessLayer
             Context = context;
         }
 
-
         public ManagerBase()
         {
             Context = new EMContext();
         }
-
     }
 }

@@ -1,9 +1,4 @@
-﻿using EasyMechBackend.DataAccessLayer.Entities;
-using System;
-using System.Collections.Generic;
-using static EasyMechBackend.Common.EnumHelper;
-
-namespace EasyMechBackend.Common.DataTransferObject.DTOs
+﻿namespace EasyMechBackend.Common.DataTransferObject.DTOs
 {
     public class ArbeitsschrittDto
     {

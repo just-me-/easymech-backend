@@ -71,7 +71,6 @@ namespace EasyMechBackend.DataAccessLayer.Entities
             Ort = Ort.ClipToNChars(128);
             Email = Email.ClipToNChars(128);
             Telefon = Telefon.ClipToNChars(128);
-
         }
     }
 }

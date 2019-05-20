@@ -70,6 +70,15 @@ namespace BusinessLayerTest
             }
         }
 
+        [TestMethod]
+        public void GetServiceByNonexistantIdTest()
+        {
+            using (var context = new EMContext(options))
+            {
+                ServiceManager man = new ServiceManager(context);
+                Assert.ThrowsException<InvalidOperationException>(() => man.GetServiceById(999));
+            }
+        }
 
         [TestMethod]
         public void AddReservationWithoutMaterialOrArbeit()
@@ -95,7 +104,6 @@ namespace BusinessLayerTest
                 Assert.IsTrue(!addedEntity.Arbeitsschritte.Any());
             }
         }
-
 
         [TestMethod]
         public void AddServiceWithMaterialAndArbeit()
@@ -139,7 +147,6 @@ namespace BusinessLayerTest
                 Assert.AreEqual(2, addedEntity.Arbeitsschritte.Count);
             }
         }
-
      
         [TestMethod]
         public void UpdateServiceSimple()
@@ -157,7 +164,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void DeleteServiceTest()
         {
@@ -165,7 +171,7 @@ namespace BusinessLayerTest
             {
                 var man = new ServiceManager(context);
 
-                var doomed = man.GetServiceById(1);
+                var doomed = man.GetServiceById(3);
                 man.DeleteService(doomed);
 
                 var list = man.GetServices(0);
@@ -179,7 +185,6 @@ namespace BusinessLayerTest
     [TestClass]
     public class ServiceManagerSpecialCasesTests : ManagerBaseTests
     {
-
         [TestMethod]
         public void AddService_EndBeforeStart()
         {
@@ -224,7 +229,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddService_DateOverlap2_OutsideDate()
         {
@@ -247,7 +251,6 @@ namespace BusinessLayerTest
             }
         }
 
-
         [TestMethod]
         public void AddService_DateOverlap3_InsideDate()
         {
@@ -269,7 +272,6 @@ namespace BusinessLayerTest
                 Assert.ThrowsException<MaintenanceException>(() => man.AddService(s));
             }
         }
-
 
         [TestMethod]
         public void AddService_DateOverlap_ButDifferentMachine()
@@ -295,8 +297,5 @@ namespace BusinessLayerTest
                 }
             }
         }
-
-        
-        
     }
 }

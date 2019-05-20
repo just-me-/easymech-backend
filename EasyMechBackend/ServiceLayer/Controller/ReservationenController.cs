@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using EasyMechBackend.ServiceLayer.DataTransferObject;
 using EasyMechBackend.BusinessLayer;
 using System;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.DataTransferObject.DTOs;
 using EasyMechBackend.Common.Exceptions;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 using EasyMechBackend.Common;
 
 namespace EasyMechBackend.ServiceLayer.Controller
-
-
 {
     //[Authorize]
     [Route("[controller]")]
@@ -50,7 +46,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
 
             return await task;
         }
-
 
         // GET: /Reservationen/2
         [HttpGet("{id}")]
@@ -172,8 +167,6 @@ namespace EasyMechBackend.ServiceLayer.Controller
             });
             return await task;
         }
-
-
 
         // POST: reservationen/suchen
         [HttpPost("suchen")]

@@ -439,10 +439,8 @@ namespace EasyMechBackend.Common.DataTransferObject
         private static List<TTarget> ConvertGenericList<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> converter)
         {
             if (source == null) { return null; }
-            if (converter == null) { return null; }
-
+            if (converter == null) return null;
             return source.Select(converter).ToList();
         }
     }
-
 }

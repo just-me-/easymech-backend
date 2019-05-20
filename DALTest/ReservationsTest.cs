@@ -1,5 +1,4 @@
 using System;
-using EasyMechBackend.DataAccessLayer;
 using EasyMechBackend.DataAccessLayer.Entities;
 using EasyMechBackend.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +8,6 @@ namespace DALTest
     [TestClass]
     public class ReservationsTest : DalBase
     {
-
         [TestMethod]
         public void ValidateSimple()
         {
@@ -40,11 +38,7 @@ namespace DALTest
             Assert.IsTrue(HaveSameData(expected, reservation));
         }
 
-
-
-
         [TestMethod]
-
         public void ValidateTooLong()
         {
             Reservation reservation = new Reservation
@@ -72,6 +66,5 @@ namespace DALTest
             Assert.IsTrue(HaveSameData(expected, reservation));
         }
     }
-
 }
 

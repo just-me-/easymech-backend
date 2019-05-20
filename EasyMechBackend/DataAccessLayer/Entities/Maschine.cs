@@ -60,7 +60,6 @@ namespace EasyMechBackend.DataAccessLayer.Entities
             Seriennummer = Seriennummer.ClipToNChars(128);
             Mastnummer = Mastnummer.ClipToNChars(128);
             Motorennummer = Motorennummer.ClipToNChars(128);
-
         }
     }
 }
