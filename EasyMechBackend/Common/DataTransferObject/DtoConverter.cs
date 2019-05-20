@@ -181,7 +181,7 @@ namespace EasyMechBackend.Common.DataTransferObject
                 Id = dto.Id,
                 Preis = dto.Preis,
                 Typ = dto.Typ,
-                Datum = dto.Datum,
+                Datum = dto.Datum == DateTime.MinValue ? new DateTime(1900,1,1) : dto.Datum,
                 MaschinenId = dto.MaschinenId,
                 KundenId = dto.KundenId
             };
