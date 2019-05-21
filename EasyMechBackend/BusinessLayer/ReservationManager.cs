@@ -7,6 +7,7 @@ using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
 using EasyMechBackend.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Remotion.Linq.Clauses;
 using static EasyMechBackend.Common.EnumHelper;
 
 namespace EasyMechBackend.BusinessLayer
@@ -125,7 +126,7 @@ namespace EasyMechBackend.BusinessLayer
                     throw new ArgumentException("Konnte den Service-Status nicht einordnen.");
             }
 
-            return query.OrderByDescending(t => t.Startdatum).ToList();
+            return query.OrderBy(t => t.Startdatum).ToList();
         }
         
         private void CheckAndValidate(Reservation r)
