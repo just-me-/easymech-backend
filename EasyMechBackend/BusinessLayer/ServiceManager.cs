@@ -31,20 +31,25 @@ namespace EasyMechBackend.BusinessLayer
             where status == ServiceState.All || r.Status == status
             orderby r.Beginn descending
             select r;
+            foreach (var service in query)
+            {
+                SortArbeitsschritteAndMaterial(service);
+            }
             return query.ToList();
         }
 
         public Service GetServiceById(long id)
         {
-            Service r = Context.Services
+            Service s = Context.Services
                 .Include(a => a.Arbeitsschritte)
                 .Include(m => m.Materialposten)
                 .SingleOrDefault(res => res.Id == id);
-            if (r == null)
+            if (s == null)
             {
                 throw new InvalidOperationException($"Service with id {id} is not in database");
             }
-            return r;
+            SortArbeitsschritteAndMaterial(s);
+            return s;
         }
 
         public Service AddService(Service s)
@@ -52,6 +57,7 @@ namespace EasyMechBackend.BusinessLayer
             CheckAndValidate(s);
             Context.Add(s);
             Context.SaveChanges();
+            SortArbeitsschritteAndMaterial(s);
             return s;
         }
 
@@ -79,8 +85,9 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
-            Context.Entry(old).CurrentValues.SetValues(s);
+            Context.Update(s);
             Context.SaveChanges();
+            SortArbeitsschritteAndMaterial(s);
             return s;
         }
 
@@ -112,7 +119,10 @@ namespace EasyMechBackend.BusinessLayer
                         where searchEntity.Bis == null || t.Ende <= searchEntity.Bis
                         where searchEntity.Status == null || searchEntity.Status == 0 || searchEntity.Status == t.Status
                         select t;
-
+            foreach (var service in query)
+            {
+                SortArbeitsschritteAndMaterial(service);
+            }
             return query.OrderByDescending(t => t.Beginn).ToList();
         }
 
@@ -125,7 +135,7 @@ namespace EasyMechBackend.BusinessLayer
             s.Validate();
         }
 
-        private void EnsureStartBeforeEnd(Service s)
+        private static void EnsureStartBeforeEnd(Service s)
         {
             var start = s.Beginn;
             var end = s.Ende;
@@ -193,6 +203,10 @@ namespace EasyMechBackend.BusinessLayer
 
         }
 
-
+        private static void SortArbeitsschritteAndMaterial(Service s)
+        {
+            s.Arbeitsschritte = s.Arbeitsschritte.OrderBy(a => a.Id).ToList();
+            s.Materialposten = s.Materialposten.OrderBy(m => m.Id).ToList();
+        }
     }
 }

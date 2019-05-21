@@ -81,7 +81,6 @@ namespace EasyMechBackend.BusinessLayer
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
-
             Context.Update(r);
             Context.SaveChanges();
             return r;
