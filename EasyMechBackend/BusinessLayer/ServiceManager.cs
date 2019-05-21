@@ -8,6 +8,7 @@ using static EasyMechBackend.Common.EnumHelper;
 using Microsoft.EntityFrameworkCore;
 using EasyMechBackend.Common.DataTransferObject;
 using EasyMechBackend.Common.Exceptions;
+using Remotion.Linq.Clauses;
 
 namespace EasyMechBackend.BusinessLayer
 {
@@ -118,6 +119,7 @@ namespace EasyMechBackend.BusinessLayer
                         where searchEntity.Von == null || searchEntity.Von <= t.Beginn
                         where searchEntity.Bis == null || t.Ende <= searchEntity.Bis
                         where searchEntity.Status == null || searchEntity.Status == 0 || searchEntity.Status == t.Status
+                        orderby t.Beginn
                         select t;
             foreach (var service in query)
             {
