@@ -82,10 +82,10 @@ namespace EasyMechBackend.BusinessLayer
                 }
             }
 
+            Context.Remove(old);
             Context.SaveChanges();
-            Context.Entry(old).State = EntityState.Detached;
 
-            Context.Update(s);
+            Context.Add(s);
             Context.SaveChanges();
             SortArbeitsschritteAndMaterial(s);
             return s;

@@ -77,7 +77,6 @@ namespace EasyMechBackend.BusinessLayer
             {
                 Context.Remove(old.Ruecknahme);
             }
-
             Context.SaveChanges();
             Context.Entry(old).State = EntityState.Detached;
 
