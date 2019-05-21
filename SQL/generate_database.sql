@@ -1,4 +1,36 @@
-﻿CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+﻿\echo \conninfo
+\echo
+\echo -n 'client encoding: '\encoding
+\echo
+
+SET client_min_messages = ERROR;
+\set user em 
+\set password '\'em19\''
+\set database easymech
+\set promptvar ''
+
+\prompt 'DROP USER [':user'] and DROP DATABASE [':database'] if existing (\\q or Ctrl-C to abort)?' promptvar
+:promptvar
+
+DROP DATABASE if exists :database;
+DROP USER if exists :user;
+
+\echo -------------------------------------
+\echo passwort for user :user = :password
+\echo -------------------------------------
+\echo
+
+\prompt 'CREATE USER [':user'] and DATABASE [':database'] (\\q or Ctrl-C to abort)?' promptvar
+:promptvar
+
+DROP DATABASE if exists :database;
+DROP USER if exists :user;
+
+CREATE USER :user WITH PASSWORD :password;
+CREATE DATABASE :database WITH OWNER :user ENCODING 'UTF8';
+\c :database :user
+
+CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
     "MigrationId" varchar(150) NOT NULL,
     "ProductVersion" varchar(32) NOT NULL,
     CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
