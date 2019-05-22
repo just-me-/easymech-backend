@@ -205,9 +205,9 @@ namespace EasyMechBackend.BusinessLayer
 
             if (!reservedDates.Any()) return;
             var overlappingEntity = reservedDates.First();
-            string msg = $"Die Maschine ist bereits von Kunde {overlappingEntity.Kunde} " +
-                         $"von {overlappingEntity.Von:ddd dd.MM.yyyy} " +
-                         $"bis {overlappingEntity.Bis:ddd dd.MM.yyyy} reserviert.";
+            string msg = $"Die Maschine ist bereits von \"{overlappingEntity.Kunde}\" " +
+                         $"vom {overlappingEntity.Von:dd.MM.yyyy} " +
+                         $"bis am {overlappingEntity.Bis:dd.MM.yyyy} reserviert.";
             throw new ReservationException(msg);
 
         }
@@ -231,8 +231,8 @@ namespace EasyMechBackend.BusinessLayer
 
             if (!maintenanceDates.Any()) return;
             var overlappingEntity = maintenanceDates.First();
-            string msg = $"Die Maschine befindet sich von {overlappingEntity.Von:ddd dd.MM.yyyy} " +
-                         $"bis {overlappingEntity.Bis:ddd dd.MM.yyyy} " +
+            string msg = $"Die Maschine befindet sich vom {overlappingEntity.Von:dd.MM.yyyy} " +
+                         $"bis am {overlappingEntity.Bis:dd.MM.yyyy} " +
                          "im Service und kann nicht reserviert werden.";
             throw new ReservationException(msg);
 
